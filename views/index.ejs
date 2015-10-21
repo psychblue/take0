@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <div id="titlebar">
+      <div id="titlebar-title">
+        T . A . K . E .
+      </div>
+      <div id="titlebar-login">
+        <% if(!isAuth){ %>
+        - <a href=/login>로그인</a> - <a href=/join>회원가입</a> -
+        <% }else{ %>
+        <%= name %> - <a href=/logout>로그아웃</a> - <a href=/withdraw>탈퇴</a> -
+        <% } %>
+      </div>
+    </div>
+  </body>
+</html>
