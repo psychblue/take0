@@ -1,15 +1,24 @@
+/*
+Main Router
+*/
+
 //Modules
 var express = require('express');
-
-var router = express.Router();
 
 //HTML Variables
 var MAIN_TITLE = 'T.A.K.E.';
 
+//Express Router Settings
+var router = express.Router();
+
+/*
+Routing Logics
+*/
 module.exports = function(passport, mysqlDb){
-	//Route
-	// "/"
+
+	// "/" - Main Page
 	router.get('/', function(req, res, next){
+		//Check User Login
 		if(req.isAuthenticated()){
 			var username = req.user.username;
 		}else{
@@ -19,8 +28,9 @@ module.exports = function(passport, mysqlDb){
 		res.render('index', indexOptions);
 	});
 
-	// "/login"
+	// "/login" - User Login Page
 	router.get('/login', function(req, res, next){
+		//Check User Login
 		if(req.isAuthenticated()){
 			res.send('Already logged in...');
 		}else{
@@ -29,17 +39,24 @@ module.exports = function(passport, mysqlDb){
 		}
 	});
 
+	// '/login' post
 	router.post('/login', require('./login').loginAuth(passport));
 
+	// "/logout"
 	router.get('/logout', function(req, res, next){
+		//Session Logout
 		req.logout();
 		res.redirect('/');
 	});
 
+	// "/login/kakao" - Kakao Login Redirect
 	router.get('/login/kakao', require('./login').loginByKakao);
+	// "/login/kakao/callback" - Kakao Login Callback
 	router.get('/login/kakao/callback', require('./login').loginByKakaoCallback);
 
+	// "/join" - User Join Page
 	router.get('/join', function(req, res, next){
+		// Check User Login
 		if(req.isAuthenticated()){
 			res.send('Already joined...');
 		}else{
@@ -48,18 +65,22 @@ module.exports = function(passport, mysqlDb){
 		}
 	});
 
+	// "/join" post
 	router.post('/join', require('./join').joinUser(mysqlDb));
 
+	// "/withdraw" - User Withdraw
 	router.get('/withdraw', function(req, res, next){
 		var withdrawOptions = {title: MAIN_TITLE};
 		res.render('withdraw', withdrawOptions);
 	});
 
-	router.get('/withdraw_confirmed', require('./join').withdrawUser(mysqlDb));
+	// "/withdraw/confirmed"
+	router.get('/withdraw/confirmed', require('./join').withdrawUser(mysqlDb));
 
-	router.get('/withdraw_success', function(req, res, next){
+	// "/withdraw/success"
+	router.get('/withdraw/success', function(req, res, next){
 		var withdrawSuccessOptions = {title: MAIN_TITLE};
-		res.render('withdraw_success', withdrawSuccessOptions);
+		res.render('withdraw/success', withdrawSuccessOptions);
 	});
 
 	return router;

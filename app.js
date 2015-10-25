@@ -1,3 +1,7 @@
+/*
+T.A.K.E main logic
+*/
+
 //Modules
 var fs = require('fs');
 var https = require('https');
@@ -13,19 +17,21 @@ var RedisStore = require('connect-redis')(session);
 
 var app = express();
 
-//Settings
+//Express Settings
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-//Middlewares
+//Express Middlewares
 //app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: 'false'}));
 app.use(cookieParser());
 
+//Redis for HTTP Session DB
 var redis = require("redis").createClient(6379, 'localhost');
 
+//Express Session Settings
 app.use(session({
 	name: 'TAKE0',
 	secret: 'IALWAYSCU8219!',
@@ -34,7 +40,7 @@ app.use(session({
 	saveUninitialized: 'false'
 }));
 
-//DB Settings
+//MySQL User DB Settings
 var mysqlDb = mysql.createConnection({
 	host: "localhost",
 	port: 3306,
@@ -47,7 +53,7 @@ mysqlDb.connect();
 //Passport Settings
 var passport = require('./routes/login').getPassport(app, mysqlDb);
 
-//Basic Router
+//Root Router
 app.use('/', routes(passport, mysqlDb));
 
 //Server Starting
