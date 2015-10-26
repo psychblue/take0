@@ -2,6 +2,9 @@
 Functions for User Join & Withdraw Page
 */
 
+//Modules
+logger = require('winston');
+
 /*
 User Join Function
 */
@@ -17,7 +20,7 @@ exports.joinUser = function(mysqlDb){
       mysqlDb.query(insertUser, function(err, rows, fields){
         //DB Error Case
         if(err){
-          console.log(err);
+          logger.error(err);
           //User is Already Exist
           if(err.code == "ER_DUP_ENTRY"){
             res.send("Username is Already Exist");
@@ -31,7 +34,7 @@ exports.joinUser = function(mysqlDb){
           req.login(user, function(err){
             //Session Error Case
             if(err){
-              console.log(err);
+              logger.error(err);
               return res.send(err);
             }else{
               //Redirect to Main Page
@@ -43,7 +46,7 @@ exports.joinUser = function(mysqlDb){
     }
     //Fields Error
     else{
-      console.log("[User Login] Submitted Field Error");
+      logger.error("[User Login] Submitted Field Error");
     }
   }
 }

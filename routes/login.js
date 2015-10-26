@@ -9,6 +9,7 @@ var bcrypt = require('bcrypt-node');
 var configure = require('../configure.json');
 var request = require('request');
 var mysqlUserDb;
+var logger = require('winston');
 
 /*
 Passport Setting Function
@@ -30,7 +31,7 @@ exports.getPassport = function(app, mysqlDb){
     mysqlDb.query(selectPassword, function(err, rows, feilds){
       //DB Error Case
       if(err){
-        console.log(err);
+        lgger.error(err);
         return done(null, false);
       }
       //No Password Case
@@ -88,7 +89,7 @@ Kakao Login Callback Function
 */
 exports.loginByKakaoCallback = function(req, res, next){
 
-  console.log('code: %s', req.query.code);
+  logger.debug('code: %s', req.query.code);
   //Getting Tokens
   request.post({
     url: 'https://kauth.kakao.com/oauth/token',
@@ -103,7 +104,7 @@ exports.loginByKakaoCallback = function(req, res, next){
     //Token Success
     if(!error && response.statusCode == 200){
       var accessToken = JSON.parse(body).access_token;
-      console.log("access token: %s", accessToken);
+      logger.debug("access token: %s", accessToken);
       //Getting Username
       request.get({
         url: 'https://kapi.kakao.com/v1/user/me',
@@ -115,12 +116,12 @@ exports.loginByKakaoCallback = function(req, res, next){
       }, function(error, response, body){
         if(!error && response.statusCode == 200){
           var userId = JSON.parse(body).id;
-          console.log("id: %s", userId);
+          logger.debug("id: %s", userId);
           //Query for Select Username
           var selectUsername = "SELECT username FROM takeUser WHERE username = \'" + userId + "\'";
           mysqlUserDb.query(selectUsername, function(err, rows, feilds){
             if(err){
-              console.log(err);
+              logger.error(err);
             }
             //Join User
             if(!rows[0]){
@@ -156,22 +157,22 @@ exports.loginByKakaoCallback = function(req, res, next){
                 }
               });
             }else{
-              console.log("Error");
+              logger.error("Error");
             }
           });
         }else if(error){
-          console.log(error);
+          logger.error(error);
           //error handling for getting username
         }else {
-          console.log(body);
+          logger.error(body);
           //error handling for getting username
         }
       });
     }else if(error){
-      console.log(error);
+      logger.error(error);
       //error handling for getting tokens
     }else{
-      console.log(body);
+      logger.error(body);
       //error handling for getting tokens
     }
   });

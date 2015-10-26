@@ -14,8 +14,13 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var mysql = require('mysql');
 var RedisStore = require('connect-redis')(session);
+var logger = require('winston');
 
 var app = express();
+
+//Logger Settings
+logger.remove(logger.transports.Console);
+logger.add(logger.transports.File, {filename: 'take0_main.log'});
 
 //Express Settings
 app.set('view engine', 'ejs');
@@ -59,11 +64,11 @@ app.use('/', routes(passport, mysqlDb));
 //Server Starting
 //HTTP
 var serverHttp = app.listen(8080, function(){
-	console.log('T.A.K.E., Listening on port %d', serverHttp.address().port);
+	logger.info('T.A.K.E., Listening on port %d', serverHttp.address().port);
 });
 
 //HTTPS
 var httpsOptions = {key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem')};
 var serverHttps = https.createServer(httpsOptions, app).listen(8090, function(){
-	console.log('HTTPS on port %d', serverHttps.address().port);
+	logger.info('HTTPS on port %d', serverHttps.address().port);
 });
