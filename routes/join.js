@@ -3,7 +3,7 @@ Functions for User Join & Withdraw Page
 */
 
 //Modules
-logger = require('winston');
+logger = require('../logger/logger')(__filename);
 
 /*
 User Join Function

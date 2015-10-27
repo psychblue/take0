@@ -14,13 +14,19 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var mysql = require('mysql');
 var RedisStore = require('connect-redis')(session);
-var logger = require('winston');
+var logger = require('./logger/logger')(__filename);
+//var logger = require('winston');
 
 var app = express();
 
 //Logger Settings
+/*
 logger.remove(logger.transports.Console);
-logger.add(logger.transports.File, {filename: 'take0_main.log'});
+logger.add(logger.transports.File, {
+	level: 'debug',
+	filename: 'take0_main.log'
+});
+*/
 
 //Express Settings
 app.set('view engine', 'ejs');

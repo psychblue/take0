@@ -1,6 +1,12 @@
-{"level":"info","message":"T.A.K.E., Listening on port 8080","timestamp":"2015-10-25T04:46:29.347Z"}
-{"level":"info","message":"HTTPS on port 8090","timestamp":"2015-10-25T04:46:29.350Z"}
-{"level":"info","message":"T.A.K.E., Listening on port 8080","timestamp":"2015-10-25T04:47:44.187Z"}
-{"level":"info","message":"HTTPS on port 8090","timestamp":"2015-10-25T04:47:44.190Z"}
-{"level":"info","message":"T.A.K.E., Listening on port 8080","timestamp":"2015-10-25T04:49:45.292Z"}
-{"level":"info","message":"HTTPS on port 8090","timestamp":"2015-10-25T04:49:45.295Z"}
+2015-09-28 00:02:46.744 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-09-28 00:02:46.746 [INFO]	 [app.js]  HTTPS on port 8090
+2015-09-28 00:02:57.143 [DEBUG]	 [routes/login.js]  code: 9i3J_Blzlp9rMB1ZWRnKBakoExM5joCRq9cBBYC2qhO3o3mz77oMqRjseFYTEibTsXxweKwQQjQAAAFQqdLRdA
+2015-09-28 00:02:57.282 [DEBUG]	 [routes/login.js]  access token: 2Qf9yNZrPAD-cNCBMzBvMAG5kqwEMgLr0rK2KawQQjIAAAFQqdLR_A
+2015-09-28 00:02:57.356 [DEBUG]	 [routes/login.js]  id: 65036686
+2015-09-28 00:14:22.982 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-09-28 00:14:22.983 [INFO]	 [app.js]  HTTPS on port 8090
+2015-09-28 00:14:42.651 [DEBUG]	 [routes/login.js]  code: Z-DiD3_4cOW4s1SIMH9tIc4XlKeZS5ebO6kuXyuPd4znaTHctJBsUW4sBMxBoKmuf6fHgqwQQjMAAAFQqd2VMw
+2015-09-28 00:14:42.772 [DEBUG]	 [routes/login.js]  access token: evBkF6s7n0tV4N54ve_aojJj2vNb5CVAZx0n06wQQjQAAAFQqd2Vpw
+2015-09-28 00:14:42.880 [DEBUG]	 [routes/login.js]  id: 65036686
+2015-09-28 00:16:23.247 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-09-28 00:16:23.249 [INFO]	 [app.js]  HTTPS on port 8090

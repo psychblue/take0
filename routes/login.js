@@ -9,7 +9,7 @@ var bcrypt = require('bcrypt-node');
 var configure = require('../configure.json');
 var request = require('request');
 var mysqlUserDb;
-var logger = require('winston');
+var logger = require('../logger/logger')(__filename);
 
 /*
 Passport Setting Function
