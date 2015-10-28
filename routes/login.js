@@ -8,19 +8,17 @@ var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt-node');
 var configure = require('../configure.json');
 var request = require('request');
-var mysqlUserDb;
+var mysqlDb = require('../database/mysqldb');
 var logger = require('../logger/logger')(__filename);
 
 /*
 Passport Setting Function
 */
-exports.getPassport = function(app, mysqlDb){
+exports.initPassport = function(app){
 
   //Express Passport Setting
   app.use(passport.initialize());
   app.use(passport.session());
-
-  mysqlUserDb = mysqlDb;
 
   //Passport Local Strategy Setting
   passport.use(new LocalStrategy(function(username, password, done){
@@ -64,8 +62,8 @@ exports.getPassport = function(app, mysqlDb){
 /*
 User Local Login Post Function
 */
-exports.loginAuth = function(passport){
-  return passport.authenticate('local', {successRedirect: '/', failureRedirect: '/login'});
+exports.loginAuth = function(){
+  passport.authenticate('local', {successRedirect: '/', failureRedirect: '/login'});
 }
 
 /*
@@ -119,7 +117,7 @@ exports.loginByKakaoCallback = function(req, res, next){
           logger.debug("id: %s", userId);
           //Query for Select Username
           var selectUsername = "SELECT username FROM takeUser WHERE username = \'" + userId + "\'";
-          mysqlUserDb.query(selectUsername, function(err, rows, feilds){
+          mysqlDb.query(selectUsername, function(err, rows, feilds){
             if(err){
               logger.error(err);
             }
@@ -130,7 +128,7 @@ exports.loginByKakaoCallback = function(req, res, next){
               var encryptedPassword = bcrypt.hashSync(userId, salt);
               //Query for Insert User
               var insertUser = "INSERT INTO takeUser values\(\"" + userId + "\", \"" + encryptedPassword + "\"\)";
-              mysqlUserDb.query(insertUser, function(err, rows, fields){
+              mysqlDb.query(insertUser, function(err, rows, fields){
                 if(err){
                   res.send('Error');
                 }else{

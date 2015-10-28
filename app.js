@@ -3,8 +3,8 @@ T.A.K.E main logic
 */
 
 //Modules
-var fs = require('fs');
-var https = require('https');
+//var fs = require('fs');
+//var https = require('https');
 var express = require('express');
 var session = require('express-session');
 //var stylus = require('stylus');
@@ -12,21 +12,14 @@ var routes = require('./routes/index');
 var path = require('path');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var mysql = require('mysql');
 var RedisStore = require('connect-redis')(session);
 var logger = require('./logger/logger')(__filename);
-//var logger = require('winston');
+//User DB
+var mysqlDb = require('./database/mysqldb');
+//Redis for HTTP Session DB
+var redis = require("redis").createClient(6379, 'localhost');
 
 var app = express();
-
-//Logger Settings
-/*
-logger.remove(logger.transports.Console);
-logger.add(logger.transports.File, {
-	level: 'debug',
-	filename: 'take0_main.log'
-});
-*/
 
 //Express Settings
 app.set('view engine', 'ejs');
@@ -39,9 +32,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: 'false'}));
 app.use(cookieParser());
 
-//Redis for HTTP Session DB
-var redis = require("redis").createClient(6379, 'localhost');
-
 //Express Session Settings
 app.use(session({
 	name: 'TAKE0',
@@ -51,21 +41,11 @@ app.use(session({
 	saveUninitialized: 'false'
 }));
 
-//MySQL User DB Settings
-var mysqlDb = mysql.createConnection({
-	host: "localhost",
-	port: 3306,
-	user: "psychblue",
-	password: "8219kjs",
-	database: "take0"
-});
-mysqlDb.connect();
-
 //Passport Settings
-var passport = require('./routes/login').getPassport(app, mysqlDb);
+var passport = require('./routes/login').initPassport(app);
 
 //Root Router
-app.use('/', routes(passport, mysqlDb));
+app.use('/', routes);
 
 //Server Starting
 //HTTP
@@ -74,7 +54,9 @@ var serverHttp = app.listen(8080, function(){
 });
 
 //HTTPS
+/*
 var httpsOptions = {key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem')};
 var serverHttps = https.createServer(httpsOptions, app).listen(8090, function(){
 	logger.info('HTTPS on port %d', serverHttps.address().port);
 });
+*/

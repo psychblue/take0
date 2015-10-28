@@ -3,12 +3,12 @@ Functions for User Join & Withdraw Page
 */
 
 //Modules
-logger = require('../logger/logger')(__filename);
-
+var logger = require('../logger/logger')(__filename);
+var mysqlDb = require('../database/mysqldb');
 /*
 User Join Function
 */
-exports.joinUser = function(mysqlDb){
+exports.joinUser = function(){
   return function(req, res, next){
     //Password Encryption
     var encryptedPassword = require('./login').encryptPassword(req);
@@ -54,7 +54,7 @@ exports.joinUser = function(mysqlDb){
 /*
 User Withdraw Function
 */
-exports.withdrawUser = function(mysqlDb){
+exports.withdrawUser = function(){
   return function(req, res, next){
     //Query for Delete User
     var deleteUser = "DELETE FROM takeUser WHERE username =\'" + req.user.username + "\'";
