@@ -5,13 +5,14 @@ Functions for User Join & Withdraw Page
 //Modules
 var logger = require('../logger/logger')(__filename);
 var mysqlDb = require('../database/mysqldb');
+var loginManager = require('./login');
 /*
 User Join Function
 */
 exports.joinUser = function(){
   return function(req, res, next){
     //Password Encryption
-    var encryptedPassword = require('./login').encryptPassword(req);
+    var encryptedPassword = loginManager.encryptPassword(req);
     //Check Submitted Fields
     if(isAvailField(req, res)){
       //Query for Insert User

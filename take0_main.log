@@ -47,3 +47,28 @@
 2015-10-28 22:48:27.708 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
 2015-10-28 22:56:30.954 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
 2015-10-28 22:56:52.162 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-10-28 23:47:52.791 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-10-28 23:56:00.075 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-10-28 23:56:17.430 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-10-29 00:01:54.287 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-10-29 00:02:28.759 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-10-29 00:02:41.822 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-10-29 00:04:36.156 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-10-29 00:07:04.652 [INFO]	 [routes/set-passport.js]  Passport is set...
+2015-10-29 00:07:04.707 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-10-29 00:09:04.668 [INFO]	 [routes/set-passport.js]  Passport is set...
+2015-10-29 00:09:04.734 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-10-29 00:13:06.813 [INFO]	 [routes/set-passport.js]  Passport is set...
+2015-10-29 00:13:07.021 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-10-29 00:13:28.896 [INFO]	 [routes/set-passport.js]  Passport is set...
+2015-10-29 00:13:29.107 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-10-29 00:13:33.208 [INFO]	 [routes/set-passport.js]  Passport is set...
+2015-10-29 00:13:33.431 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-10-29 00:15:53.382 [INFO]	 [routes/set-passport.js]  Passport is set...
+2015-10-29 00:15:53.641 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-10-29 00:16:03.846 [DEBUG]	 [routes/set-passport.js]  DB Query: SELECT password FROM takeUser WHERE username = 'psychblue'
+2015-10-29 00:16:09.687 [DEBUG]	 [routes/login.js]  code: hYB0zWBn30VS3VHj6pzOTDmyB596OcU2zuUiEbn7adw6BDoBp8kA-wTFBU2tuLVC7oo9XqwQQjEAAAFQrwVFLw
+2015-10-29 00:16:09.840 [DEBUG]	 [routes/login.js]  access token: 96WovIB0i8MUqs84koXG7DktskoSwQR0t2k2FKwQQjIAAAFQrwVFtA
+2015-10-29 00:16:09.960 [DEBUG]	 [routes/login.js]  id: 65036686
+2015-10-29 00:17:19.259 [DEBUG]	 [routes/set-passport.js]  DB Query: SELECT password FROM takeUser WHERE username = 'blue3739'
+2015-10-29 00:18:07.022 [DEBUG]	 [routes/set-passport.js]  DB Query: SELECT password FROM takeUser WHERE username = 'blue3739'

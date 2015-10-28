@@ -4,6 +4,7 @@ Main Router
 
 //Modules
 var express = require('express');
+var loginManager = require('./login');
 
 //HTML Variables
 var MAIN_TITLE = 'T.A.K.E.';
@@ -39,7 +40,7 @@ router.get('/login', function(req, res, next){
 });
 
 // '/login' post
-router.post('/login', require('./login').loginAuth);
+router.post('/login', loginManager.loginAuth());
 
 // "/logout"
 router.get('/logout', function(req, res, next){
@@ -49,9 +50,9 @@ router.get('/logout', function(req, res, next){
 });
 
 // "/login/kakao" - Kakao Login Redirect
-router.get('/login/kakao', require('./login').loginByKakao);
+router.get('/login/kakao', loginManager.loginByKakao);
 // "/login/kakao/callback" - Kakao Login Callback
-router.get('/login/kakao/callback', require('./login').loginByKakaoCallback);
+router.get('/login/kakao/callback', loginManager.loginByKakaoCallback);
 
 // "/join" - User Join Page
 router.get('/join', function(req, res, next){

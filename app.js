@@ -18,7 +18,10 @@ var logger = require('./logger/logger')(__filename);
 var mysqlDb = require('./database/mysqldb');
 //Redis for HTTP Session DB
 var redis = require("redis").createClient(6379, 'localhost');
+//Loading Passport Module
+var passport = require('./routes/set-passport');
 
+//Loading Express
 var app = express();
 
 //Express Settings
@@ -41,8 +44,9 @@ app.use(session({
 	saveUninitialized: 'false'
 }));
 
-//Passport Settings
-var passport = require('./routes/login').initPassport(app);
+//Express Passport Setting
+app.use(passport.initialize());
+app.use(passport.session());
 
 //Root Router
 app.use('/', routes);

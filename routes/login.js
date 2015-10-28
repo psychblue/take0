@@ -3,73 +3,24 @@ Functions for User Login Page
 */
 
 //Modules
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+var passport = require('./set-passport');
 var bcrypt = require('bcrypt-node');
 var configure = require('../configure.json');
 var request = require('request');
 var mysqlDb = require('../database/mysqldb');
 var logger = require('../logger/logger')(__filename);
-
-/*
-Passport Setting Function
-*/
-exports.initPassport = function(app){
-
-  //Express Passport Setting
-  app.use(passport.initialize());
-  app.use(passport.session());
-
-  //Passport Local Strategy Setting
-  passport.use(new LocalStrategy(function(username, password, done){
-
-    //Query for Select Password
-    var selectPassword = "SELECT password FROM takeUser WHERE username = \'" + username + "\'";
-    //Selecting From User DB
-    mysqlDb.query(selectPassword, function(err, rows, feilds){
-      //DB Error Case
-      if(err){
-        lgger.error(err);
-        return done(null, false);
-      }
-      //No Password Case
-      if(!rows[0]){
-        return done(null, false);
-      }
-      //Comparing Password
-      if(bcrypt.compareSync(password, rows[0].password)){
-        var user = {'username': username};
-        return done(null, user);
-      }else{
-        return done(null, false);
-      }
-    });
-  }));
-
-  //Passport Serializer
-  passport.serializeUser(function(user, done){
-    done(null, user);
-  });
-
-  //Passport Deserializer
-  passport.deserializeUser(function(user, done){
-    done(null, user);
-  });
-
-  return passport;
-}
-
+var loginManager = exports;
 /*
 User Local Login Post Function
 */
-exports.loginAuth = function(){
-  passport.authenticate('local', {successRedirect: '/', failureRedirect: '/login'});
+loginManager.loginAuth = function(){
+  return passport.authenticate('local', {successRedirect: '/', failureRedirect: '/login'});
 }
 
 /*
 Password Encrytion Function
 */
-exports.encryptPassword = function(req){
+loginManager.encryptPassword = function(req){
   var salt = bcrypt.genSaltSync(10);
   return bcrypt.hashSync(req.body.password, salt);
 }
@@ -77,7 +28,7 @@ exports.encryptPassword = function(req){
 /*
 Kakao Login Function
 */
-exports.loginByKakao = function(req, res, next){
+loginManager.loginByKakao = function(req, res, next){
   var redirectUrl = 'https://kauth.kakao.com/oauth/authorize?client_id=' + configure.kakao_client_id + '&redirect_uri=' + configure.kakao_redirect_uri + '&response_type=code';
   res.redirect(redirectUrl);
 }
@@ -85,7 +36,7 @@ exports.loginByKakao = function(req, res, next){
 /*
 Kakao Login Callback Function
 */
-exports.loginByKakaoCallback = function(req, res, next){
+loginManager.loginByKakaoCallback = function(req, res, next){
 
   logger.debug('code: %s', req.query.code);
   //Getting Tokens
