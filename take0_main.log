@@ -10,3 +10,7 @@
 2015-09-28 00:14:42.880 [DEBUG]	 [routes/login.js]  id: 65036686
 2015-09-28 00:16:23.247 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
 2015-09-28 00:16:23.249 [INFO]	 [app.js]  HTTPS on port 8090
+2015-10-28 21:39:16.076 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-10-28 21:39:16.078 [INFO]	 [app.js]  HTTPS on port 8090
+2015-10-28 21:39:57.538 [INFO]	 [app.js]  T.A.K.E., Listening on port 8080
+2015-10-28 21:39:57.540 [INFO]	 [app.js]  HTTPS on port 8090

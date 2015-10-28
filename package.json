@@ -10,6 +10,7 @@
     "ejs": "^2.3.4",
     "express": "^4.13.3",
     "express-session": "^1.11.3",
+    "moment": "^2.10.6",
     "mysql": "^2.9.0",
     "passport": "^0.3.0",
     "passport-local": "^1.0.0",
