@@ -5,6 +5,7 @@ Main Router
 //Modules
 var express = require('express');
 var loginManager = require('./login');
+var joinManager = require('./join');
 
 //HTML Variables
 var MAIN_TITLE = 'T.A.K.E.';
@@ -66,7 +67,7 @@ router.get('/join', function(req, res, next){
 });
 
 // "/join" post
-router.post('/join', require('./join').joinUser());
+router.post('/join', joinManager.joinUser);
 
 // "/withdraw" - User Withdraw
 router.get('/withdraw', function(req, res, next){
@@ -75,7 +76,7 @@ router.get('/withdraw', function(req, res, next){
 });
 
 // "/withdraw/confirmed"
-router.get('/withdraw/confirmed', require('./join').withdrawUser());
+router.get('/withdraw/confirmed', joinManager.withdrawUser);
 
 // "/withdraw/success"
 router.get('/withdraw/success', function(req, res, next){
