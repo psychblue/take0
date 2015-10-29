@@ -6,7 +6,7 @@ Functions for User Join & Withdraw Page
 var logger = require('../logger/logger')(__filename);
 var mysqlDb = require('../database/mysqldb');
 var loginManager = require('./login');
-var joinManager = exports;
+var joinManager = {};
 
 /*
 User Join Function
@@ -16,35 +16,32 @@ joinManager.joinUser = function(req, res, next){
   var encryptedPassword = loginManager.encryptPassword(req);
   //Check Submitted Fields
   if(isAvailField(req, res)){
-    //Query for Insert User
-    var insertUser = "INSERT INTO takeUser values\(\"" + req.body.username + "\", \"" + encryptedPassword + "\"\)";
-    //Inserting to User DB
-    mysqlDb.query(insertUser, function(err, rows, fields){
-      //DB Error Case
-      if(err){
-        logger.error(err);
-        //User is Already Exist
-        if(err.code == "ER_DUP_ENTRY"){
-          res.send("Username is Already Exist");
-        }
-        else{
-          res.send("Error");
-        }
-      }else{
-        var user = {'username': req.body.username};
-        //Session Login
-        req.login(user, function(err){
-          //Session Error Case
-          if(err){
-            logger.error(err);
-            return res.send(err);
-          }else{
-            //Redirect to Main Page
-            return res.redirect('/');
-          }
-        });
+
+    var joinUserInsertCallbackForError = function(err){
+      if(err.code == "ER_DUP_ENTRY"){
+        res.send("Username is Already Exist");
       }
-    });
+      else{
+        res.send("Error");
+      }
+    }
+
+    var joinUserInsertCallbackForSuccess = function(){
+      var user = {'username': req.body.username};
+      //Session Login
+      req.login(user, function(err){
+        //Session Error Case
+        if(err){
+          logger.error(err.toString());
+          return res.send(err);
+        }else{
+          //Redirect to Main Page
+          return res.redirect('/');
+        }
+      });
+    }
+
+    mysqlDb.doSQLInsertQuery('takeUser', {username: req.body.username, password: encryptedPassword}, joinUserInsertCallbackForSuccess, joinUserInsertCallbackForError);
   }
   //Fields Error
   else{
@@ -56,20 +53,19 @@ joinManager.joinUser = function(req, res, next){
 User Withdraw Function
 */
 joinManager.withdrawUser = function(req, res, next){
-  //Query for Delete User
-  var deleteUser = "DELETE FROM takeUser WHERE username =\'" + req.user.username + "\'";
-  //Deleting From User DB
-  mysqlDb.query(deleteUser, function(err, rows, fields){
-    //DB Error Case
-    if(err){
-      res.send('Error');
-    }else{
-      //Session Logout
-      req.logout();
-      //Redirecting to Success Page
-      res.redirect('/withdraw/success');
-    }
-  });
+
+  var withdrawUserDeleteCallbackForError = function(err){
+    res.send('Error');
+  }
+
+  var withdrawUserDeleteCallbackForSuccess = function(){
+    //Session Logout
+    req.logout();
+    //Redirecting to Success Page
+    res.redirect('/withdraw/success');
+  }
+
+  mysqlDb.doSQLDeleteQuery('takeUser', 'username', req.user.username, withdrawUserDeleteCallbackForSuccess, withdrawUserDeleteCallbackForError);
 }
 
 /*
@@ -84,3 +80,5 @@ function isAvailField(req, res){
     return 1;
   }
 }
+
+module.exports = joinManager;

@@ -9,7 +9,7 @@ var configure = require('../configure.json');
 var request = require('request');
 var mysqlDb = require('../database/mysqldb');
 var logger = require('../logger/logger')(__filename);
-var loginManager = exports;
+var loginManager = {};
 /*
 User Local Login Post Function
 */
@@ -66,63 +66,66 @@ loginManager.loginByKakaoCallback = function(req, res, next){
         if(!error && response.statusCode == 200){
           var userId = JSON.parse(body).id;
           logger.debug("id: %s", userId);
-          //Query for Select Username
-          var selectUsername = "SELECT username FROM takeUser WHERE username = \'" + userId + "\'";
-          mysqlDb.query(selectUsername, function(err, rows, feilds){
-            if(err){
-              logger.error(err);
-            }
-            //Join User
-            if(!rows[0]){
-              //Making Password by Username
-              var salt = bcrypt.genSaltSync(10);
-              var encryptedPassword = bcrypt.hashSync(userId, salt);
-              //Query for Insert User
-              var insertUser = "INSERT INTO takeUser values\(\"" + userId + "\", \"" + encryptedPassword + "\"\)";
-              mysqlDb.query(insertUser, function(err, rows, fields){
-                if(err){
-                  res.send('Error');
-                }else{
-                  //Login User
-                  var user = {'username': userId};
-                  req.login(user, function(err){
-                    if(err){
-                      res.send(err);
-                    }else{
-                      res.redirect('/');
-                    }
-                  });
-                }
-              });
-            }
-            //Login User if Username is Already Exist
-            else if(rows[0]){
-              var user = {'username': userId};
-              req.login(user, function(err){
-                if(err){
-                  res.send(err);
-                }else{
-                  res.redirect('/');
-                }
-              });
-            }else{
-              logger.error("Error");
-            }
-          });
-        }else if(error){
-          logger.error(error);
+
+          var kakaoInsertCallbackForError = function(err){
+            res.send('DB Error');
+          }
+
+          var kakaoInsertCallbackForSuccess = function(){
+            var user = {'username': userId};
+            req.login(user, function(err){
+              if(err){
+                logger.error(err.toString());
+                res.send(err);
+              }else{
+                res.redirect('/');
+              }
+            });
+          }
+
+          var kakaoSelectCallbackForError = function(err){
+            res.send('DB Error');
+          }
+
+          var kakaoSelectCallbackForNoUser = function(){
+            var salt = bcrypt.genSaltSync(10);
+            var encryptedPassword = bcrypt.hashSync(userId, salt);
+            mysqlDb.doSQLInsertQuery('takeUser', {username: userId, password: encryptedPassword}, kakaoInsertCallbackForSuccess, kakaoInsertCallbackForError);
+          }
+
+          var kakaoSelectCallbackForExistingUser = function(rows, fields){
+            var user = {'username': userId};
+            req.login(user, function(err){
+              if(err){
+                logger.error(err.toString());
+                res.send(err);
+              }else{
+                res.redirect('/');
+              }
+            });
+          }
+
+          mysqlDb.doSQLSelectQuery('username', 'takeUser', 'username', userId, kakaoSelectCallbackForExistingUser, kakaoSelectCallbackForNoUser, kakaoSelectCallbackForError);
+        }
+        else if(error){
+          logger.error(error.toString());
           //error handling for getting username
-        }else {
+        }
+        else{
           logger.error(body);
           //error handling for getting username
         }
       });
-    }else if(error){
-      logger.error(error);
+    }
+    else if(error){
+      logger.error(error.toString());
       //error handling for getting tokens
-    }else{
+    }
+    else{
       logger.error(body);
       //error handling for getting tokens
     }
   });
 }
+
+module.exports = loginManager;

@@ -11,28 +11,25 @@ var logger = require('../logger/logger')(__filename);
 
 //Passport Local Strategy Setting
 passport.use(new LocalStrategy(function(username, password, done){
-  //Query for Select Password
-  var selectPassword = "SELECT password FROM takeUser WHERE username = \'" + username + "\'";
-  //Selecting From User DB
-  logger.debug('DB Query: %s', selectPassword);
-  mysqlDb.query(selectPassword, function(err, rows, feilds){
-    //DB Error Case
-    if(err){
-      logger.error(err);
-      return done(null, false);
-    }
-    //No Password Case
-    if(!rows[0]){
-      return done(null, false);
-    }
-    //Comparing Password
+
+  var passportSelectCallbackForError = function(err){
+    return done(null, false);
+  }
+
+  var passportSelectCallbackForNoPassword = function(){
+    return done(null, false);
+  }
+
+  var passportSelectCallbackForExistingPassword = function(rows, fields){
     if(bcrypt.compareSync(password, rows[0].password)){
       var user = {'username': username};
       return done(null, user);
     }else{
       return done(null, false);
     }
-  });
+  }
+
+  mysqlDb.doSQLSelectQuery('password', 'takeUser', 'username', username, passportSelectCallbackForExistingPassword, passportSelectCallbackForNoPassword, passportSelectCallbackForError);
 }));
 
 //Passport Serializer

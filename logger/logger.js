@@ -30,5 +30,6 @@ module.exports = function(jsname){
 		]
 	});
 	var logger = container.get(label);
+	logger.info('Logger for %s is set... ', label);
 	return logger;
 }

@@ -18,6 +18,7 @@ var logger = require('./logger/logger')(__filename);
 var mysqlDb = require('./database/mysqldb');
 //Redis for HTTP Session DB
 var redis = require("redis").createClient(6379, 'localhost');
+logger.info('Redis Session DB is connected...');
 //Loading Passport Module
 var passport = require('./routes/set-passport');
 
@@ -54,7 +55,8 @@ app.use('/', routes);
 //Server Starting
 //HTTP
 var serverHttp = app.listen(8080, function(){
-	logger.info('T.A.K.E., Listening on port %d', serverHttp.address().port);
+	logger.info('=============== T.A.K.E. ==============');
+	logger.info('Listening on port %d', serverHttp.address().port);
 });
 
 //HTTPS
