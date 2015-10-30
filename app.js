@@ -14,6 +14,8 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var RedisStore = require('connect-redis')(session);
 var logger = require('./logger/logger')(__filename);
+//Configuration Manager
+var confManager = require('./conf/conf');
 //User DB
 var mysqlDb = require('./database/mysqldb');
 //Redis for HTTP Session DB
@@ -21,7 +23,8 @@ var redis = require("redis").createClient(6379, 'localhost');
 logger.info('Redis Session DB is connected...');
 //Loading Passport Module
 var passport = require('./routes/set-passport');
-
+//Configuration CLI Server Running;
+confManager.initServer();
 //Loading Express
 var app = express();
 
