@@ -1,4 +1,0 @@
-{
-  "kakao_client_id": "56d13877f8df6d870842fa9dfcb4bbe7",
-  "kakao_redirect_uri": "http://localhost:8080/login/kakao/callback"
-}

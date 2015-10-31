@@ -16,10 +16,11 @@ var RedisStore = require('connect-redis')(session);
 var logger = require('./logger/logger')(__filename);
 //Configuration Manager
 var confManager = require('./conf/conf');
+var confParams = confManager.getParams();
 //User DB
 var mysqlDb = require('./database/mysqldb');
 //Redis for HTTP Session DB
-var redis = require("redis").createClient(6379, 'localhost');
+var redis = require("redis").createClient(confParams.redis.port, confParams.redis.address);
 logger.info('Redis Session DB is connected...');
 //Loading Passport Module
 var passport = require('./routes/set-passport');
@@ -41,11 +42,11 @@ app.use(cookieParser());
 
 //Express Session Settings
 app.use(session({
-	name: 'TAKE0',
-	secret: 'IALWAYSCU8219!',
+	name: confParams.express_session.name,
+	secret: confParams.express_session.secret,
 	store: new RedisStore({client: redis}),
-	resave: 'true',
-	saveUninitialized: 'false'
+	resave: confParams.express_session.resave,
+	saveUninitialized: confParams.express_session.saveUninitialized
 }));
 
 //Express Passport Setting
@@ -57,7 +58,7 @@ app.use('/', routes);
 
 //Server Starting
 //HTTP
-var serverHttp = app.listen(8080, function(){
+var serverHttp = app.listen(confParams.http_server.port, function(){
 	logger.info('=============== T.A.K.E. ==============');
 	logger.info('Listening on port %d', serverHttp.address().port);
 });

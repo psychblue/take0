@@ -4,15 +4,16 @@ mySQL Module
 
 //Modules
 var mysql = require('mysql');
+var confParams = require('../conf/conf').getParams();
 var logger = require('../logger/logger')(__filename);
 
 //MySQL User DB Settings
 var mysqlDb = mysql.createConnection({
-	host: "localhost",
-	port: 3306,
-	user: "psychblue",
-	password: "8219kjs",
-	database: "take0"
+	host: confParams.mysql.host,
+	port: confParams.mysql.port,
+	user: confParams.mysql.user,
+	password: confParams.mysql.password,
+	database: confParams.mysql.database
 });
 mysqlDb.connect();
 logger.info('MySQL User DB is connected...');

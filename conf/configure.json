@@ -1,0 +1,26 @@
+{
+  "http_server": {
+    "port": "8080"
+  },
+  "redis": {
+    "port": "6379",
+    "address": "localhost"
+  },
+  "mysql": {
+    "host": "localhost",
+    "port": "3306",
+    "user": "psychblue",
+    "password": "8219kjs",
+    "database": "take0"
+  },
+  "express_session": {
+    "name": "TAKE0",
+    "secret": "IALWAYSCU8219!",
+    "resave": "true",
+    "saveUninitialized": "false"
+  },
+  "kakao": {
+    "kakao_client_id": "56d13877f8df6d870842fa9dfcb4bbe7",
+    "kakao_redirect_uri": "http://localhost:8080/login/kakao/callback"
+  }
+}

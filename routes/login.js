@@ -5,11 +5,12 @@ Functions for User Login Page
 //Modules
 var passport = require('./set-passport');
 var bcrypt = require('bcrypt-node');
-var configure = require('../configure.json');
 var request = require('request');
 var mysqlDb = require('../database/mysqldb');
 var logger = require('../logger/logger')(__filename);
+var confParams = require('../conf/conf').getParams();
 var loginManager = {};
+
 /*
 User Local Login Post Function
 */
@@ -29,7 +30,7 @@ loginManager.encryptPassword = function(req){
 Kakao Login Function
 */
 loginManager.loginByKakao = function(req, res, next){
-  var redirectUrl = 'https://kauth.kakao.com/oauth/authorize?client_id=' + configure.kakao_client_id + '&redirect_uri=' + configure.kakao_redirect_uri + '&response_type=code';
+  var redirectUrl = 'https://kauth.kakao.com/oauth/authorize?client_id=' + confParams.kakao.kakao_client_id + '&redirect_uri=' + confParams.kakao.kakao_redirect_uri + '&response_type=code';
   res.redirect(redirectUrl);
 }
 
@@ -45,8 +46,8 @@ loginManager.loginByKakaoCallback = function(req, res, next){
     method: 'POST',
     qs: {
       grant_type: 'authorization_code',
-      client_id: configure.kakao_client_id,
-      redirect_uri: configure.kakao_redirect_uri,
+      client_id: confParams.kakao.kakao_client_id,
+      redirect_uri: confParams.kakao.kakao_redirect_uri,
       code: req.query.code
     }
   }, function(error, response, body){
