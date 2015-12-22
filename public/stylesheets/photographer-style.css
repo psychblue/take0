@@ -1,0 +1,32 @@
+body {
+  padding: 0px;
+  margin: 0px;
+  font-family: "Nanum Gothic";
+}
+#photographer-studio-pics-window {
+  width: 100%;
+  height: 500px;
+  margin-top: 40px;
+  margin-bottom: 50px;
+  background-color: #eee;
+}
+#photographer-studio-pics-window .mainPicture {
+  width: 100%;
+  height: 500px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+#photographer-studio-title-window {
+  width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+#photographer-studio-title-window #stars {
+  margin-top: 20px;
+}
+#photographer-studio-main-window {
+  width: 100%;
+  height: 2000px;
+  margin-top: 50px;
+}

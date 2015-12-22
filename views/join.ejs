@@ -1,33 +1,87 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/join_style.css' />
+    <title><%=title%></title>
+    <link rel="stylesheet" href="/stylesheets/header-style.css" />
+    <link rel="stylesheet" href="/stylesheets/join-style.css" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="/javascripts/header.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+
+        if($('.joinInput input[type="text"]').val() != ""){
+          $('.joinInput input[type="text"]').siblings("label").hide();
+        }
+
+        $('.joinInput input[type="text"], .joinInput input[type="password"]').keydown(function(keyEvent){
+          $(this).siblings("label").hide();
+          if(keyEvent.which == 13){
+            $("#join-submit-button").focus();
+          }
+        });
+
+        $('.joinInput input[type="text"], .joinInput input[type="password"]').focusout(function(){
+          if($(this).val() == ""){
+            $(this).siblings("label").show();
+          }
+          $(this).css({"border": "1px solid #ccc", "background-color": "#fff"});
+        });
+
+        $("#join-submit-button").click(function(){
+          $.ajax({
+            type: "POST",
+            url: "/join",
+            data: $("#join-form").serialize(),
+            success: function(data){
+              if(data.result == "success"){
+                location.replace("/");
+              }
+              else if(data.result == "fail"){
+                $("#join-error").text(data.text);
+                $("#join-error").css({"color": "#bb2929", "font-weight": "bold", "margin-bottom": "30px"});
+              }
+            },
+            error: function(xhr, option, error){
+              alert(error);
+            }
+          });
+        });
+
+      });
+    </script>
   </head>
   <body>
     <div id="headerbar">
-      <span id="headerbar-title">
-        <a href=\>T. A. K. E.</a>
-      </span>
+      <div id="headerbar-title">
+        <a href="/"><%=service%></a>
+      </div>
     </div>
+
     <div id="join-title">
-      회 원 가 입
+      <h1><a href="/"><%=service%></a>&nbsp;&nbsp;가족이&nbsp;&nbsp;되어주세요.</h1>
     </div>
-    <form action="/join" method="post">
+
+    <div id="join-window">
+      <form id="join-form" action="/join" method="post">
+        <div class="joinInput">
+          <label for="join-username">아이디</label>
+          <input type="text" id="join-username" name="username"/>
+        </div>
+        <div class="joinInput">
+          <label for="join-password">패스워드</label>
+          <input type="password" id="join-password" name="password"/>
+        </div>
+      </form>
       <div>
-        <label>UserId:</label>
-        <input type="text" name="username"/><br/>
+        <button id="join-submit-button">가입하기</button>
       </div>
-      <div>
-        <label>Password:</label>
-        <input type="password" name="password"/>
+      <a href="/login/kakao">
+        <div id="kakao-login-button">카카오 아이디로 가입하기
+        </div>
+      </a>
+      <div id="join-error">
       </div>
-      <div>
-        <input type="submit" value="Submit"/>
-      </div>
-    </form>
-    <div id="kakao-login">
-      <a href='/login/kakao'><img src="images/login/kakao/kakao_login_btn.png"></a>
     </div>
+
   </body>
 </html>

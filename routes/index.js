@@ -6,9 +6,11 @@ Main Router
 var express = require('express');
 var loginManager = require('./login');
 var joinManager = require('./join');
-
-//HTML Variables
-var MAIN_TITLE = 'T.A.K.E.';
+var mainManager = require('./main');
+var listManager = require('./list');
+var photographerManager = require('./photographer');
+var confManager = require('../conf/conf');
+var confParams = confManager.getParams();
 
 //Express Router Settings
 var router = express.Router();
@@ -20,28 +22,25 @@ Routing Logics
 // "/" - Main Page
 router.get('/', function(req, res, next){
 	//Check User Login
+	var username = '';
 	if(req.isAuthenticated()){
-		var username = req.user.username;
-	}else{
-		var username = '';
+		username = req.user.username;
 	}
-	var indexOptions = {title: MAIN_TITLE, isAuth: req.isAuthenticated(), name: username};
+	var indexOptions = {title: confParams.html.title, service: confParams.html.service_name, isAuth: req.isAuthenticated(), name: username};
 	res.render('index', indexOptions);
 });
 
-// "/login" - User Login Page
+// Main Photographer List
+router.post('/mainList', mainManager.showPhotograherList);
+
+// '/login'
 router.get('/login', function(req, res, next){
-	//Check User Login
-	if(req.isAuthenticated()){
-		res.send('Already logged in...');
-	}else{
-		var loginOptions = {title: MAIN_TITLE};
-		res.render('login', loginOptions);
-	}
+	var loginOptions = {service: confParams.html.service_name};
+	res.render('login/login', loginOptions);
 });
 
 // '/login' post
-router.post('/login', loginManager.loginAuth());
+router.post('/login', loginManager.loginAuth);
 
 // "/logout"
 router.get('/logout', function(req, res, next){
@@ -61,7 +60,7 @@ router.get('/join', function(req, res, next){
 	if(req.isAuthenticated()){
 		res.send('Already joined...');
 	}else{
-		var joinOptions = {title: MAIN_TITLE};
+		var joinOptions = {title: confParams.html.title, service: confParams.html.service_name};
 		res.render('join', joinOptions);
 	}
 });
@@ -71,7 +70,7 @@ router.post('/join', joinManager.joinUser);
 
 // "/withdraw" - User Withdraw
 router.get('/withdraw', function(req, res, next){
-	var withdrawOptions = {title: MAIN_TITLE};
+	var withdrawOptions = {title: confParams.html.title, service: confParams.html.service_name};
 	res.render('withdraw', withdrawOptions);
 });
 
@@ -80,8 +79,19 @@ router.get('/withdraw/confirmed', joinManager.withdrawUser);
 
 // "/withdraw/success"
 router.get('/withdraw/success', function(req, res, next){
-	var withdrawSuccessOptions = {title: MAIN_TITLE};
+	var withdrawSuccessOptions = {title: confParams.html.title};
 	res.render('withdraw/success', withdrawSuccessOptions);
 });
+
+// "/search"
+router.get('/searchbar', function(req, res, next){
+	res.render('search/search-bar');
+});
+
+// "/list" post
+router.post('/list', listManager.showList);
+
+// "/photographer"
+router.get('/:photographer', photographerManager.showPage);
 
 module.exports = router;

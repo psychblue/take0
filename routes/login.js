@@ -14,8 +14,24 @@ var loginManager = {};
 /*
 User Local Login Post Function
 */
-loginManager.loginAuth = function(){
-  return passport.authenticate('local', {successRedirect: '/', failureRedirect: '/login'});
+loginManager.loginAuth = function(req, res, next){
+  //return passport.authenticate('local', {successRedirect: '/', failureRedirect: '/login'});
+  passport.authenticate('local', function(err, user, info){
+    if(err){
+      return next(err);
+    }
+    if(!user){
+      return res.send({"result": "fail", "text": "아이디 또는 패스워드를 확인하세요."});
+    }
+    req.logIn(user, function(err){
+      if(err){
+        logger.error(err.toString());
+        return res.send(err);
+      }else{
+        return res.send({"result": "success"});
+      }
+    });
+  })(req, res, next);
 }
 
 /*

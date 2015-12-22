@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%=title%></title>
+    <link rel="stylesheet" href="/stylesheets/header-style.css" />
+    <link rel="stylesheet" href="/stylesheets/unslider.css" />
+    <link rel="stylesheet" href="/stylesheets/unslider-dots.css" />
+    <link rel="stylesheet" href="/stylesheets/photographer-style.css" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/javascripts/unslider-min.js"></script>
+    <script type="text/javascript" src="/javascripts/header.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+
+        $("#photographer-studio-pics-window").unslider({
+          autoplay: true,
+          delay: 4000,
+          arrows: {
+            prev: '<a class="unslider-arrow prev">&lt;</a>',
+	          next: '<a class="unslider-arrow next">&gt;</a>'
+          }
+        });
+
+        $("#photographer-studio-pics-window .mainPicture").each(function(index){
+          $(this).css({"background-image": "url\(\"/images/main/bg"+ (index + 1) +".jpg\"\)"});
+        });
+
+      });
+    </script>
+  </head>
+  <body>
+    <div id="headerbar">
+      <div id="headerbar-title">
+        <a href="/"><%=service%></a>
+      </div>
+      <div id="headerbar-login">
+        <% if(!isAuth){ %>
+        <span id="login-button">로그인</span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/join">회원가입</a>
+        <% }else{ %>
+        <%=name%> 님&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/logout">로그아웃</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/withdraw">탈퇴</a>
+        <% } %>
+      </div>
+      <div class="divClear"></div>
+    </div>
+
+    <div id="photographer-studio-pics-window">
+      <ul>
+        <li><div class="mainPicture"></div></li>
+        <li><div class="mainPicture"></div></li>
+        <li><div class="mainPicture"></div></li>
+      </ul>
+    </div>
+
+    <div id="photographer-studio-title-window">
+        <h1>파란달 Studio</h1>
+        <div class="subTitle">&nbsp;by&nbsp;&nbsp;<%=photographerName%></div>
+        <div id="stars"><img src="/images/studio/star.png" width="20px" height="20px"></img><img src="/images/studio/star.png" width="20px" height="20px"></img><img src="/images/studio/star.png" width="20px" height="20px"></img><img src="/images/studio/star.png" width="20px" height="20px"></img><img src="/images/studio/star.png" width="20px" height="20px"></img></div>
+    </div>
+
+    <div id="photographer-studio-main-window">
+    </div>
+
+    <div id="footer">
+      <div id="footer-main">
+      </div>
+      <div id="footer-menu">
+        이용약관&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        개인정보취급방침&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        서비스운영정책&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        고객센터
+      </div>
+      <hr id="footer-horizon">
+      <div class="subTitle">
+        &copy; <a href="/"><%=service%></a>, Inc.
+      </div>
+    </div>
+  </body>
+
+</html>

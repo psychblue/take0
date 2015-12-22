@@ -1,11 +1,26 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <title><%=title%></title>
+    <link rel="stylesheet" href="/stylesheets/header-style.css" />
+    <link rel="stylesheet" href="/stylesheets/join-style.css" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="/javascripts/header.js"></script>
   </head>
   <body>
-    <p>Sure??</p>
-    <p>- <a href='/withdraw/confirmed'>OK</a> -</p>
+    <div id="headerbar">
+      <div id="headerbar-title">
+        <a href="/"><%=service%></a>
+      </div>
+    </div>
+
+    <div id="join-title">
+      <h1><a href="/"><%=service%></a>를&nbsp;&nbsp;떠나시겠습니까?</h1>
+    </div>
+
+    <div id="join-window">
+        <a href='/withdraw/confirmed'>네</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href='/' onclick="history.back()">아니오</a>
+    </div>
+
   </body>
 </html>

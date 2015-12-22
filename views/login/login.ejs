@@ -1,0 +1,27 @@
+<div id="popup-bg">
+</div>
+
+<div id="login-popup">
+  <form id="login-form">
+    <div class="loginInput">
+      <label for="login-username">아이디</label>
+      <input type="text" id="login-username" name="username"/>
+    </div>
+    <div class="loginInput">
+      <label for="login-password">패스워드</label>
+      <input type="password" id="login-password" name="password"/>
+    </div>
+  </form>
+  <div>
+    <button id="login-submit-button">로그인</button>
+  </div>
+  <a href="/login/kakao">
+    <div id="kakao-login-button">카카오 아이디로 로그인
+    </div>
+  </a>
+  <div id="login-error">
+  </div>
+  <div id="login-join"><%=service%> 아이디가 없으세요?&nbsp;&nbsp;<a href="/join">회원가입</a>
+  </div>
+  <span id="login-popup-close-button">닫 기</span>
+</div>

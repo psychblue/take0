@@ -1,0 +1,16 @@
+<%
+for(var i = 0;i < data.length;i++) {
+%>
+<a href="/<%=data[i].username%>">
+  <div id="main-list-box<%=i+1%>">
+    <div class="mainListBoxUpper"></div>
+    <div class="mainListBoxNote">
+      <span class="mainListBoxUsername"><%=data[i].username%></span><br>
+      <span class="mainListBoxTitle"><%=data[i].title%><span>
+    </div>
+  </div>
+</a>
+<%
+}
+%>
+<div class="divClear"></div>

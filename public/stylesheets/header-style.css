@@ -1,0 +1,334 @@
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+
+h1 {
+  padding: 0px;
+  margin: 0px;
+  color: #404040;
+  font-size: 30px;
+  font-weight: normal;
+}
+a {
+  text-decoration: none;
+}
+.divClear {
+  clear:both;
+}
+.titleBold {
+  font-weight: bold;
+  letter-spacing: 5px;
+}
+.subTitle {
+  margin-top: 5px;
+  color: #999;
+}
+.subTitle a {
+  color: #999;
+}
+.downArrow {
+  width: 0;
+  height: 0;
+  position: relative;
+  top: 5px;
+  float: right;
+  border-top: 10px solid #ccc;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+#headerbar {
+  width: 100%;
+  height: 20px;
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  background-color: #404040;
+}
+#headerbar a {
+  color: #fff;
+}
+#headerbar-title {
+  height: 20px;
+  color: #fff;
+  font-size: 20px;
+  line-height: 20px;
+  float: left;
+}
+#headerbar-login {
+  height: 20px;
+  margin-right: 20px;
+  color: #fff;
+  line-height: 20px;
+  float: right;
+}
+#footer {
+  height: 300px;
+  margin-top: 100px;
+  background-color: #404040;
+  text-align: center;
+}
+#footer-main {
+  height: 200px;
+}
+#footer-horizon {
+  width: 60%;
+  height: 1px;
+  margin: 0 auto;
+  border: none;
+  background-color: #555;
+}
+#footer-menu {
+  margin-bottom: 10px;
+  color: #999;
+  font-size: 12px;
+}
+#login-button {
+  cursor: pointer;
+}
+#login-popup {
+  display: none;
+  padding-top: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 342px;
+  height: 330px;
+  z-index: 120;
+  position: fixed;
+  background-color: #fff;
+  border-radius: 3px;
+  text-align: center;
+}
+#login-submit-button {
+  width: 342px;
+  height: 42px;
+  margin-bottom: 10px;
+  background-color: #3db7cc;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1em;
+  line-height: 42px;
+  text-align: center;
+  cursor: pointer;
+  outline: 0;
+}
+#login-submit-button:hover {
+  color: #008299;
+}
+#kakao-login-button {
+  width: 342px;
+  height: 42px;
+  margin-bottom: 30px;
+  background-color: #ffeb00;
+  background-image: url("/images/login/kakao/kakao_login_btn.png");
+  background-repeat: no-repeat;
+  background-position: 10px 0px;
+  color: #3c1e1e;
+  font-weight: bold;
+  line-height: 42px;
+  text-align: center;
+  cursor: pointer;
+}
+#login-join {
+  color: #404040;
+  margin-bottom: 30px;
+}
+#login-join a {
+  color: #bb2929;
+  font-weight: bold;
+}
+#login-popup-close-button {
+  color: #404040;
+  font-size: 20px;
+  cursor: pointer;
+}
+#popup-bg {
+  display: none;
+  width: 100%;
+  height: 100%;
+  z-index: 110;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #000;
+}
+.loginInput {
+  position: relative;
+  margin-bottom: 10px;
+}
+.loginInput label {
+  position: absolute;
+  top: 12px;
+  left: 23px;
+  color: #ccc;
+  font-size: 20px;
+  cursor: text;
+}
+.loginInput input[type="text"],
+.loginInput input[type="password"] {
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 300px;
+  height: 40px;
+  color: #404040;
+  font-size: 20px;
+  letter-spacing: 10px;
+  border: 1px solid #ccc;
+  border-radius: 0;
+  outline-style: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+#searchbar {
+  width: 800px;
+  height: 40px;
+  z-index: 105;
+  position: fixed;
+  top: 0;
+  background-color: #fff;
+}
+#searchbar-category {
+  width: 170px;
+  height: 19px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  float: left;
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+  color: #999;
+  cursor: pointer;
+}
+#searchbar-region {
+  width: 170px;
+  height: 19px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  float: left;
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+  color: #999;
+  cursor: pointer;
+}
+#searchbar-date {
+  width: 270px;
+  height: 19px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  float: left;
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+  color: #999;
+  cursor: pointer;
+}
+#searchbar-button {
+  width: 68px;
+  height: 20px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  float: left;
+  background-color: #3db7cc;
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+}
+#searchbar-category-list {
+  display: none;
+  position: absolute;
+  width: 200px;
+}
+#searchbar-region-list {
+  display: none;
+  position: absolute;
+  width: 200px;
+}
+#searchbar-datepicker {
+  display: none;
+  width: 278px;
+  padding: 10px;
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+.searchbarDivider {
+  width: 1px;
+  height: 40px;
+  float: left;
+  background-color: #ccc;
+}
+.searchbarItem {
+  height: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 2px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #999;
+  text-align: center;
+  cursor: pointer;
+}
+.searchbarItem:hover {
+  background-color: #eee;
+  border: 1px solid #999;
+  color: #404040;
+  font-weight: bold;
+}
+.ui-datepicker {
+  width: 280px;
+  color: #999;
+}
+.ui-datepicker a {
+  text-decoration: none;
+  color: #999;
+}
+.ui-datepicker table {
+  width: 100%;
+  text-align: center;
+}
+.ui-datepicker tr {
+  height: 30px;
+}
+.ui-datepicker td {
+  padding: 0;
+  margin: 0;
+}
+.ui-datepicker-header {
+  margin-top: 10px;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #404040;
+  font-size: 20px;
+  font-weight: bold;
+}
+.ui-datepicker-prev, .ui-datepicker-next {
+  text-align: center;
+  font-weight: normal;
+  cursor: pointer;
+}
+.ui-datepicker-prev {
+  float: left;
+  margin-left: 10px;
+}
+.ui-datepicker-next {
+  float: right;
+  margin-right: 10px;
+}
+.ui-datepicker-calendar a:hover {
+  color: #404040;
+  font-weight: bold;
+}
+.ui-datepicker-current-day {
+  background-color: #3db7cc;
+}
+.ui-datepicker-current-day a {
+  color: #fff;
+}

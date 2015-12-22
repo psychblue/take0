@@ -19,10 +19,10 @@ joinManager.joinUser = function(req, res, next){
 
     var joinUserInsertCallbackForError = function(err){
       if(err.code == "ER_DUP_ENTRY"){
-        res.send("Username is Already Exist");
+        res.send({"result": "fail", "text": "아이디가 이미 존재합니다."});
       }
       else{
-        res.send("Error");
+        res.send({"result": "fail", "text": "죄송합니다. 서비스에 문제가 발생하였습니다. 다시 시도해주세요."});
       }
     }
 
@@ -33,10 +33,10 @@ joinManager.joinUser = function(req, res, next){
         //Session Error Case
         if(err){
           logger.error(err.toString());
-          return res.send(err);
+          return res.send({"result": "fail", "text": "죄송합니다. 서비스에 문제가 발생하였습니다. 다시 시도해주세요."});
         }else{
           //Redirect to Main Page
-          return res.redirect('/');
+          return res.send({"result": "success"});
         }
       });
     }
@@ -72,8 +72,16 @@ joinManager.withdrawUser = function(req, res, next){
 User Join Field Availability Check Function
 */
 function isAvailField(req, res){
-  if(!req.body.password || !req.body.username){
-    res.send("Enter Username or Password");
+  if(!req.body.password && !req.body.username){
+    res.send({"result": "fail", "text": "아이디와 패스워드를 입력해 주세요."});
+    return 0;
+  }
+  else if(!req.body.username){
+    res.send({"result": "fail", "text": "아이디를 입력해 주세요."});
+    return 0;
+  }
+  else if(!req.body.password){
+    res.send({"result": "fail", "text": "패스워드를 입력해 주세요."});
     return 0;
   }
   else{

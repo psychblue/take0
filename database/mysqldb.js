@@ -43,6 +43,51 @@ mysqlDb.doSQLSelectQuery = function(selectParam, fromParam, whereParam, value, c
 }
 
 /*
+SELECT LIMIT Function
+*/
+mysqlDb.doSQLSelectLimitQuery = function(selectParam, fromParam, whereParam, value, limitFrom, limitTo, callbackForResult, callbackForNoResult, callbackForError){
+	if(selectParam != '*'){
+		if(whereParam != null){
+			var query = 'SELECT ?? FROM ?? WHERE ?? = ? LIMIT ??,??';
+			var params = [selectParam, fromParam, whereParam, value, limitFrom, limitTo];
+			logger.debug('SQL Query [ method: SELECT, selectParam: %s, fromParam: %s, whereParam: %s, value: %s, limitFrom: %d, limitTo: %d ]', selectParam, fromParam, whereParam, value, limitFrom, limitTo);
+		}
+		else{
+			var query = 'SELECT ?? FROM ?? LIMIT ?,?';
+			var params = [selectParam, fromParam, Number(limitFrom), Number(limitTo)];
+			logger.debug('SQL Query [ method: SELECT, selectParam: %s, fromParam: %s, limitFrom: %d, limitTo: %d ]', selectParam, fromParam, limitFrom, limitTo);
+		}
+	}
+	else{
+		if(whereParam != null){
+			var query = 'SELECT * FROM ?? WHERE ?? = ? LIMIT ??,??';
+			var params = [fromParam, whereParam, value, limitFrom, limitTo];
+			logger.debug('SQL Query [ method: SELECT, selectParam: %s, fromParam: %s, whereParam: %s, value: %s, limitFrom: %d, limitTo: %d ]', '*', fromParam, whereParam, value, limitFrom, limitTo);
+		}
+		else{
+			var query = 'SELECT * FROM ?? LIMIT ?,?';
+			var params = [fromParam, Number(limitFrom), Number(limitTo)];
+			logger.debug('SQL Query [ method: SELECT, selectParam: %s, fromParam: %s, limitFrom: %d, limitTo: %d ]', '*', fromParam, limitFrom, limitTo);
+		}
+	}
+	mysqlDb.query(query, params, function(err, rows, fields){
+	  if(err){
+	    logger.error(err.toString());
+			callbackForError(err);
+	  }
+	  if(!rows[0]){
+			callbackForNoResult();
+		}
+		else if(rows[0]){
+	    callbackForResult(rows, fields);
+	  }
+		else{
+	    logger.error("Error");
+	  }
+	});
+}
+
+/*
 INSERT Function
 */
 mysqlDb.doSQLInsertQuery = function(intoParam, values, callbackForSuccess, callbackForError){
