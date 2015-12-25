@@ -3,6 +3,15 @@ body {
   margin: 0px;
   font-family: "Nanum Gothic";
 }
+hr {
+  width: 100px;
+  height: 1px;
+  margin: 0 auto;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  border: none;
+  background-color: #ccc;
+}
 #photographer-studio-pics-window {
   width: 100%;
   height: 500px;
@@ -18,15 +27,27 @@ body {
   background-size: cover;
 }
 #photographer-studio-title-window {
-  width: 1000px;
+  width: 800px;
   margin: 0 auto;
   text-align: center;
+  color: #999;
 }
 #photographer-studio-title-window #stars {
   margin-top: 20px;
+  margin-bottom: 50px;
+  color: #404040;
+  font-weight: bold;
+}
+#photographer-studio-title-window .star {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
 }
 #photographer-studio-main-window {
-  width: 100%;
+  width: 800px;
   height: 2000px;
-  margin-top: 50px;
+  margin: 0 auto;
+  background-color: #fff;
+  color: #999;
+  text-align: center;
 }

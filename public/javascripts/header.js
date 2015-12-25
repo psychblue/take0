@@ -51,7 +51,7 @@ function setSearchBoxPosition(){
 
 function setSearchBoxListPosition(list, menu){
   var boxOffset = $("#searchbar").offset().left;
-  list.css({"left": menu.offset().left - boxOffset, "top": menu.offset().top + 42});
+  list.css({"left": menu.offset().left - boxOffset, "top": 42});
 }
 
 $(document).ready(function(){

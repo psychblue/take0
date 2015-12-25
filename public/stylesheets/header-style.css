@@ -24,6 +24,14 @@ a {
 .subTitle a {
   color: #999;
 }
+.centerAligned {
+  width: 100%;
+  text-align: center;
+}
+.leftAligned {
+  width: 100%;
+  text-align: left;
+}
 .downArrow {
   width: 0;
   height: 0;
@@ -71,7 +79,7 @@ a {
 #footer-main {
   height: 200px;
 }
-#footer-horizon {
+#footer hr {
   width: 60%;
   height: 1px;
   margin: 0 auto;
