@@ -21,6 +21,7 @@ body {
 }
 #main-list-window {
   width:100%;
+  margin-bottom: 100px;
 }
 #main-list {
   width: 84%;
