@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="/stylesheets/header-style.css" />
     <link rel="stylesheet" href="/stylesheets/join-style.css" />
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/javascripts/header.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
@@ -20,31 +21,46 @@
           }
         });
 
+        $('.joinInput input[type="text"], .joinInput input[type="password"]').focus(function(){
+          $(this).css({"border": "1px solid #999", "background-color": "#fff"});
+          $(this).siblings("label").css({"color": "#999", "font-weight": "normal"});
+        });
+
         $('.joinInput input[type="text"], .joinInput input[type="password"]').focusout(function(){
           if($(this).val() == ""){
             $(this).siblings("label").show();
           }
-          $(this).css({"border": "1px solid #ccc", "background-color": "#fff"});
+          $(this).css({"border": "1px solid #ccc"});
         });
 
         $("#join-submit-button").click(function(){
-          $.ajax({
-            type: "POST",
-            url: "/join",
-            data: $("#join-form").serialize(),
-            success: function(data){
-              if(data.result == "success"){
-                location.replace("/");
+          var isFieldChecked = 1;
+          $(".joinInput input").each(function(index){
+              if($(this).val() == ""){
+                $(this).css({"background-color": "#fde2e2"});
+                $(this).siblings("label").css({"color": "#bb292929", "font-weight": "bold"});
+                isFieldChecked = 0;
               }
-              else if(data.result == "fail"){
-                $("#join-error").text(data.text);
-                $("#join-error").css({"color": "#bb2929", "font-weight": "bold", "margin-bottom": "30px"});
+            });
+          if(isFieldChecked == 1){
+            $.ajax({
+              type: "POST",
+              url: "/join",
+              data: $("#join-form").serialize(),
+              success: function(data){
+                if(data.result == "success"){
+                  location.replace("/");
+                }
+                else if(data.result == "fail"){
+                  $("#join-error").text(data.text);
+                  $("#join-error").css({"color": "#bb2929", "font-weight": "bold", "margin-bottom": "30px"});
+                }
+              },
+              error: function(xhr, option, error){
+                alert(error);
               }
-            },
-            error: function(xhr, option, error){
-              alert(error);
-            }
-          });
+            });
+          }
         });
 
       });
@@ -70,6 +86,10 @@
         <div class="joinInput">
           <label for="join-password">패스워드</label>
           <input type="password" id="join-password" name="password"/>
+        </div>
+        <div class="joinInput">
+          <label for="join-email">이메일</label>
+          <input type="text" id="join-email" name="email"/>
         </div>
       </form>
       <div>

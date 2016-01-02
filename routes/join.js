@@ -41,7 +41,11 @@ joinManager.joinUser = function(req, res, next){
       });
     }
 
-    mysqlDb.doSQLInsertQuery('takeUser', {username: req.body.username, password: encryptedPassword}, joinUserInsertCallbackForSuccess, joinUserInsertCallbackForError);
+    var query = 'INSERT INTO ?? SET ?';
+  	var params = ['takeUser', {username: req.body.username, password: encryptedPassword, email: req.body.email}];
+    logger.debug('SQL Query [INSERT INTO %s SET %s]', params[0], params[1].toString());
+
+    mysqlDb.doSQLInsertQuery(query, params, joinUserInsertCallbackForSuccess, joinUserInsertCallbackForError);
   }
   //Fields Error
   else{
@@ -65,28 +69,18 @@ joinManager.withdrawUser = function(req, res, next){
     res.redirect('/withdraw/success');
   }
 
-  mysqlDb.doSQLDeleteQuery('takeUser', 'username', req.user.username, withdrawUserDeleteCallbackForSuccess, withdrawUserDeleteCallbackForError);
+  var query = 'DELETE FROM ?? WHERE ?? = ?';
+	var params = ['takeUser', 'username', req.user.username];
+  logger.debug('SQL Query [DELETE FROM %s WHERE %s=%s]', params[0], params[1], params[2]);
+
+  mysqlDb.doSQLDeleteQuery(query, params, withdrawUserDeleteCallbackForSuccess, withdrawUserDeleteCallbackForError);
 }
 
 /*
 User Join Field Availability Check Function
 */
 function isAvailField(req, res){
-  if(!req.body.password && !req.body.username){
-    res.send({"result": "fail", "text": "아이디와 패스워드를 입력해 주세요."});
-    return 0;
-  }
-  else if(!req.body.username){
-    res.send({"result": "fail", "text": "아이디를 입력해 주세요."});
-    return 0;
-  }
-  else if(!req.body.password){
-    res.send({"result": "fail", "text": "패스워드를 입력해 주세요."});
-    return 0;
-  }
-  else{
-    return 1;
-  }
+  return 1;
 }
 
 module.exports = joinManager;

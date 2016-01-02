@@ -24,10 +24,10 @@ listManager.showList = function(req, res, next){
 
   if(req.body.category == "wedding"){
     if(req.body.region){
-      mysqlDb.doSQLSelectLimitQuery('*', 'weddingList', region, req.body.region, req.body.start, req.body.end, listSelectCallbackForList, listSelectCallbackForNoList, listSelectCallbackForError);
+      
     }
     else{
-      
+
     }
   }
 }

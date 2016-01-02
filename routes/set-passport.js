@@ -29,7 +29,11 @@ passport.use(new LocalStrategy(function(username, password, done){
     }
   }
 
-  mysqlDb.doSQLSelectQuery('password', 'takeUser', 'username', username, passportSelectCallbackForExistingPassword, passportSelectCallbackForNoPassword, passportSelectCallbackForError);
+  var query = 'SELECT ?? FROM ?? WHERE ?? = ?';
+  var params = ['password', 'takeUser', 'username', username];
+  logger.debug('SQL Query [SELECT %s FROM %s WHERE %s=%s]', params[0], params[1], params[2], params[3]);
+
+  mysqlDb.doSQLSelectQuery(query, params, passportSelectCallbackForExistingPassword, passportSelectCallbackForNoPassword, passportSelectCallbackForError);
 }));
 
 //Passport Serializer

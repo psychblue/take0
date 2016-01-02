@@ -41,21 +41,20 @@ body {
 }
 .joinInput label {
   position: absolute;
-  top: 12px;
+  top: 13px;
   left: 23px;
-  color: #ccc;
-  font-size: 20px;
+  font-size: 1em;
+  color: #999;
   cursor: text;
 }
-.joinInput input[type="text"],
-.joinInput input[type="password"] {
+.joinInput input {
   padding-left: 20px;
   padding-right: 20px;
   width: 300px;
   height: 40px;
   color: #404040;
-  font-size: 20px;
-  letter-spacing: 10px;
+  font-size: 1em;
+  letter-spacing: 5px;
   border: 1px solid #ccc;
   border-radius: 0;
   outline-style: none;

@@ -182,21 +182,20 @@ a {
 }
 .loginInput label {
   position: absolute;
-  top: 12px;
+  top: 13px;
   left: 23px;
-  color: #ccc;
-  font-size: 20px;
+  color: #999;
+  font-size: 1em;
   cursor: text;
 }
-.loginInput input[type="text"],
-.loginInput input[type="password"] {
+.loginInput input {
   padding-left: 20px;
   padding-right: 20px;
   width: 300px;
   height: 40px;
   color: #404040;
-  font-size: 20px;
-  letter-spacing: 10px;
+  font-size: 1em;
+  letter-spacing: 5px;
   border: 1px solid #ccc;
   border-radius: 0;
   outline-style: none;

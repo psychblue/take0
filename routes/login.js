@@ -107,7 +107,12 @@ loginManager.loginByKakaoCallback = function(req, res, next){
           var kakaoSelectCallbackForNoUser = function(){
             var salt = bcrypt.genSaltSync(10);
             var encryptedPassword = bcrypt.hashSync(userId, salt);
-            mysqlDb.doSQLInsertQuery('takeUser', {username: userId, password: encryptedPassword}, kakaoInsertCallbackForSuccess, kakaoInsertCallbackForError);
+
+            var query = 'INSERT INTO ?? SET ?';
+          	var params = ['takeUser', {username: userId, password: encryptedPassword, email: ''}];
+            logger.debug('SQL Query [INSERT INTO %s SET %s]', params[0], params[1].toString());
+
+            mysqlDb.doSQLInsertQuery(query, params, kakaoInsertCallbackForSuccess, kakaoInsertCallbackForError);
           }
 
           var kakaoSelectCallbackForExistingUser = function(rows, fields){
@@ -122,7 +127,11 @@ loginManager.loginByKakaoCallback = function(req, res, next){
             });
           }
 
-          mysqlDb.doSQLSelectQuery('username', 'takeUser', 'username', userId, kakaoSelectCallbackForExistingUser, kakaoSelectCallbackForNoUser, kakaoSelectCallbackForError);
+          var query = 'SELECT ?? FROM ?? WHERE ?? = ?';
+        	var params = ['username', 'takeUser', 'username', userId];
+          logger.debug('SQL Query [SELECT %s FROM %s WHERE %s=%s]', params[0], params[1], params[2], params[3]);
+
+          mysqlDb.doSQLSelectQuery(query, params, kakaoSelectCallbackForExistingUser, kakaoSelectCallbackForNoUser, kakaoSelectCallbackForError);
         }
         else if(error){
           logger.error(error.toString());

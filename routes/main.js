@@ -25,7 +25,11 @@ mainManager.showPhotograherList = function(req, res, next){
     res.render('main/main-list', {data: rows});
   }
 
-  mysqlDb.doSQLSelectLimitQuery('*', 'photographerList', null, null, req.body.start, req.body.end, listSelectCallbackForList, listSelectCallbackForNoList, listSelectCallbackForError);
+  var query = 'SELECT * FROM ?? LIMIT ?,?';
+  var params = ['todaysPhotographerList', Number(req.body.start), Number(req.body.end)];
+  logger.debug('SQL Query [SELECT * FROM %s LIMIT %d,%d]', params[0], params[1], params[2]);
+
+  mysqlDb.doSQLSelectQuery(query, params, listSelectCallbackForList, listSelectCallbackForNoList, listSelectCallbackForError);
 }
 
 module.exports = mainManager;
