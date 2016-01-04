@@ -25,9 +25,9 @@ mainManager.showPhotograherList = function(req, res, next){
     res.render('main/main-list', {data: rows});
   }
 
-  var query = 'SELECT * FROM ?? LIMIT ?,?';
-  var params = ['todaysPhotographerList', Number(req.body.start), Number(req.body.end)];
-  logger.debug('SQL Query [SELECT * FROM %s LIMIT %d,%d]', params[0], params[1], params[2]);
+  var query = 'SELECT ?? FROM ?? INNER JOIN ?? WHERE ?? = ?? LIMIT ?,?';
+  var params = [['studio.username', 'studio.studio_name'], 'studio', 'todaysPhotographerList', 'studio.username', 'todaysPhotographerList.username', Number(req.body.start), Number(req.body.end)];
+  logger.debug('SQL Query [SELECT %s, %s FROM %s INNER JOIN %s WHERE %s=%s LIMIT %d,%d]', params[0][0], params[0][1], params[1], params[2], params[3], params[4], params[5], params[6]);
 
   mysqlDb.doSQLSelectQuery(query, params, listSelectCallbackForList, listSelectCallbackForNoList, listSelectCallbackForError);
 }

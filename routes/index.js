@@ -92,6 +92,6 @@ router.get('/searchbar', function(req, res, next){
 router.post('/list', listManager.showList);
 
 // "/photographer"
-router.get('/:photographer', photographerManager.showPage);
+router.get('/:photographer', photographerManager.showStudio);
 
 module.exports = router;

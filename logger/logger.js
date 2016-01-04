@@ -18,7 +18,24 @@ module.exports = function(jsname){
 		transports: [
 			new winston.transports.File({
 				level: 'debug',
-				filename: 'take0_main.log',
+				filename: 'take0_main_.log',
+				maxsize: 1000000,
+				maxFiles: 10,
+				rotationFormat: function(){
+    			return getFormattedDate();
+    			function getFormattedDate(){
+    				var temp = new Date();
+    				return dateStr = padStr(temp.getFullYear()) +
+                  				padStr(1 + temp.getMonth()) +
+                  				padStr(temp.getDate()) + '_' +
+                  				padStr(temp.getHours()) +
+                  				padStr(temp.getMinutes()) +
+                  				padStr(temp.getSeconds());
+    			}
+    			function padStr(i) {
+        		return (i < 10) ? "0" + i : "" + i;
+    			}
+  			},
 				json: false,
 				timestamp: function(){
 					return moment().format('YYYY-MM-DD HH:mm:ss.SSS');

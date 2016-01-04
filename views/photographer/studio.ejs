@@ -53,11 +53,30 @@
     </div>
 
     <div id="photographer-studio-title-window">
-        <h1>파란달 Studio</h1>
-        <div class="subTitle">&nbsp;by&nbsp;&nbsp;<%=photographerName%></div>
-        <div id="stars"><img class="star" src="/images/studio/star.png" width="20px" height="20px"></img><img class="star" src="/images/studio/star.png" width="20px" height="20px"></img><img class="star" src="/images/studio/star.png" width="20px" height="20px"></img><img class="star" src="/images/studio/star.png" width="20px" height="20px"></img><img class="star" src="/images/studio/halfstar.png" width="20px" height="20px"></img></div>
+        <h1><%=data.studio_name%></h1>
+        <div class="subTitle">by&nbsp;&nbsp;<%=photographerName%></div>
+        <div id="stars">
+          <%
+          for(var i = 0;i < data.stars;i++){
+          %>
+          <img class="star" src="/images/studio/star.png" width="20px" height="20px"></img>
+          <%
+          }
+          if(data.half_star){
+          %>
+          <img class="star" src="/images/studio/halfstar.png" width="20px" height="20px"></img>
+          <%
+          }
+          %>
+        </div>
         <hr>
-        <div id="introduction" class="centerAligned">파란달 스튜디오는 유아 전문 스냅 사진관입니다.<br>아름다운 순간들을 영원히 기록하세요.</div>
+        <div id="introduction">
+          <%-data.introduction%>
+          <div class="leftAlignedBox">
+            <div class="boldLabel">연락처</div>&nbsp;&nbsp;&nbsp;<%=data.tel_num%><div class="divClear"></div>
+            <div class="boldLabel">주소</div>&nbsp;&nbsp;&nbsp;<%=data.address%><div class="divClear"></div>
+          </div>
+        </div>
     </div>
 
     <div id="photographer-studio-product-window">

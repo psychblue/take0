@@ -40,14 +40,6 @@ a {
 .subTitle a {
   color: #999;
 }
-.centerAligned {
-  width: 100%;
-  text-align: center;
-}
-.leftAligned {
-  width: 100%;
-  text-align: left;
-}
 .downArrow {
   width: 0;
   height: 0;

@@ -43,7 +43,7 @@ joinManager.joinUser = function(req, res, next){
 
     var query = 'INSERT INTO ?? SET ?';
   	var params = ['takeUser', {username: req.body.username, password: encryptedPassword, email: req.body.email}];
-    logger.debug('SQL Query [INSERT INTO %s SET %s]', params[0], params[1].toString());
+    logger.debug('SQL Query [INSERT INTO %s SET %s]', params[0], JSON.stringify(params[1]));
 
     mysqlDb.doSQLInsertQuery(query, params, joinUserInsertCallbackForSuccess, joinUserInsertCallbackForError);
   }
