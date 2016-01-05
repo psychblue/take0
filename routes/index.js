@@ -61,7 +61,7 @@ router.get('/join', function(req, res, next){
 		res.send('Already joined...');
 	}else{
 		var joinOptions = {title: confParams.html.title, service: confParams.html.service_name};
-		res.render('join', joinOptions);
+		res.render('join/join', joinOptions);
 	}
 });
 

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%=title%></title>
+    <link rel="stylesheet" href="/stylesheets/header-style.css" />
+    <link rel="stylesheet" href="/stylesheets/join-style.css" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/javascripts/header.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+
+        if($('.joinInput input[type="text"]').val() != ""){
+          $('.joinInput input[type="text"]').siblings("label").hide();
+        }
+
+        $('.joinInput input[type="text"]').keydown(function(keyEvent){
+          $(this).siblings("label").hide();
+          if(keyEvent.which == 13){
+            $("#join-submit-button").focus();
+          }
+        });
+
+        $('.joinInput input[type="text"]').focus(function(){
+          $(this).css({"border": "1px solid #999", "background-color": "#fff"});
+          $(this).siblings("label").css({"color": "#999", "font-weight": "normal"});
+        });
+
+        $('.joinInput input[type="text"]').focusout(function(){
+          if($(this).val() == ""){
+            $(this).siblings("label").show();
+          }
+          $(this).css({"border": "1px solid #ccc"});
+        });
+
+        $("#join-submit-button").click(function(){
+          var isFieldChecked = 1;
+          $(".joinInput input").each(function(index){
+              if($(this).val() == ""){
+                $(this).css({"background-color": "#fde2e2"});
+                $(this).siblings("label").css({"color": "#bb292929", "font-weight": "bold"});
+                isFieldChecked = 0;
+              }
+            });
+          if(isFieldChecked == 1){
+            $.ajax({
+              type: "POST",
+              url: "/join",
+              data: $("#join-form").serialize(),
+              success: function(data){
+                if(data.result == "success"){
+                  location.replace("/");
+                }
+                else if(data.result == "fail"){
+                  $("#join-error").text(data.text);
+                  $("#join-error").css({"color": "#bb2929", "font-weight": "bold", "margin-bottom": "30px"});
+                }
+              },
+              error: function(xhr, option, error){
+                alert(error);
+              }
+            });
+          }
+        });
+
+      });
+    </script>
+  </head>
+  <body>
+    <div id="headerbar">
+      <div id="headerbar-title">
+        <a href="/"><%=service%></a>
+      </div>
+    </div>
+
+    <div id="join-title">
+      <h1><a href="/"><%=service%></a>&nbsp;&nbsp;가족이&nbsp;&nbsp;되어주세요.</h1>
+    </div>
+
+    <div id="join-window">
+      <form id="join-form" action="/join" method="post">
+        <div class="joinInput">
+          <label for="join-email">이메일</label>
+          <input type="text" id="join-email" name="email"/>
+        </div>
+        <input type="hidden" name="username" value='<%=username%>'/>
+        <input type="hidden" name="password" value='kakao'/>
+        <input type="hidden" name="kakao" value='1'/>
+      </form>
+      <div>
+        <button id="join-submit-button">가입하기</button>
+      </div>
+      <div id="join-error">
+      </div>
+    </div>
+
+  </body>
+</html>

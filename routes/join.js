@@ -4,16 +4,31 @@ Functions for User Join & Withdraw Page
 
 //Modules
 var logger = require('../logger/logger')(__filename);
+var bcrypt = require('bcrypt-node');
 var mysqlDb = require('../database/mysqldb');
 var loginManager = require('./login');
 var joinManager = {};
+
+/*
+Password Encrytion Function
+*/
+joinManager.encryptPassword = function(seed){
+  var salt = bcrypt.genSaltSync(10);
+  return bcrypt.hashSync(seed, salt);
+}
 
 /*
 User Join Function
 */
 joinManager.joinUser = function(req, res, next){
   //Password Encryption
-  var encryptedPassword = loginManager.encryptPassword(req);
+  var encryptedPassword;
+  if(!req.body.kakao){
+    encryptedPassword = joinManager.encryptPassword(req.body.password);
+  }
+  else{
+    encryptedPassword = joinManager.encryptPassword(req.body.username);
+  }
   //Check Submitted Fields
   if(isAvailField(req, res)){
 

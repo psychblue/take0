@@ -4,7 +4,7 @@ Functions for User Login Page
 
 //Modules
 var passport = require('./set-passport');
-var bcrypt = require('bcrypt-node');
+//var bcrypt = require('bcrypt-node');
 var request = require('request');
 var mysqlDb = require('../database/mysqldb');
 var logger = require('../logger/logger')(__filename);
@@ -32,14 +32,6 @@ loginManager.loginAuth = function(req, res, next){
       }
     });
   })(req, res, next);
-}
-
-/*
-Password Encrytion Function
-*/
-loginManager.encryptPassword = function(req){
-  var salt = bcrypt.genSaltSync(10);
-  return bcrypt.hashSync(req.body.password, salt);
 }
 
 /*
@@ -81,15 +73,16 @@ loginManager.loginByKakaoCallback = function(req, res, next){
         }
       }, function(error, response, body){
         if(!error && response.statusCode == 200){
-          var userId = JSON.parse(body).id;
-          logger.debug("id: %s", userId);
+          var kakaoId = JSON.parse(body).id;
+          logger.debug("id: %s", kakaoId);
 
+          /*
           var kakaoInsertCallbackForError = function(err){
             res.send('DB Error');
           }
 
           var kakaoInsertCallbackForSuccess = function(){
-            var user = {'username': userId};
+            var user = {'username': kakaoId};
             req.login(user, function(err){
               if(err){
                 logger.error(err.toString());
@@ -99,24 +92,33 @@ loginManager.loginByKakaoCallback = function(req, res, next){
               }
             });
           }
+          */
 
           var kakaoSelectCallbackForError = function(err){
             res.send('DB Error');
           }
 
           var kakaoSelectCallbackForNoUser = function(){
+            /*
             var salt = bcrypt.genSaltSync(10);
-            var encryptedPassword = bcrypt.hashSync(userId, salt);
+            var encryptedPassword = bcrypt.hashSync(kakaoId, salt);
 
             var query = 'INSERT INTO ?? SET ?';
-          	var params = ['takeUser', {username: userId, password: encryptedPassword, email: ''}];
+          	var params = ['takeUser', {username: kakaoId, password: encryptedPassword, email: ''}];
             logger.debug('SQL Query [INSERT INTO %s SET %s]', params[0], JSON.stringify(params[1]));
 
             mysqlDb.doSQLInsertQuery(query, params, kakaoInsertCallbackForSuccess, kakaoInsertCallbackForError);
+            */
+            var additionalInfoOptions = {
+              title: confParams.html.title,
+              service: confParams.html.service_name,
+              username: kakaoId
+            };
+            res.render('join/additional-info', additionalInfoOptions);
           }
 
           var kakaoSelectCallbackForExistingUser = function(rows, fields){
-            var user = {'username': userId};
+            var user = {'username': kakaoId};
             req.login(user, function(err){
               if(err){
                 logger.error(err.toString());
@@ -128,7 +130,7 @@ loginManager.loginByKakaoCallback = function(req, res, next){
           }
 
           var query = 'SELECT ?? FROM ?? WHERE ?? = ?';
-        	var params = ['username', 'takeUser', 'username', userId];
+        	var params = ['username', 'takeUser', 'username', kakaoId];
           logger.debug('SQL Query [SELECT %s FROM %s WHERE %s=%s]', params[0], params[1], params[2], params[3]);
 
           mysqlDb.doSQLSelectQuery(query, params, kakaoSelectCallbackForExistingUser, kakaoSelectCallbackForNoUser, kakaoSelectCallbackForError);
