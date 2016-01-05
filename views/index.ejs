@@ -88,7 +88,7 @@
         var regionEnabled = 0;
         var dateEnabled = 0;
 
-        $("body").click(function(e){
+        $(window).click(function(e){
           if(!$("#search-box-category").is(e.target) && !$("#search-box-category").has(e.target).length && !$("#category-list").has(e.target).length){
             $("#category-list").fadeOut("fast");
             categoryEnabled = 0;

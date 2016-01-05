@@ -66,7 +66,7 @@ $(document).ready(function(){
 
       setSearchBoxPosition();
 
-      $("body").click(function(e){
+      $(window).click(function(e){
         if(!$("#searchbar-category").is(e.target) && !$("#searchbar-category").has(e.target).length && !$("#searchbar-category-list").has(e.target).length){
           $("#searchbar-category-list").fadeOut("fast");
           categoryEnabled = 0;
