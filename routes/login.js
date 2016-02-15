@@ -12,6 +12,15 @@ var confParams = require('../conf/conf').getParams();
 var loginManager = {};
 
 /*
+Show Login Popup
+*/
+loginManager.showLoginPopup = function(req, res, next){
+
+  var loginOptions = {service: confParams.html.service_name};
+	res.render('login/login', loginOptions);
+}
+
+/*
 User Local Login Post Function
 */
 loginManager.loginAuth = function(req, res, next){
@@ -154,6 +163,15 @@ loginManager.loginByKakaoCallback = function(req, res, next){
       //error handling for getting tokens
     }
   });
+}
+
+/*
+Logout Function
+*/
+loginManager.logout = function(req, res, next){
+  //Session Logout
+	req.logout();
+	res.redirect('/');
 }
 
 module.exports = loginManager;

@@ -6,8 +6,22 @@ Functions for User Join & Withdraw Page
 var logger = require('../logger/logger')(__filename);
 var bcrypt = require('bcrypt-node');
 var mysqlDb = require('../database/mysqldb');
+var confParams = require('../conf/conf').getParams();
 var loginManager = require('./login');
 var joinManager = {};
+
+/*
+Show Join Page
+*/
+joinManager.showJoinPage = function(req, res, next){
+  // Check User Login
+	if(req.isAuthenticated()){
+		res.send('Already joined...');
+	}else{
+		var joinOptions = {title: confParams.html.title, service: confParams.html.service_name};
+		res.render('join/join', joinOptions);
+	}
+}
 
 /*
 Password Encrytion Function
@@ -69,6 +83,15 @@ joinManager.joinUser = function(req, res, next){
 }
 
 /*
+Show User Withdraw Page
+*/
+joinManager.showWithdrawPage = function(req, res, next){
+
+  var withdrawOptions = {title: confParams.html.title, service: confParams.html.service_name};
+	res.render('withdraw', withdrawOptions);
+}
+
+/*
 User Withdraw Function
 */
 joinManager.withdrawUser = function(req, res, next){
@@ -89,6 +112,15 @@ joinManager.withdrawUser = function(req, res, next){
   logger.debug('SQL Query [DELETE FROM %s WHERE %s=%s]', params[0], params[1], params[2]);
 
   mysqlDb.doSQLDeleteQuery(query, params, withdrawUserDeleteCallbackForSuccess, withdrawUserDeleteCallbackForError);
+}
+
+/*
+Show User Withdraw Success Page
+*/
+joinManager.showWithdrawSuccessPage = function(req, res, next){
+
+  var withdrawSuccessOptions = {title: confParams.html.title};
+	res.render('withdraw/success', withdrawSuccessOptions);
 }
 
 /*

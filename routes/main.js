@@ -3,9 +3,32 @@ Functions for Main Page
 */
 
 //Modules
+var confParams = require('../conf/conf').getParams();
 var mysqlDb = require('../database/mysqldb');
 var logger = require('../logger/logger')(__filename);
 var mainManager = {};
+
+
+/*
+Show Main Page
+*/
+mainManager.showMainPage = function(req, res, next){
+
+  var username = '';
+  //Login Checking
+  if(req.isAuthenticated()){
+    username = req.user.username;
+  }
+
+  var indexOptions = {
+    title: confParams.html.title,
+    service: confParams.html.service_name,
+    isAuth: req.isAuthenticated(),
+    name: username
+  };
+
+  res.render('index', indexOptions);
+}
 
 /*
 Show Phtographer List Function
