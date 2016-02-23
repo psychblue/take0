@@ -1,276 +1,95 @@
 <!DOCTYPE html>
 <html>
+
   <head>
     <title><%=title%></title>
-    <link rel="stylesheet" href="/stylesheets/header-style.css" />
-    <link rel="stylesheet" href="/stylesheets/main-style.css" />
+    <link rel="stylesheet" href="/stylesheets/take-main-style.css"/>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="/javascripts/header.js"></script>
+    <script type="text/javascript" src="/javascripts/take-util.js"></script>
+    <script type="text/javascript" src="/javascripts/take-login.js"></script>
+    <script type="text/javascript" src="/javascripts/take-search-box.js"></script>
+    <script type="text/javascript" src="/javascripts/take-list-slider.js"></script>
     <script type="text/javascript">
-      var mainListPageNum = 1;
+      (function(){
+        $(document).ready(function(){
+          var searchBoxOptions = {
+            boxWidth: 800,
+            boxHeight: 50,
+            borderStyle: "10px solid rgba(255, 255, 255, 0.4)",
+            marginStyle: "0 auto"
+          }
+          SearchBoxController.setSearchBox(searchBoxOptions);
 
-      function resizeMainListBox(){
-        var mainListBoxWidth = Math.floor(($("#main-list").width() - 60) / 3) - 1;
-        $("#main-list-box1, #main-list-box2, #main-list-box3").css({
-          "width": mainListBoxWidth,
-          "height": mainListBoxWidth * 1.2,
+          ListSlider($("#today-studio-box"), "/todaystudiolist").init();
         });
-        $("#main-list-box1").fadeIn("slow");
-        $("#main-list-box2").delay(150).fadeIn("slow");
-        $("#main-list-box3").delay(300).fadeIn("slow");
-        $(".mainListArrowBox").css("height", mainListBoxWidth * 1.2 + 20);
-        $(".mainListArrowEmpty").css("height", Math.floor((mainListBoxWidth * 1.2 - 50) / 2));
-        $(".mainListBoxUpper").css("height", (mainListBoxWidth * 1.2) - 110);
-      }
-
-      function postMainList(PageNum){
-        $.post("/mainList", {start:(PageNum * 3), end:3}, function(data){
-          $("#main-list").empty().append(data);
-          resizeMainListBox();
-        });
-      }
-
-      $(document).ready(function(){
-
-        postMainList(0);
-        $("#main-list-arrow-left").hide();
-
-        $(window).resize(function(){
-          resizeMainListBox();
-        });
-
-        $("#main-list-arrow-right").click(function(){
-          if(mainListPageNum == 1){
-            $("#main-list-arrow-left").show();
-          }
-          postMainList(mainListPageNum);
-          mainListPageNum++;
-          if(mainListPageNum == 2){
-            $("#main-list-arrow-right").hide();
-          }
-        });
-
-        $("#main-list-arrow-left").click(function(){
-          if(mainListPageNum == 2){
-            $("#main-list-arrow-right").show();
-          }
-          postMainList(mainListPageNum - 2);
-          mainListPageNum--;
-          if(mainListPageNum == 1){
-            $("#main-list-arrow-left").hide();
-          }
-        });
-
-      });
-    </script>
-    <script type="text/javascript">
-
-      function searchBoxMouseOver(arrow){
-        return function(){
-          arrow.css({"border-top": "10px solid #404040"});
-        }
-      }
-
-      function searchBoxMouseOut(arrow){
-        return function(){
-          arrow.css({"border-top": "10px solid #ccc"});
-        }
-      }
-
-      function setSearchBoxListPosition(list, menu){
-        list.css({"left": menu.offset().left, "top": menu.offset().top + 65});
-      }
-
-      $(document).ready(function(){
-
-        var categoryEnabled = 0;
-        var regionEnabled = 0;
-        var dateEnabled = 0;
-
-        $(window).click(function(e){
-          if(!$("#search-box-category").is(e.target) && !$("#search-box-category").has(e.target).length && !$("#category-list").has(e.target).length){
-            $("#category-list").fadeOut("fast");
-            categoryEnabled = 0;
-          }
-          if(!$("#search-box-region").is(e.target) && !$("#search-box-region").has(e.target).length && !$("#region-list").has(e.target).length){
-            $("#region-list").fadeOut("fast");
-            regionEnabled = 0;
-          }
-          var isPrevOrNext = 0;
-          if($(e.target).attr("class")){
-            if($(e.target).attr("class").indexOf("ui-icon") != -1){
-              isPrevOrNext = 1;
-            }
-          }
-          if(!isPrevOrNext && !$("#search-box-date").is(e.target) && !$("#search-box-date").has(e.target).length && !$("#search-box-datepicker").is(e.target) && !$("#search-box-datepicker").has(e.target).length){
-            $("#search-box-datepicker").fadeOut("fast");
-            dateEnabled = 0;
-          }
-        });
-
-        var categoryArrow = $("#search-box-category > .downArrow");
-        $("#search-box-category").hover(searchBoxMouseOver(categoryArrow), searchBoxMouseOut(categoryArrow));
-
-        $("#search-box-category").click(function(){
-          if(categoryEnabled == 0){
-            setSearchBoxListPosition($("#category-list"), $("#search-box-category"));
-            $("#category-list").fadeIn("fast");
-            categoryEnabled = 1;
-          }else{
-            $("#category-list").fadeOut("fast");
-            categoryEnabled = 0;
-          }
-        });
-
-        var regionArrow = $("#search-box-region > .downArrow");
-        $("#search-box-region").hover(searchBoxMouseOver(regionArrow), searchBoxMouseOut(regionArrow));
-
-        $("#search-box-region").click(function(){
-          if(regionEnabled == 0){
-            setSearchBoxListPosition($("#region-list"), $("#search-box-region"));
-            $("#region-list").fadeIn("fast");
-            regionEnabled = 1;
-          }else{
-            $("#region-list").fadeOut("fast");
-            regionEnabled = 0;
-          }
-        });
-
-        $(".searchBoxItem").click(function(e){
-          if($("#category-list").has(e.target).length){
-            $("#search-box-category > .searchBoxText").text($(e.target).text()).css({"color": "#404040", "font-weight": "bold"});
-            $("#search-box-category").css({"background-color": "#fff"});
-            $("#category-list").fadeOut("fast");
-            categoryEnabled = 0;
-          }else if($("#region-list").has(e.target).length){
-            $("#search-box-region > .searchBoxText").text($(e.target).text()).css({"color": "#404040", "font-weight": "bold"});
-            $("#region-list").fadeOut("fast");
-            regionEnabled = 0;
-          }
-        });
-
-        var dateArrow = $("#search-box-date > .downArrow");
-        $("#search-box-date").hover(searchBoxMouseOver(dateArrow), searchBoxMouseOut(dateArrow));
-
-        $("#search-box-date").click(function(){
-          if(dateEnabled == 0){
-            setSearchBoxListPosition($("#search-box-datepicker"), $("#search-box-date"));
-            $("#search-box-datepicker").fadeIn("fast");
-            dateEnabled = 1;
-          }else{
-            $("#search-box-datepicker").fadeOut("fast");
-            dateEnabled = 0;
-          }
-        });
-
-        $("#search-box-datepicker").datepicker({
-          inline: true,
-          showOtherMonths: false,
-          showMonthAfterYear: true,
-          monthNames: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
-          dayNamesMin: ["일", "월", "화", "수", "목", "금", "토"],
-          nextText: ">",
-          prevText: "<",
-          yearSuffix: "년",
-          dateFormat: "yy'년' m'월' d'일'",
-          onSelect: function(date){
-            $("#search-box-date > .searchBoxText").text(date).css({"color": "#404040", "font-weight": "bold"});
-            $("#search-box-datepicker").fadeOut("fast");
-            dateEnabled = 0;
-          }
-        });
-
-        $("#search-box-button").click(function(){
-          if($("#search-box-category > .searchBoxText").text() == "서비스를 선택하세요."){
-            $("#search-box-category > .searchBoxText").css({"color": "#bb2929", "font-weight": "bold"});
-            $("#search-box-category").css({"background-color": "#fde2e2"});
-          }
-        });
-
-      });
+      }());
     </script>
   </head>
+
   <body>
-    <div id="headerbar">
-      <div id="headerbar-title">
-        <a href="/"><%=service%></a>
-      </div>
-      <div id="headerbar-login">
+
+    <div id="header" class="width-full bg-color-darkgrey font-white">
+
+      <div id="header-title" class="float-left"><a href="/"><%= service %></a></div>
+      <div id="header-login" class="float-right">
         <% if(!isAuth){ %>
-        <span id="login-button">로그인</span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/join">회원가입</a>
+        <span id="login-button" class="cursor-pointer">로그인</span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/join">회원가입</a>
         <% }else{ %>
         <%= name %> 님&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/logout">로그아웃</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/withdraw">탈퇴</a>
         <% } %>
       </div>
-      <div class="divClear"></div>
+      <div class="float-clear"></div>
+
     </div>
 
-    <div id="top-window">
-      <div id="search-box-upper">일생의 순간, 나만의 사진작가를 만나보세요.</div>
-      <div id="search-box">
-        <div id="search-box-category"><span class="searchBoxText">서비스를 선택하세요.</span><div class="downArrow"></div><div class="divClear"></div></div>
-        <div class="searchBoxDivider"></div>
-        <div id="search-box-region"><span class="searchBoxText">지역을 선택하세요.</span><div class="downArrow"></div><div class="divClear"></div></div>
-        <div class="searchBoxDivider"></div>
-        <div id="search-box-date"><span class="searchBoxText">날짜를 선택하세요.</span><div class="downArrow"></div><div class="divClear"></div></div>
-        <div id="search-box-button">검 색</div>
-        <div class="divClear"></div>
-        <div id="category-list">
-          <div class="searchBoxItem">웨딩</div>
-          <div class="searchBoxItem">돌/백일</div>
-          <div class="searchBoxItem">데이트</div>
+    <div class="take-main-window">
+
+      <div id="search-window" class="width-full bg-color-lightergrey">
+
+        <div class="font-white font-bold font-level-max center-aligned">
+          일생의 순간, 나만의 사진작가를 만나보세요.
         </div>
-        <div id="region-list">
-          <div class="searchBoxItem">서울</div>
-          <div class="searchBoxItem">인천</div>
-          <div class="searchBoxItem">경기</div>
-          <div class="searchBoxItem">부산</div>
-          <div class="searchBoxItem">서울</div>
-          <div class="searchBoxItem">인천</div>
-          <div class="searchBoxItem">경기</div>
-          <div class="searchBoxItem">부산</div>
+
+        <div id="search-box"></div>
+
+      </div>
+
+      <div class="take-basic-window">
+
+        <div class="center-aligned">
+          <h1>오늘의&nbsp;&nbsp;<span class="font-bold font-space-wide">Studio</span></h1>
+          <span class="font-grey"><%= service %>의 멋진 사진작가들을 만나보세요.</span>
         </div>
-        <div id="search-box-datepicker">
+
+        <div id="today-studio-box">
         </div>
+
       </div>
+
+
     </div>
 
-    <div id="main-list-title">
-      <h1>오늘의&nbsp;&nbsp;<span class="titleBold">Photographer</span></h1>
-      <div class="subTitle"><%=service%>의 멋진 사진작가들을 만나보세요.</div>
-    </div>
+    <div id="footer" class="bg-color-darkgrey center-aligned">
 
-    <div id="main-list-window">
-      <div class="mainListArrowBox">
-        <div class="mainListArrowEmpty"></div>
-        <div id="main-list-arrow-left">&lt;</div>
-        <div class="mainListArrowEmpty"></div>
-      </div>
-      <div id="main-list">
-      </div>
-      <div class="mainListArrowBox">
-        <div class="mainListArrowEmpty"></div>
-        <div id="main-list-arrow-right">&gt;</div>
-        <div class="mainListArrowEmpty"></div>
-      </div>
-      <div class="divClear"></div>
-    </div>
-
-    <div id="footer">
       <div id="footer-main">
       </div>
-      <div id="footer-menu">
+
+      <div id="footer-menu" class="font-grey font-level-small">
         이용약관&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         개인정보취급방침&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         서비스운영정책&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         고객센터
       </div>
-      <hr>
-      <div class="subTitle">
-        &copy; <a href="/"><%=service%></a>, Inc.
+
+      <hr class="bg-color-grey">
+
+      <div class="font-grey">
+        &copy; <a href="/" class="font-grey"><%= service %></a>, Inc.
       </div>
+
     </div>
 
   </body>
+
 </html>

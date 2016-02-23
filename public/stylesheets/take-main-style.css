@@ -1,0 +1,553 @@
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+
+body {
+  padding: 0px;
+  margin: 0px;
+  font-family: "Nanum Gothic";
+}
+
+a {
+  text-decoration: none;
+}
+
+h1 {
+  padding: 0px;
+  margin-top: 0px;
+  margin-bottom: 5px;
+  margin-left: 0px;
+  margin-right: 0px;
+  color: #404040;
+  font-size: 2em;
+  font-weight: normal;
+}
+
+h1 a {
+  color: #404040;
+}
+
+.bg-color-darkgrey {
+  background-color: #404040;
+}
+
+.bg-color-grey {
+  background-color: #999;
+}
+
+.bg-color-lightgrey {
+  background-color: #ccc;
+}
+
+.bg-color-lightergrey {
+  background-color: #eee;
+}
+
+.bg-color-black {
+  background-color: #000;
+}
+
+.bg-color-white {
+  background-color: #fff;
+}
+
+.bg-color-mint {
+  background-color: #3db7cc;
+}
+
+.bg-color-pink {
+  background-color: #fde2e2;
+}
+
+.width-full {
+  width: 100%;
+}
+
+.margin-top-190 {
+  margin-top: 190px;
+}
+
+.margin-bottom-30 {
+  margin-bottom: 30px;
+}
+
+.font-white {
+  color: #fff;
+}
+
+.font-lightgrey {
+  color: #ccc;
+}
+
+.font-grey {
+  color: #999;
+}
+
+.font-darkgrey {
+  color: #404040;
+}
+
+.font-red {
+  color: #bb2929;
+}
+
+.font-level-default {
+  font-size: 1em;
+}
+
+.font-level-small {
+  font-size: 0.8em;
+}
+
+.font-level-large {
+  font-size: 1.5em;
+}
+
+.font-level-max {
+  font-size: 2.5em;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.font-space-wide {
+  letter-spacing: 10px;
+}
+
+.border-none {
+  border: none;
+}
+
+.border-solid-thin-lightgrey {
+  border: 1px solid #ccc;
+}
+
+.border-solid-thin-grey {
+  border: 1px solid #999;
+}
+
+.rounded-box {  
+  border-radius: 3px;
+}
+
+.center-aligned {
+  text-align: center;
+}
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.float-clear {
+  clear: both;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-text {
+  cursor: text;
+}
+
+.label-bold {
+  width: 50px;
+  color: #404040;
+  font-weight: bold;
+  float: left;
+}
+
+
+.take-main-window {
+  margin-top: 40px;
+}
+
+.take-basic-window {
+  width: 100%;
+  padding-top: 100px;
+  padding-bottom: 50px;
+  text-align: center;
+}
+
+.take-basic-paragraph {
+  margin: 0px;
+  padding: 0px;
+  line-height: 1.5em;
+}
+
+.list-slider-box {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.list-slider-arrow-box {
+  width: 8%;
+  float: left;
+  font-size: 4em;
+  text-align: center;
+  cursor: pointer;
+}
+
+.list-slider-list {
+  width: 84%;
+  float: left;
+}
+
+.list-slider-list .list-box {
+  margin-left: 5px;
+  margin-right: 5px;
+  display: none;
+  float: left;
+}
+
+.list-slider-list .list-box-note {
+  height: 75px;
+  padding-top: 15px;
+  padding-right: 20px;
+  margin: 10px;
+  text-align: right;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+#studio-photo-slider-window {
+  width: 100%;
+  height: 400px;
+}
+
+#studio-photo-slider-window .photo-box {
+  width: 100%;
+  height: 400px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+#studio-introduction-window hr {
+  width: 100px;
+  height: 1px;
+  margin: 0 auto;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  border: none;
+}
+
+#studio-introduction-window .left-aligned-box {
+  width: 500px;
+  padding: 20px;
+  margin: 0 auto;
+  margin-top: 100px;
+  text-align: left;
+  line-height: 2em;
+}
+
+#stars {
+  margin-top: 20px;
+}
+
+#stars .star {
+  width: 20px;
+  height: 20px;
+}
+
+#studio-product-window .product-box {
+  width: 800px;
+  margin: 25px auto;
+}
+
+#studio-product-window .product-title-box {
+  width: 545px;
+  padding-top: 25px;
+  padding-bottom: 20px;
+  padding-left: 30px;
+  float: left;
+  text-align: left;
+}
+
+#studio-product-window .product-button-box {
+  width: 195px;
+  padding-top: 30px;
+  padding-right: 30px;
+  float: left;
+}
+
+#studio-product-window .product-button {
+  width: 193px;
+  height: 28px;
+  line-height: 28px;
+  cursor: pointer;
+}
+
+#studio-product-window .product-button:hover {
+  background-color: #3db7cc;
+  color: #fff;
+  border: 1px solid #3db7cc;
+}
+
+#studio-product-window .product-desc-box {
+  width: 750px;
+  padding-top: 20px;
+  padding-bottom: 50px;
+  margin-left: 25px;
+  margin-right: 25px;
+  text-align: left;
+  border-top: 1px solid #ccc;
+}
+
+#studio-portfolio-window .portfolio-box {
+  width: 960px;
+  padding-top: 20px;
+  padding-bottom: 50px;
+  margin: 0 auto;
+}
+
+#studio-portfolio-window .portfolio-item {
+  width: 300px;
+  height: 300px;
+  margin: 10px;
+  float: left;
+}
+
+#header {
+  height: 20px;
+  padding: 10px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+#header a {
+  color: #fff;
+}
+
+#header-title {
+  font-size: 20px;
+  line-height: 20px;
+}
+
+#header-login {
+  margin-right: 20px;
+}
+
+#login-popup-background {
+  display: none;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 110;
+}
+
+#login-popup {
+  display: none;
+  width: 342px;
+  height: 330px;
+  padding-top: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+  position: fixed;
+  z-index: 120;
+}
+
+.login-input {
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.login-input label {
+  position: absolute;
+  top: 13px;
+  left: 23px;
+}
+
+.login-input input {
+  width: 300px;
+  height: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+  letter-spacing: 5px;
+  border-radius: 0;
+  outline-style: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+#login-submit-button, #join-submit-button {
+  width: 342px;
+  height: 42px;
+  margin-bottom: 10px;
+  font-family: inherit;
+  line-height: 42px;
+  outline: 0;
+}
+
+#login-submit-button:hover, #join-submit-button:hover {
+  color: #008299;
+}
+
+#kakao-login-button {
+  width: 342px;
+  height: 42px;
+  background-color: #ffeb00;
+  background-image: url("/images/login/kakao/kakao_login_btn.png");
+  background-repeat: no-repeat;
+  background-position: 10px 0px;
+  color: #3c1e1e;
+  line-height: 42px;
+}
+
+#search-window {
+  height: 600px;
+  background-image: url("/images/main/top_bg.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#search-window .font-level-max {
+  padding-top: 230px;
+  margin-bottom: 40px;
+}
+
+#search-box {
+  position: relative;
+}
+
+#search-box-category {
+  width: 170px;
+}
+
+#search-box-region {
+  width: 170px;
+}
+
+#search-box-date {
+  width: 270px;}
+
+#search-box-button {
+  width: 68px;
+  cursor: pointer;
+}
+
+#search-box-datepicker {
+  display: none;
+  width: 278px;
+  padding: 10px;
+  position: absolute;
+}
+
+.search-box-list {
+  display: none;
+  position: absolute;
+  width: 200px;
+}
+
+.search-box-divider {
+  width: 1px;
+  float: left;
+}
+
+.search-box-item {
+  height: 20px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #999;
+  text-align: center;
+  cursor: pointer;
+}
+
+.search-box-item:hover {
+  background-color: #eee;
+  border: 1px solid #999;
+  color: #404040;
+  font-weight: bold;
+}
+
+.down-arrow {
+  width: 0;
+  height: 0;
+  position: relative;
+  top: 5px;
+  border-top: 10px solid #ccc;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+
+.ui-datepicker {
+  width: 280px;
+  color: #999;
+}
+.ui-datepicker a {
+  text-decoration: none;
+  color: #999;
+}
+.ui-datepicker table {
+  width: 100%;
+  text-align: center;
+}
+.ui-datepicker tr {
+  height: 30px;
+}
+.ui-datepicker td {
+  padding: 0;
+  margin: 0;
+}
+.ui-datepicker-header {
+  margin-top: 10px;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #404040;
+  font-size: 20px;
+  font-weight: bold;
+}
+.ui-datepicker-prev, .ui-datepicker-next {
+  text-align: center;
+  font-weight: normal;
+  cursor: pointer;
+}
+.ui-datepicker-prev {
+  float: left;
+  margin-left: 10px;
+}
+.ui-datepicker-next {
+  float: right;
+  margin-right: 10px;
+}
+.ui-datepicker-calendar a:hover {
+  color: #404040;
+  font-weight: bold;
+}
+.ui-datepicker-current-day {
+  background-color: #3db7cc;
+}
+.ui-datepicker-current-day a {
+  color: #fff;
+}
+
+#footer {
+  height: 300px;
+}
+
+#footer-main {
+  height: 200px;
+}
+
+#footer hr {
+  width: 60%;
+  height: 1px;
+  margin: 0 auto;
+  margin-bottom: 5px;
+  border: none;
+}
+
+#footer-menu {
+  margin-bottom: 10px;
+}
+

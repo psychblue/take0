@@ -24,7 +24,7 @@
     "kakao_redirect_uri": "http://localhost:8080/login/kakao/callback"
   },
   "html": {
-    "title": "T.A.K.E.",
-    "service_name": "T.A.K.E."
+    "title": "TAKE",
+    "service_name": "TAKE"
   }
 }

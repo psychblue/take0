@@ -2,15 +2,14 @@
 for(var i = 0;i < data.length;i++) {
 %>
 <a href="/<%=data[i].username%>">
-  <div id="main-list-box<%=i+1%>">
-    <div class="mainListBoxUpper"></div>
-    <div class="mainListBoxNote">
-      <span class="mainListBoxUsername"><%=data[i].username%></span><br>
-      <span class="mainListBoxTitle"><%=data[i].studio_name%><span>
+  <div class="list-box bg-color-lightergrey">
+    <div class="list-box-note">
+      <span class="font-darkgrey"><%=data[i].username%></span><br>
+      <span class="font-darkgrey font-level-large"><%=data[i].studio_name%><span>
     </div>
   </div>
 </a>
 <%
 }
 %>
-<div class="divClear"></div>
+<div class="float-clear"></div>

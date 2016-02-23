@@ -2,18 +2,24 @@
 <html>
   <head>
     <title><%=title%></title>
-    <link rel="stylesheet" href="/stylesheets/header-style.css" />
-    <link rel="stylesheet" href="/stylesheets/unslider.css" />
-    <link rel="stylesheet" href="/stylesheets/unslider-dots.css" />
-    <link rel="stylesheet" href="/stylesheets/photographer-style.css" />
+    <link rel="stylesheet" href="/stylesheets/take-main-style.css"/>
+    <link rel="stylesheet" href="/stylesheets/unslider.css"/>
+    <link rel="stylesheet" href="/stylesheets/unslider-dots.css"/>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/javascripts/unslider-min.js"></script>
-    <script type="text/javascript" src="/javascripts/header.js"></script>
+    <script type="text/javascript" src="/javascripts/take-util.js"></script>
+    <script type="text/javascript" src="/javascripts/take-login.js"></script>
     <script type="text/javascript">
-      $(document).ready(function(){
+    (function(){
+      (function(){
+        $(document).ready(function(){
+          setPhotoSlider();
+        });
+      }());
 
-        $("#photographer-studio-pics-window").unslider({
+      function setPhotoSlider(){
+        $("#studio-photo-slider-window").unslider({
           autoplay: true,
           delay: 4000,
           arrows: {
@@ -22,150 +28,117 @@
           }
         });
 
-        $("#photographer-studio-pics-window .mainPicture").each(function(index){
+        $("#studio-photo-slider-window .photo-box").each(function(index){
           $(this).css({"background-image": "url\(\"/images/main/bg"+ (index + 1) +".jpg\"\)"});
         });
-
-      });
+      };
+    }());
     </script>
   </head>
   <body>
-    <div id="headerbar">
-      <div id="headerbar-title">
-        <a href="/"><%=service%></a>
-      </div>
-      <div id="headerbar-login">
+    <div id="header" class="width-full bg-color-darkgrey font-white">
+
+      <div id="header-title" class="float-left"><a href="/"><%= service %></a></div>
+      <div id="header-login" class="float-right">
         <% if(!isAuth){ %>
-        <span id="login-button">로그인</span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/join">회원가입</a>
+        <span id="login-button" class="cursor-pointer">로그인</span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/join">회원가입</a>
         <% }else{ %>
-        <%=name%> 님&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/logout">로그아웃</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/withdraw">탈퇴</a>
+        <%= name %> 님&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/logout">로그아웃</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/withdraw">탈퇴</a>
         <% } %>
       </div>
-      <div class="divClear"></div>
+      <div class="float-clear"></div>
+
     </div>
 
-    <div id="photographer-studio-pics-window">
-      <ul>
-        <li><div class="mainPicture"></div></li>
-        <li><div class="mainPicture"></div></li>
-        <li><div class="mainPicture"></div></li>
-      </ul>
-    </div>
+    <div class="take-main-window">
 
-    <div id="photographer-studio-title-window">
-        <h1><%=data.studio_name%></h1>
-        <div class="subTitle">by&nbsp;&nbsp;<%=photographerName%></div>
-        <div id="stars">
-          <%
-          for(var i = 0;i < data.stars;i++){
-          %>
-          <img class="star" src="/images/studio/star.png" width="20px" height="20px"></img>
-          <%
-          }
-          if(data.half_star){
-          %>
-          <img class="star" src="/images/studio/halfstar.png" width="20px" height="20px"></img>
-          <%
-          }
-          %>
-        </div>
-        <hr>
-        <div id="introduction">
-          <%-data.introduction%>
-          <div class="leftAlignedBox">
-            <div class="boldLabel">연락처</div>&nbsp;&nbsp;&nbsp;<%=data.tel_num%><div class="divClear"></div>
-            <div class="boldLabel">주소</div>&nbsp;&nbsp;&nbsp;<%=data.address%><div class="divClear"></div>
-          </div>
-        </div>
-    </div>
+      <div id="studio-photo-slider-window" class="bg-color-lightergrey">
+        <ul>
+          <li><div class="photo-box"></div></li>
+          <li><div class="photo-box"></div></li>
+          <li><div class="photo-box"></div></li>
+        </ul>
+      </div>
 
-    <div id="photographer-studio-product-window">
-      <div class="studioProduct">
-        <div class="studioProductTitleBox">
-          <h1>돌스냅 Basic</h1>
+      <div id="studio-introduction-window" class="take-basic-window font-grey">
+        <h1><%= data.studio_name %></h1>
+        <span>by&nbsp;&nbsp;<%= photographerName %></span>
+        <div id="stars" class="font-darkgrey font-bold">
+          <% for(var i = 0;i < data.stars;i++){ %>
+          <img class="star" src="/images/studio/star.png"></img>
+          <% }if(data.half_star){ %>
+          <img class="star" src="/images/studio/halfstar.png"></img>
+          <% } %>
         </div>
-        <div class="studioProductButtonBox">
-          <div class="studioProductButton">
-            예약하기
-          </div>
-        </div>
-        <div class="divClear">
-        </div>
-        <div class="studioProductDescBox">
-          <ul>
-            <li>고급 인화 60매</li>
-            <li>촬영 원본 CD</li>
-            <li>고급 사진 보관함</li>
-            <li>돌잡이 행사 및 돌잔치 행사 촬영</li>
-          </ul>
+        <hr class="bg-color-lightgrey">
+        <p class="take-basic-paragraph"><%- data.introduction %></p>
+        <div class="left-aligned-box border-solid-thin-grey">
+          <div class="label-bold">연락처</div>&nbsp;&nbsp;&nbsp;<%= data.tel_num %>
+          <div class="float-clear"></div>
+          <div class="label-bold">주소</div>&nbsp;&nbsp;&nbsp;<%= data.address %>
+          <div class="float-clear"></div>
         </div>
       </div>
-      <div class="studioProduct">
-        <div class="studioProductTitleBox">
-          <h1>돌스냅 Special</h1>
-        </div>
-        <div class="studioProductButtonBox">
-          <div class="studioProductButton">
-            예약하기
+
+      <div id="studio-product-window" class="take-basic-window font-grey bg-color-lightergrey">
+
+        <div class="product-box bg-color-white">
+          <div class="product-title-box">
+            <h1>돌스냅 Basic</h1>
+          </div>
+          <div class="product-button-box">
+            <div class="product-button font-darkgrey border-solid-thin-lightgrey">
+              예약하기
+            </div>
+          </div>
+          <div class="float-clear">
+          </div>
+          <div class="product-desc-box">
+            <ul>
+              <li>고급 인화 60매</li>
+              <li>촬영 원본 CD</li>
+              <li>고급 사진 보관함</li>
+              <li>돌잡이 행사 및 돌잔치 행사 촬영</li>
+            </ul>
           </div>
         </div>
-        <div class="divClear">
-        </div>
-        <div class="studioProductDescBox">
-          <ul>
-            <li>고급 인화 60매</li>
-            <li>촬영 원본 CD</li>
-            <li>고급 사진 보관함</li>
-            <li>돌잡이 행사 및 돌잔치 행사 촬영</li>
-          </ul>
-        </div>
+
       </div>
-      <div class="studioProduct">
-        <div class="studioProductTitleBox">
-          <h1>돌스냅 Premium</h1>
+
+      <div id="studio-portfolio-window" class="take-basic-window font-grey">
+        <h1>Portfolio</h1>
+
+        <div class="portfolio-box">
+          <div class="portfolio-item bg-color-lightergrey"></div>
+          <div class="portfolio-item bg-color-lightergrey"></div>
+          <div class="portfolio-item bg-color-lightergrey"></div>
+          <div class="float-clear"></div>
         </div>
-        <div class="studioProductButtonBox">
-          <div class="studioProductButton">
-            예약하기
-          </div>
-        </div>
-        <div class="divClear">
-        </div>
-        <div class="studioProductDescBox">
-          <ul>
-            <li>고급 인화 60매</li>
-            <li>촬영 원본 CD</li>
-            <li>고급 사진 보관함</li>
-            <li>돌잡이 행사 및 돌잔치 행사 촬영</li>
-          </ul>
-        </div>
+
       </div>
+
     </div>
 
-    <div id="photographer-studio-portfolio-window">
-      <h1>Portfolio</h1>
-      <div class="studioPortfolio">
-        <div class="studioPortfolioItem"></div>
-        <div class="studioPortfolioItem"></div>
-        <div class="studioPortfolioItem"></div>
-        <div class="divClear"></div>
-      </div>
-    </div>
+    <div id="footer" class="bg-color-darkgrey center-aligned">
 
-    <div id="footer">
       <div id="footer-main">
       </div>
-      <div id="footer-menu">
+
+      <div id="footer-menu" class="font-grey font-level-small">
         이용약관&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         개인정보취급방침&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         서비스운영정책&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         고객센터
       </div>
-      <hr>
-      <div class="subTitle">
-        &copy; <a href="/"><%=service%></a>, Inc.
+
+      <hr class="bg-color-grey">
+
+      <div class="font-grey">
+        &copy; <a href="/" class="font-grey"><%= service %></a>, Inc.
       </div>
+
     </div>
+
   </body>
 
 </html>
