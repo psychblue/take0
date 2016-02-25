@@ -47,6 +47,11 @@ photographerManager.showStudio = function(req, res, next){
 
 photographerManager.updateSlider = function(req, res, next){
 
+  if(!(req.isAuthenticated() && (req.user.username == req.params.photographer))){
+    res.send('허락된 사진작가만 이용 가능합니다.');
+    return;
+  }
+
   var sliderPhotoStoragePath = 'public/images/main';
   var sliderPhotoUrlPath = '/images/main/';
   var filenamePrefix = req.params.photographer + '_slider_' + Date.now() + '_';
