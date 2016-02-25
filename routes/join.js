@@ -96,6 +96,12 @@ User Withdraw Function
 */
 joinManager.withdrawUser = function(req, res, next){
 
+	if(!req.isAuthenticated()){
+		res.redirect('/');
+
+		return;
+	}
+
   var withdrawUserDeleteCallbackForError = function(err){
     res.send('Error');
   }

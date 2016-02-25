@@ -50,9 +50,9 @@ router.get('/withdraw/success', joinManager.showWithdrawSuccessPage);
 router.post('/list', listManager.showList);
 
 // Studio
-router.get('/:photographer', photographerManager.showStudio);
+router.get('/studio/:photographer', photographerManager.showStudio);
 
 // Studio Photo Slider Update
-router.post('/:photographer/slider/update', photographerManager.updateSlider);
+router.post('/studio/:photographer/slider/update', photographerManager.updateSlider);
 
 module.exports = router;

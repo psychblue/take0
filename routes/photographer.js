@@ -156,7 +156,7 @@ photographerManager.updateSlider = function(req, res, next){
     }
 
     var sliderPhotoListUpdateCallbackForSuccess = function(){
-      res.redirect('/' + req.params.photographer);
+      res.redirect('/studio/' + req.params.photographer);
     }
 
     var query = 'UPDATE ?? SET ? WHERE ?? = ?';
