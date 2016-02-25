@@ -19,7 +19,7 @@ module.exports = function(jsname){
 			new winston.transports.File({
 				level: 'debug',
 				filename: 'take0_main_.log',
-				maxsize: 1000000,
+				maxsize: 1000000000,
 				maxFiles: 10,
 				rotationFormat: function(){
     			return getFormattedDate();

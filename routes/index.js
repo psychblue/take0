@@ -49,7 +49,10 @@ router.get('/withdraw/success', joinManager.showWithdrawSuccessPage);
 // "/list" post
 router.post('/list', listManager.showList);
 
-// "/photographer"
+// Studio
 router.get('/:photographer', photographerManager.showStudio);
+
+// Studio Photo Slider Update
+router.post('/:photographer/slider/update', photographerManager.updateSlider);
 
 module.exports = router;

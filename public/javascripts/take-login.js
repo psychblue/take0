@@ -14,7 +14,8 @@
   $loginPopupBackground,
   $loginButton,
   $loginPopupCloseButton,
-  $loginSubmitButton;
+  $loginSubmitButton,
+  $logoutButton;
 
   (function(){
     $(document).ready(function(){
@@ -30,6 +31,7 @@
         $loginButton = $("#login-button");
         $loginPopupCloseButton = $("#login-popup-close-button");
         $loginSubmitButton = $("#login-submit-button");
+        $logoutButton = $("#logout-button");
 
         bindEvents();
       });
@@ -84,6 +86,14 @@
         }
       });
     });
+
+    $logoutButton.click(function(){
+      $.get("/logout", function(data){
+        if(data.result == "success"){
+          location.reload();
+        }
+      });
+    });
   };
 
   function setLoginPopupPosition(){
@@ -99,7 +109,7 @@
       $loginForm[0].reset();
       $loginInputLabels.show();
       setLoginPopupPosition();
-      $loginPopupBackground.css({"opacity": "0.7"}).fadeIn("fast");
+      $loginPopupBackground.fadeIn("fast");
       $loginPopup.css({"height": "330"}).fadeIn("fast");
       loginPopupEnabled = 1;
     }

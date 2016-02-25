@@ -51,6 +51,18 @@ mysqlDb.doSQLInsertQuery = function(query, params, callbackForSuccess, callbackF
 	});
 }
 
+mysqlDb.doSQLUpdateQuery = function(query, params, callbackForSuccess, callbackForError){
+	mysqlDb.query(query, params, function(err, rows, fields){
+		if(err){
+			logger.error(err.toString());
+			callbackForError(err);
+		}
+		else{
+			callbackForSuccess();
+		}
+	});
+}
+
 mysqlDb.doSQLDeleteQuery = function(query, params, callbackForSuccess, callbackForError){
 		mysqlDb.query(query, params, function(err, rows, fiedls){
 		if(err){

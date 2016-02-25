@@ -171,7 +171,7 @@ Logout Function
 loginManager.logout = function(req, res, next){
   //Session Logout
 	req.logout();
-	res.redirect('/');
+	res.send({"result": "success"});
 }
 
 module.exports = loginManager;

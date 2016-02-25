@@ -10,41 +10,24 @@
     <script type="text/javascript" src="/javascripts/unslider-min.js"></script>
     <script type="text/javascript" src="/javascripts/take-util.js"></script>
     <script type="text/javascript" src="/javascripts/take-login.js"></script>
-    <script type="text/javascript">
-    (function(){
-      (function(){
-        $(document).ready(function(){
-          setPhotoSlider();
-        });
-      }());
-
-      function setPhotoSlider(){
-        $("#studio-photo-slider-window").unslider({
-          autoplay: true,
-          delay: 4000,
-          arrows: {
-            prev: '<a class="unslider-arrow prev">&lt;</a>',
-	          next: '<a class="unslider-arrow next">&gt;</a>'
-          }
-        });
-
-        $("#studio-photo-slider-window .photo-box").each(function(index){
-          $(this).css({"background-image": "url\(\"/images/main/bg"+ (index + 1) +".jpg\"\)"});
-        });
-      };
-    }());
-    </script>
+    <script type="text/javascript" src="/javascripts/take-studio.js"></script>
   </head>
   <body>
     <div id="header" class="width-full bg-color-darkgrey font-white">
 
       <div id="header-title" class="float-left"><a href="/"><%= service %></a></div>
       <div id="header-login" class="float-right">
-        <% if(!isAuth){ %>
+        <%
+        if(!isAuth){
+        %>
         <span id="login-button" class="cursor-pointer">로그인</span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/join">회원가입</a>
-        <% }else{ %>
-        <%= name %> 님&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/logout">로그아웃</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/withdraw">탈퇴</a>
-        <% } %>
+        <%
+        }else{
+        %>
+        <%= name %> 님&nbsp;&nbsp;|&nbsp;&nbsp;<span id="logout-button" class="cursor-pointer">로그아웃</span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/withdraw">탈퇴</a>
+        <%
+        }
+        %>
       </div>
       <div class="float-clear"></div>
 
@@ -52,23 +35,81 @@
 
     <div class="take-main-window">
 
-      <div id="studio-photo-slider-window" class="bg-color-lightergrey">
+      <div id="studio-photo-slider-window" class="bg-color-grey">
+        <%
+        if(data.num_photo_on_slider > 0){
+        %>
+        <script type="text/javascript">
+          StudioPhotoSliderController.enableSlider(<%- data.slider_photo_list %>);
+        </script>
         <ul>
+          <%
+          for(var i = 0; i < data.num_photo_on_slider; i++){
+          %>
           <li><div class="photo-box"></div></li>
-          <li><div class="photo-box"></div></li>
-          <li><div class="photo-box"></div></li>
+          <%
+          }
+          %>
         </ul>
+        <%
+        }else{
+          if(isOwner){
+          %>
+          <div class="center-aligned font-white font-level-larger">스튜디오의 대표 사진을 등록하세요.</div>
+          <%
+          }
+        }
+        if(isOwner){
+        %>
+          <div class="slider-edit-button bg-color-mint font-white">+</div>
+        <%
+        }
+        %>
+        <div class="slider-editor-box font-lightgrey">
+          <form action="/<%= data.username %>/slider/update" method="POST" enctype="multipart/form-data">
+            <div class="editor-main-box">
+              <input type="hidden" id="flag" name="flag"></input>
+              <%
+              for(var i = 0; i < 5; i++){
+                if(data.num_photo_on_slider >= i+1){
+                %>
+                <label for="file-input-<%= i + 1 %>" class="editor-photo-box"></label>
+                <%
+                }else{
+                %>
+                <label for="file-input-<%= i + 1 %>" class="editor-photo-box no-photo">+</label>
+                <%
+                }
+                %>
+                <input type="file" id="file-input-<%= i + 1 %>" class="editor-photo-input" name="<%= i + 1 %>"></input>
+              <%
+              }
+              %>
+              <div class="float-clear"></div>
+            </div>
+            <div class="editor-button-box">
+              <button type="submit" class="submit-button font-lightgrey font-level-default">저장</button>&nbsp;&nbsp;|&nbsp;&nbsp;
+              <span class="cancel-button cursor-pointer">취소</span>
+            </div>
+          </form>
+        </div>
       </div>
 
       <div id="studio-introduction-window" class="take-basic-window font-grey">
         <h1><%= data.studio_name %></h1>
         <span>by&nbsp;&nbsp;<%= photographerName %></span>
         <div id="stars" class="font-darkgrey font-bold">
-          <% for(var i = 0;i < data.stars;i++){ %>
+          <%
+          for(var i = 0; i < data.stars; i++){
+          %>
           <img class="star" src="/images/studio/star.png"></img>
-          <% }if(data.half_star){ %>
+          <%
+          }if(data.half_star){
+          %>
           <img class="star" src="/images/studio/halfstar.png"></img>
-          <% } %>
+          <%
+          }
+          %>
         </div>
         <hr class="bg-color-lightgrey">
         <p class="take-basic-paragraph"><%- data.introduction %></p>
