@@ -55,4 +55,7 @@ router.get('/studio/:photographer', photographerManager.showStudio);
 // Studio Photo Slider Update
 router.post('/studio/:photographer/slider/update', photographerManager.updateSlider);
 
+// Studio Introduction Update
+router.post('/studio/:photographer/intro/update', photographerManager.updateIntro);
+
 module.exports = router;

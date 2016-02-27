@@ -89,6 +89,14 @@ h1 a {
   color: #404040;
 }
 
+.font-black {
+  color: #000;
+}
+
+.font-mint {
+  color: #3db7cc;
+}
+
 .font-red {
   color: #bb2929;
 }
@@ -133,6 +141,10 @@ h1 a {
   border: 1px solid #999;
 }
 
+.border-solid-thin-mint {
+  border: 1px solid #3db7cc;
+}
+
 .rounded-box {  
   border-radius: 3px;
 }
@@ -168,9 +180,8 @@ h1 a {
   float: left;
 }
 
-
 .take-main-window {
-  margin-top: 40px;
+
 }
 
 .take-basic-window {
@@ -178,6 +189,7 @@ h1 a {
   padding-top: 100px;
   padding-bottom: 50px;
   text-align: center;
+  position: relative;
 }
 
 .take-basic-paragraph {
@@ -220,9 +232,68 @@ h1 a {
   background-color: rgba(255, 255, 255, 0.9);
 }
 
+.studio-edit-button {
+  width: 130px;
+  height: 24px;
+  padding-top: 6px;
+  padding-bottom: 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.studio-edit-button img {
+  vertical-align: text-bottom;
+}
+
+.editor-title-box {
+  width: 100%;
+  height: 50px;
+  padding-top: 70px;
+  line-height: 50px;
+}
+
+.editor-button-box {
+  width: 100%;
+  height: 100px;
+  line-height: 100px;
+}
+
+.editor-submit-button {
+  width: 130px;
+  height: 40px;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 1em;
+  outline: 0;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  background-color: #3db7cc;
+}
+
+.editor-cancel-button {
+  width: 130px;
+  height: 40px;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 1em;
+  outline: 0;
+  border: 1px solid #3db7cc;
+  cursor: pointer;
+  text-align: center;
+  background: transparent;
+}
+
+.editor-input-label {
+  width: 150px;
+  height: 42px;
+  margin-top: 10px;
+  line-height: 42px;
+  text-align: left;
+}
+
 #studio-photo-slider-window {
   width: 100%;
-  height: 400px;
   position: relative;
   text-align: center;
   line-height: 400px;
@@ -230,7 +301,7 @@ h1 a {
 
 #studio-photo-slider-window .photo-box {
   width: 100%;
-  height: 400px;
+  height: 500px;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -247,23 +318,23 @@ h1 a {
   bottom: 30px;
   right: 30px;
   cursor: pointer;
+  z-index: 80;
 }
 
 #studio-photo-slider-window .slider-editor-box {
   width: 100%;
-  height: 400px;
+  height: 100%;
   position: absolute;
   left: 0;
   top: 0;
   display: none;
   z-index: 90;
-  background-color: rgba(0, 0, 0, 0.7);
 }
 
 #studio-photo-slider-window .editor-main-box {
   width: 860px;
   height: 162px;
-  padding-top: 108px;
+  padding-top: 50px;
   margin: 0 auto;
 }
 
@@ -274,7 +345,7 @@ h1 a {
   margin-bottom: 5px;
   margin-left: 10px;
   margin-right: 10px;
-  border: 1px dashed #ccc;
+  border: 1px dashed #999;
   font-size: 3em;
   line-height: 150px;
   float: left;
@@ -285,30 +356,14 @@ h1 a {
   position: relative;
 }
 
-#studio-photo-slider-window .editor-button-box {
-  width: 100%;
-  height: 100px;
-  line-height: 100px;
-}
-
 #studio-photo-slider-window .editor-photo-input {
   position: absolute;
-  width: 1px;
-  height: 1px;
+  width: 0px;
+  height: 0px;
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
   border: 0;
-}
-
-#studio-photo-slider-window .submit-button {
-  font-family: inherit;
-  outline: 0;
-  border: none;
-  cursor: pointer;
-  text-align: center;
-  background-color: rgba(0, 0, 0, 0);
 }
 
 #studio-introduction-window hr {
@@ -325,8 +380,80 @@ h1 a {
   padding: 20px;
   margin: 0 auto;
   margin-top: 100px;
+  margin-bottom: 80px;
   text-align: left;
   line-height: 2em;
+}
+
+#studio-introduction-window #intro-edit-button {
+  position: absolute;
+  top: 40px;
+  left: calc(50% - 65px);
+}
+
+#studio-introduction-window .intro-editor-box {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 90;
+  display: none;
+}
+
+#studio-introduction-window .editor-main-box {
+  width: 502px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#studio-introduction-window input {
+  width: 500px;
+  height: 40px;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 1em;
+  font-family: "Nanum Gothic";
+  border-radius: 3px;
+  outline-style: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+#studio-introduction-window .input-short {
+  width: 250px;
+  height: 40px;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 1em;
+  font-family: "Nanum Gothic";
+  border-radius: 3px;
+  outline-style: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+#studio-introduction-window textarea {
+  width: 500px;
+  height: 100px;
+  resize: none;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 1em;
+  font-family: "Nanum Gothic";
+  border-radius: 3px;
+  outline-style: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 #stars {
@@ -379,6 +506,7 @@ h1 a {
   margin-left: 25px;
   margin-right: 25px;
   text-align: left;
+  line-height: 1.5em;
   border-top: 1px solid #ccc;
 }
 
@@ -403,6 +531,7 @@ h1 a {
   top: 0;
   left: 0;
   z-index: 100;
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 #header a {
@@ -425,7 +554,7 @@ h1 a {
   top: 0;
   left: 0;
   z-index: 110;
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 #login-popup {
@@ -455,8 +584,10 @@ h1 a {
   height: 40px;
   padding-left: 20px;
   padding-right: 20px;
+  font-size: 1em;
+  font-family: "Nanum Gothic";
+  border-radius: 3px;
   letter-spacing: 5px;
-  border-radius: 0;
   outline-style: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -467,6 +598,7 @@ h1 a {
   width: 342px;
   height: 42px;
   margin-bottom: 10px;
+  border-radius: 3px;
   font-family: inherit;
   line-height: 42px;
   outline: 0;
@@ -479,6 +611,7 @@ h1 a {
 #kakao-login-button {
   width: 342px;
   height: 42px;
+  border-radius: 3px;
   background-color: #ffeb00;
   background-image: url("/images/login/kakao/kakao_login_btn.png");
   background-repeat: no-repeat;

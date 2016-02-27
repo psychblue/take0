@@ -12,8 +12,10 @@
     <script type="text/javascript" src="/javascripts/take-login.js"></script>
     <script type="text/javascript" src="/javascripts/take-studio.js"></script>
   </head>
+
   <body>
-    <div id="header" class="width-full bg-color-darkgrey font-white">
+
+    <div id="header" class="width-full font-white">
 
       <div id="header-title" class="float-left"><a href="/"><%= service %></a></div>
       <div id="header-login" class="float-right">
@@ -43,6 +45,7 @@
           StudioPhotoSliderController.enableSlider(<%- data.slider_photo_list %>);
         </script>
         <ul>
+
           <%
           for(var i = 0; i < data.num_photo_on_slider; i++){
           %>
@@ -61,11 +64,10 @@
         }
         if(isOwner){
         %>
-          <div class="slider-edit-button bg-color-mint font-white">+</div>
-        <%
-        }
-        %>
-        <div class="slider-editor-box font-lightgrey">
+        <div class="slider-edit-button bg-color-mint font-white">+</div>
+
+        <div class="slider-editor-box bg-color-lightergrey font-darkgrey">
+          <div class="editor-title-box font-level-large">스튜디오의 대표 사진을 등록하세요.</div>
           <form action="/studio/<%= data.username %>/slider/update" method="POST" enctype="multipart/form-data">
             <div class="editor-main-box">
               <input type="hidden" id="flag" name="flag"></input>
@@ -73,11 +75,11 @@
               for(var i = 0; i < 5; i++){
                 if(data.num_photo_on_slider >= i+1){
                 %>
-                <label for="file-input-<%= i + 1 %>" class="editor-photo-box"></label>
+                <label for="file-input-<%= i + 1 %>" class="editor-photo-box font-grey"></label>
                 <%
                 }else{
                 %>
-                <label for="file-input-<%= i + 1 %>" class="editor-photo-box no-photo">+</label>
+                <label for="file-input-<%= i + 1 %>" class="editor-photo-box no-photo font-grey">+</label>
                 <%
                 }
                 %>
@@ -85,17 +87,51 @@
               <%
               }
               %>
-              <div class="float-clear"></div>
-            </div>
-            <div class="editor-button-box">
-              <button type="submit" class="submit-button font-lightgrey font-level-default">저장</button>&nbsp;&nbsp;|&nbsp;&nbsp;
-              <span class="cancel-button cursor-pointer">취소</span>
             </div>
           </form>
+          <div class="editor-button-box">
+            <button type="submit" class="editor-submit-button font-white">저장하기</button>
+            <button type="button" class="editor-cancel-button font-mint">취소하기</button>
+          </div>
         </div>
+        <%
+        }
+        %>
+
       </div>
 
       <div id="studio-introduction-window" class="take-basic-window font-grey">
+
+        <%
+        if(isOwner){
+        %>
+          <div id="intro-edit-button" class="studio-edit-button font-white bg-color-mint">
+            <img src="/images/studio/pencil.png"></img><span>&nbsp;수정하기</span>
+          </div>
+
+          <div class="intro-editor-box bg-color-white font-darkgrey">
+            <div class="editor-title-box font-level-large">스튜디오를 소개하세요.</div>
+            <form id="intro-form">
+              <div class="editor-main-box">
+                <div class="editor-input-label font-grey">&nbsp;스튜디오 이름&nbsp;&nbsp;|</div>
+                <input type="text" class="font-darkgrey font-level-default border-solid-thin-lightgrey" name="studio_name"></input>
+                <div class="editor-input-label font-grey">&nbsp;연락처&nbsp;&nbsp;|</div>
+                <input type="text" class="input-short font-darkgrey font-level-default border-solid-thin-lightgrey" name="tel_num"></input>
+                <div class="editor-input-label font-grey">&nbsp;주소&nbsp;&nbsp;|</div>
+                <input type="text" class="font-darkgrey font-level-default border-solid-thin-lightgrey" name="address"></input>
+                <div class="editor-input-label font-grey">&nbsp;스튜디오 소개글&nbsp;&nbsp;|</div>
+                <textarea class="font-darkgrey font-level-default border-solid-thin-lightgrey" name="introduction"></textarea>
+              </div>
+            </form>
+            <div class="editor-button-box">
+              <button type="submit" class="editor-submit-button font-white">저장하기</button>
+              <button type="button" class="editor-cancel-button font-mint">취소하기</button>
+            </div>
+          </div>
+        <%
+        }
+        %>
+
         <h1><%= data.studio_name %></h1>
         <span>by&nbsp;&nbsp;<%= photographerName %></span>
         <div id="stars" class="font-darkgrey font-bold">
@@ -114,9 +150,9 @@
         <hr class="bg-color-lightgrey">
         <p class="take-basic-paragraph"><%- data.introduction %></p>
         <div class="left-aligned-box border-solid-thin-grey">
-          <div class="label-bold">연락처</div>&nbsp;&nbsp;&nbsp;<%= data.tel_num %>
+          <div class="label-bold">연락처</div>&nbsp;&nbsp;&nbsp;<span id="tel-num"><%= data.tel_num %></span>
           <div class="float-clear"></div>
-          <div class="label-bold">주소</div>&nbsp;&nbsp;&nbsp;<%= data.address %>
+          <div class="label-bold">주소</div>&nbsp;&nbsp;&nbsp;<span id="address"><%= data.address %></span>
           <div class="float-clear"></div>
         </div>
       </div>

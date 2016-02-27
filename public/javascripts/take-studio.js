@@ -24,10 +24,85 @@ var StudioPhotoSliderController = (function(){
     var $sliderEditorBox,
     $editorPhotoBoxes,
     $editorPhotoInputs,
+    $submitButton,
     $cancelButton,
     $flag;
 
+    function loadElements(){
+      $sliderEditorBox = $studioPhotoSliderWindow.children(".slider-editor-box");
+      $editorPhotoBoxes = $sliderEditorBox.find(".editor-photo-box");
+      $editorPhotoInputs = $sliderEditorBox.find(".editor-photo-input");
+      $submitButton = $sliderEditorBox.find(".editor-submit-button");
+      $cancelButton = $sliderEditorBox.find(".editor-cancel-button");
+      $flag = $sliderEditorBox.find("#flag");
+    };
+
+    function addDelButton(target){
+      var $delButton = $("<img></img>");
+
+      $delButton.addClass("del-button")
+      .attr("src", "/images/studio/del.png")
+      .css({
+        "position": "absolute",
+        "right": "-12px",
+        "top": "-12px"
+      });
+
+      target.empty()
+      .append($delButton);
+    };
+
+    function clickDelButton(target){
+      target.find(".del-button").click(function(){
+        var parent = $(this).parent();
+        var inputId = parent.attr("for");
+
+        flag[inputId.charAt(11) - 1] = 2;
+        $flag.val(flag);
+
+        $(this).hide();
+        parent
+        resetPhotoBox(parent)
+        .text("+")
+        .next().val("");
+
+        return false;
+      });
+    };
+
+    function resetPhotoBox(target){
+      target.css({
+        "background-image": "none",
+        "border": "1px dashed #999"
+      });
+
+      return target;
+    };
+
+    function setPreview(target, src){
+      target.css({
+        "background-image": "url\(\"" + src + "\"\)",
+        "border": "1px solid #999"
+      });
+
+      return target;
+    }
+
     var bindEvents = function(){
+      $submitButton.hover(function(){
+        ButtonController.onMouseenter($(this));
+      },
+      function(){
+        ButtonController.onMouseleave($(this));
+      });
+
+      $cancelButton.hover(function(){
+        ButtonController.onMouseenter($(this));
+      },
+      function(){
+        ButtonController.onMouseleave($(this));
+      });
+
       $cancelButton.click(function(){
         close();
       });
@@ -51,12 +126,7 @@ var StudioPhotoSliderController = (function(){
             label.each(function(){
               if($(this).attr("for") == inputId){
                 addDelButton($(this));
-
-                $(this)
-                .css({
-                  "background-image": "url\(\"" + src + "\"\)",
-                  "border": "1px solid #ccc"
-                });
+                setPreview($(this), src);
               }
 
               clickDelButton($(this));
@@ -70,9 +140,34 @@ var StudioPhotoSliderController = (function(){
       });
     };
 
-    function close(){
+    var init = function(){
+      loadElements();
+    };
+
+    var show = function(){
+      flag = [0, 0, 0, 0, 0];
+      $flag.val(flag);
+
+      $editorPhotoBoxes.each(function(index){
+        if(!$(this).hasClass("no-photo")){
+          addDelButton($(this));
+          setPreview($(this), origPhotoList[index])
+          .next().val("");
+        }
+        else{
+          resetPhotoBox($(this))
+          .text("+")
+          .next().val("");
+        }
+
+        clickDelButton($(this));
+      });
+
+      $sliderEditorBox.fadeIn("fast");
+    };
+
+    var close = function(){
       $sliderEditorBox.fadeOut("fast");
-      $sliderEditButton.fadeIn("fast");
 
       if(sliderEnabled == 1){
         $unslider.mouseenter(function(){
@@ -85,95 +180,18 @@ var StudioPhotoSliderController = (function(){
       }
     };
 
-    function addDelButton(target){
-      var $delButton = $("<img></img>");
-
-      $delButton
-      .addClass("del-button")
-      .attr("src", "/images/studio/del.png")
-      .css({
-        "position": "absolute",
-        "right": "-12px",
-        "top": "-12px"
-      });
-
-      target
-      .empty()
-      .append($delButton);
-    };
-
-    function clickDelButton(target){
-      target.find(".del-button").click(function(){
-        var parent = $(this).parent();
-        var inputId = parent.attr("for");
-
-        flag[inputId.charAt(11) - 1] = 2;
-        $flag.val(flag);
-
-        $(this).hide();
-        parent
-        .css({
-          "background-image": "none",
-          "border": "1px dashed #ccc"
-        })
-        .text("+")
-        .next().val("");
-
-        return false;
-      });
-    };
-
-    var init = function(){
-      $sliderEditorBox = $studioPhotoSliderWindow.children(".slider-editor-box");
-      $editorPhotoBoxes = $sliderEditorBox.find(".editor-photo-box");
-      $editorPhotoInputs = $sliderEditorBox.find(".editor-photo-input");
-      $cancelButton = $sliderEditorBox.find(".cancel-button");
-      $flag = $sliderEditorBox.find("#flag");
-    };
-
-    var show = function(){
-      flag = [0, 0, 0, 0, 0];
-      $flag.val(flag);
-
-      $editorPhotoBoxes.each(function(index){
-        if(!$(this).hasClass("no-photo")){
-          addDelButton($(this));
-
-          $(this)
-          .css({
-            "background-image": "url\(\"" + origPhotoList[index] + "\"\)",
-            "border": "1px solid #ccc"
-          })
-          .next().val("");
-        }
-        else{
-          $(this)
-          .text("+")
-          .css({
-            "background-image": "none",
-            "border": "1px dashed #ccc"
-          })
-          .next().val("");
-        }
-
-        clickDelButton($(this));
-      });
-
-      $sliderEditorBox.fadeIn("fast");
-    };
-
     return {
       bindEvents,
       init,
-      show
+      show,
+      close
     }
   }());
   /***************************************************/
 
   (function(){
     $(document).ready(function(){
-      $studioPhotoSliderWindow = $("#studio-photo-slider-window");
-      $sliderEditButton = $studioPhotoSliderWindow.find(".slider-edit-button");
+      loadElements();
 
       if(sliderEnabled){
         setPhotoSlider();
@@ -184,6 +202,11 @@ var StudioPhotoSliderController = (function(){
       bindEditorEvents();
     });
   }());
+
+  function loadElements(){
+    $studioPhotoSliderWindow = $("#studio-photo-slider-window");
+    $sliderEditButton = $studioPhotoSliderWindow.find(".slider-edit-button");
+  }
 
   function bindSliderEvents(){
     $unslider.hover(function(){
@@ -203,7 +226,7 @@ var StudioPhotoSliderController = (function(){
     });
 
     $sliderEditButton.click(function(){
-      showSliderEditor();
+      showEditor();
     });
 
     SliderEditor.bindEvents();
@@ -231,8 +254,9 @@ var StudioPhotoSliderController = (function(){
     });
   };
 
-  function showSliderEditor(){
-    $sliderEditButton.fadeOut("fast");
+  function showEditor(){
+    closeOtherEditors();
+
     SliderEditor.show();
 
     if(sliderEnabled == 1){
@@ -244,6 +268,10 @@ var StudioPhotoSliderController = (function(){
     }
   };
 
+  function closeOtherEditors(){
+      StudioIntrodunctionController.closeEditor();
+  }
+
   var enableSlider = function(list){
     sliderEnabled = 1;
 
@@ -253,6 +281,140 @@ var StudioPhotoSliderController = (function(){
   };
 
   return {
-    enableSlider
+    enableSlider,
+    closeEditor: SliderEditor.close
+  }
+}());
+
+/*
+ * Introduction Controller
+ */
+var StudioIntrodunctionController = (function(){
+
+  var $studioIntroWindow,
+  $introEditButton,
+  $introEditorInputs,
+  $introEditorBox,
+  $submitButton,
+  $cancelButton;
+
+  var inputValues = {
+    studioName: "",
+    telNum: "",
+    address: "",
+    introduction: ""
+  };
+
+  (function(){
+    $(document).ready(function(){
+      loadElements();
+      bindEvents();
+      loadInputValues();
+      resetInputValues();
+    });
+  }());
+
+  function loadElements(){
+    $studioIntroWindow = $("#studio-introduction-window");
+    $introEditButton = $studioIntroWindow.find("#intro-edit-button");
+    $introEditorBox = $studioIntroWindow.find(".intro-editor-box");
+    $introEditorInputs = $introEditorBox.find("input").add($introEditorBox.find("textarea"));
+    $submitButton = $introEditorBox.find(".editor-submit-button");
+    $cancelButton = $introEditorBox.find(".editor-cancel-button");
+  };
+
+  function bindEvents(){
+    $introEditButton.hover(function(){
+      ButtonController.onMouseenter($(this));
+    },
+    function(){
+      ButtonController.onMouseleave($(this));
+    });
+
+    $introEditButton.click(function(){
+      showEditor();
+    });
+
+    $submitButton.hover(function(){
+      ButtonController.onMouseenter($(this));
+    },
+    function(){
+      ButtonController.onMouseleave($(this));
+    });
+
+    $submitButton.click(function(){
+      submit();
+    });
+
+    $cancelButton.hover(function(){
+      ButtonController.onMouseenter($(this));
+    },
+    function(){
+      ButtonController.onMouseleave($(this));
+    });
+
+    $cancelButton.click(function(){
+      closeEditor();
+    });
+
+    $introEditorInputs.focus(function(){
+      InputController.onFocus($(this));
+    });
+
+    $introEditorInputs.focusout(function(){
+      InputController.onFocusout($(this));
+    });
+  };
+
+  function showEditor(){
+    closeOtherEditors();
+    loadInputValues();
+    $introEditorBox.fadeIn("fast");
+  };
+
+  function closeOtherEditors(){
+    StudioPhotoSliderController.closeEditor();
+  };
+
+  function loadInputValues(){
+    inputValues.studioName = $studioIntroWindow.children("h1").text();
+    inputValues.telNum = $studioIntroWindow.find("#tel-num").text();
+    inputValues.address = $studioIntroWindow.find("#address").text();
+    inputValues.introduction = $studioIntroWindow.find("p").html().replace(/<br>/gi, "\r\n");
+  };
+
+  function resetInputValues(){
+    $introEditorInputs.filter("[name='studio_name']").val(inputValues.studioName);
+    $introEditorInputs.filter("[name='tel_num']").val(inputValues.telNum);
+    $introEditorInputs.filter("[name='address']").val(inputValues.address);
+    $introEditorInputs.filter("[name='introduction']").html(inputValues.introduction);
+  };
+
+  function submit(){
+    $.ajax({
+      type: "POST",
+      url: location.href + "/intro/update",
+      data: $("#intro-form").serialize(),
+      success: function(data){
+        if(data.result == "success"){
+          location.reload();
+        }
+        else if(data.result == "fail"){
+          alert(data.text);
+        }
+      },
+      error: function(xhr, option, error){
+        alert(error);
+      }
+    });
+  }
+
+  var closeEditor = function(){
+    $introEditorBox.fadeOut("fast");
+    setTimeout(resetInputValues, 200);
+  };
+
+  return {
+    closeEditor
   }
 }());

@@ -11,6 +11,16 @@ var fs = require('fs');
 var multer = require('multer');
 var photographerManager = {};
 
+var reqFromOwner = function(req, res){
+  if(!(req.isAuthenticated() && (req.user.username == req.params.photographer))){
+    res.send('허락된 사진작가만 이용 가능합니다.');
+    return 0;
+  }
+  else{
+    return 1;
+  }
+}
+
 photographerManager.showStudio = function(req, res, next){
 
   var studioSelectCallbackForError = function(err){
@@ -47,8 +57,7 @@ photographerManager.showStudio = function(req, res, next){
 
 photographerManager.updateSlider = function(req, res, next){
 
-  if(!(req.isAuthenticated() && (req.user.username == req.params.photographer))){
-    res.send('허락된 사진작가만 이용 가능합니다.');
+  if(reqFromOwner(req, res) != 1){
     return;
   }
 
@@ -165,6 +174,32 @@ photographerManager.updateSlider = function(req, res, next){
 
     mysqlDb.doSQLUpdateQuery(query, params, sliderPhotoListUpdateCallbackForSuccess, sliderPhotoListUpdateCallbackForError);
   }
+}
+
+photographerManager.updateIntro = function(req, res, next){
+
+  if(reqFromOwner(req, res) != 1){
+    return;
+  }
+
+  var introduction = req.body.introduction.replace(/\r\n/gi, '<br>');
+
+  var introUpdateCallbackForError = function(err){
+    res.send({
+      "result": "fail",
+      "text": err
+    });
+  }
+
+  var introUpdateCallbackForSuccess = function(){
+    res.send({"result": "success"});
+  }
+
+  var query = 'UPDATE ?? SET ? WHERE ?? = ?';
+  var params = ['studio', {studio_name: req.body.studio_name, tel_num: req.body.tel_num, address: req.body.address, introduction: introduction}, 'username', req.params.photographer];
+  logger.debug('SQL Query [UPDATE %s SET %s WHRER %s = %s]', params[0], JSON.stringify(params[1]), params[2], params[3]);
+
+  mysqlDb.doSQLUpdateQuery(query, params, introUpdateCallbackForSuccess, introUpdateCallbackForError);
 }
 
 module.exports = photographerManager;
