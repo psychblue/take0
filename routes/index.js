@@ -58,4 +58,10 @@ router.post('/studio/:photographer/slider/update', photographerManager.updateSli
 // Studio Introduction Update
 router.post('/studio/:photographer/intro/update', photographerManager.updateIntro);
 
+// Studio Product Update
+router.post('/studio/:photographer/product/update', photographerManager.updateProduct);
+
+// Studio Product Delete
+router.post('/studio/:photographer/product/delete', photographerManager.deleteProduct);
+
 module.exports = router;

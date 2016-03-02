@@ -256,6 +256,7 @@ var StudioPhotoSliderController = (function(){
 
   function closeOtherEditors(){
       StudioIntrodunctionController.closeEditor();
+      StudioProductController.closeEditor();
   }
 
   var enableSlider = function(list){
@@ -333,6 +334,7 @@ var StudioIntrodunctionController = (function(){
 
   function closeOtherEditors(){
     StudioPhotoSliderController.closeEditor();
+    StudioProductController.closeEditor();
   };
 
   function loadInputValues(){
@@ -378,31 +380,200 @@ var StudioIntrodunctionController = (function(){
   }
 }());
 
+/*
+ * Product Controller
+ */
 var StudioProductController = (function(){
+
+  var productEditors = [];
+  var numProducts = 0;
+
+  var $studioProductWindow,
+  $productReserveButtons;
+
+  /***************************************************
+   * Product Editor
+   */
+  var ProductEditor = function(pid, sid){
+
+    var productBoxHeight;
+
+    var $productBox,
+    $productDescBox,
+    $productEditButton,
+    $productEditorBox,
+    $productEditorInputs,
+    $submitButton,
+    $deleteButton,
+    $cancelButton,
+    $productForm;
+
+    var inputValues = {
+      productId: "",
+      productName: "",
+      productDesc: ""
+    };
+
+    (function(){
+      $(document).ready(function(){
+        loadElements();
+        bindEvents();
+        loadInputValues();
+        resetInputValues();
+      });
+    }());
+
+    function loadElements(){
+      $productBox = $("#" + pid);
+      $productDescBox = $productBox.find(".product-desc-box");
+      $productEditButton = $productBox.find(".product-edit-button");
+      $productEditorBox = $productBox.find(".product-editor-box");
+      $productEditorInputs = $productEditorBox.find("input").add($productEditorBox.find("textarea"));
+      $submitButton = $productEditorBox.find(".editor-submit-button");
+      $deleteButton = $productEditorBox.find(".editor-delete-button");
+      $cancelButton = $productEditorBox.find(".editor-cancel-button");
+      $productForm = $productEditorBox.find(".product-form");
+
+      productBoxHeight = $productBox.height();
+    };
+
+    function bindEvents(){
+      ButtonController.setButton($productEditButton, showEditor);
+
+      ButtonController.setButton($submitButton, submit);
+
+      ButtonController.setButton($deleteButton, deleteProduct);
+
+      ButtonController.setButton($cancelButton, closeEditor);
+    };
+
+    function showEditor(){
+      closeOtherEditors();
+      loadInputValues();
+
+      $productDescBox.css({"visibility": "hidden"});
+      $productBox.animate({"height": "550px"}, 200);
+      $productEditorBox.css({"height": "550px"});
+      $productEditorBox.fadeIn("fast");
+    };
+
+    function closeOtherEditors(){
+      StudioPhotoSliderController.closeEditor();
+      StudioIntrodunctionController.closeEditor();
+
+      for(var index in productEditors){
+        if(productEditors[index].getProductBox().attr("id") != $productBox.attr("id")){
+          productEditors[index].closeEditor();
+        }
+      }
+    };
+
+    function loadInputValues(){
+      inputValues.productId = $productForm.find("[name='product_id']").val();
+      inputValues.productName = $productBox.find("h1").text();
+      inputValues.productDesc = $productDescBox.find("ul").html()
+      .trim()
+      .replace(/<\/li><li>/gi, "\r\n").replace(/<li>/gi, "").replace(/<\/li>/gi, "");
+    };
+
+    function resetInputValues(){
+      $productEditorInputs.filter("[name='product_name']").val(inputValues.productName);
+      $productEditorInputs.filter("[name='product_desc']").val(inputValues.productDesc);
+    };
+
+    function submit(){
+      $.ajax({
+        type: "POST",
+        url: location.href + "/product/update",
+        data: $productForm.serialize(),
+        success: function(data){
+          if(data.result == "success"){
+            location.reload();
+          }
+          else if(data.result == "fail"){
+            alert(data.text);
+          }
+        },
+        error: function(xhr, option, error){
+          alert(error);
+        }
+      });
+    };
+
+    function deleteProduct(){
+      $.ajax({
+        type: "POST",
+        url: location.href + "/product/delete",
+        data: {
+          product_id: inputValues.productId,
+          studio_id: sid,
+          num_products: numProducts - 1
+        },
+        success: function(data){
+          if(data.result == "success"){
+            location.reload();
+          }
+          else if(data.result == "fail"){
+            alert(data.text);
+          }
+        },
+        error: function(xhr, option, error){
+          alert(error);
+        }
+      });
+    };
+
+
+    var getProductBox = function(){
+      return $productBox;
+    };
+
+    var closeEditor = function(){
+      $productEditorBox.fadeOut("fast");
+      $productBox.animate({"height": productBoxHeight}, 200);
+      $productDescBox.css({"visibility": "visible"});
+      setTimeout(resetInputValues, 200);
+    };
+
+    return {
+      getProductBox,
+      closeEditor
+    }
+  };
+  /***************************************************/
 
   (function(){
     $(document).ready(function(){
       loadElements();
       bindEvents();
-      loadInputValues();
-      resetInputValues();
     });
   }());
 
   function loadElements(){
-
-  }
+    $studioProductWindow = $("#studio-product-window");
+    $productReserveButtons = $studioProductWindow.find(".product-reserve-button");
+  };
 
   function bindEvents(){
+    $productReserveButtons.each(function(){
+      ButtonController.setButton($(this));
+    });
+  };
 
+  var setProduct = function(productId, studioId){
+    var editor = ProductEditor(productId, studioId);
+    productEditors.push(editor);
+    numProducts++;
+  };
+
+  var closeEditor = function(){
+    for(var index in productEditors){
+      productEditors[index].closeEditor();
+    }
   }
 
-  function loadInputValues(){
-
+  return {
+    setProduct,
+    closeEditor
   }
-
-  function resetInputValues(){
-
-  }
-
 }());

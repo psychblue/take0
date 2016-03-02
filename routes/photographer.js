@@ -46,7 +46,7 @@ var loadProducts = function(req, res, username, studioData){
       res.render('photographer/studio', studioOptions);
     }
     else{
-
+      //To Do
     }
   }
 
@@ -55,6 +55,26 @@ var loadProducts = function(req, res, username, studioData){
   logger.debug('SQL Query [SELECT * FROM %s WHERE %s=%s]', params[0], params[1], params[2]);
 
   mysqlDb.doSQLSelectQuery(query, params, productsSelectCallbackForSuccess, productsSelectCallbackForNoResult, productsSelectCallbackForError);
+}
+
+var updateNumberOfProducts = function(req, res){
+
+  var studioUpdateCallbackForError = function(err){
+    res.send({
+      "result": "fail",
+      "text": err
+    });
+  }
+
+  var studioUpdateCallbackForSuccess = function(){
+    res.send({"result": "success"});
+  }
+
+  var query = 'UPDATE ?? SET ? WHERE ?? = ?';
+  var params = ['studio', {num_products: req.body.num_products}, 'studio_id', req.body.studio_id];
+  logger.debug('SQL Query [UPDATE %s SET %s WHRER %s = %s]', params[0], JSON.stringify(params[1]), params[2], params[3]);
+
+  mysqlDb.doSQLUpdateQuery(query, params, studioUpdateCallbackForSuccess, studioUpdateCallbackForError);
 }
 
 photographerManager.showStudio = function(req, res, next){
@@ -242,6 +262,56 @@ photographerManager.updateIntro = function(req, res, next){
   logger.debug('SQL Query [UPDATE %s SET %s WHRER %s = %s]', params[0], JSON.stringify(params[1]), params[2], params[3]);
 
   mysqlDb.doSQLUpdateQuery(query, params, introUpdateCallbackForSuccess, introUpdateCallbackForError);
+}
+
+photographerManager.updateProduct = function(req, res, next){
+
+  if(reqFromOwner(req, res) != 1){
+    return;
+  }
+
+  var productDesc = '<li>' + req.body.product_desc.replace(/\r\n/gi, '</li><li>') + '</li>';
+
+  var productUpdateCallbackForError = function(err){
+    res.send({
+      "result": "fail",
+      "text": err
+    });
+  }
+
+  var productUpdateCallbackForSuccess = function(){
+    res.send({"result": "success"});
+  }
+
+  var query = 'UPDATE ?? SET ? WHERE ?? = ?';
+  var params = ['studioProducts', {product_name: req.body.product_name, product_desc: productDesc}, 'product_id', req.body.product_id];
+  logger.debug('SQL Query [UPDATE %s SET %s WHRER %s = %s]', params[0], JSON.stringify(params[1]), params[2], params[3]);
+
+  mysqlDb.doSQLUpdateQuery(query, params, productUpdateCallbackForSuccess, productUpdateCallbackForError);
+}
+
+photographerManager.deleteProduct = function(req, res, next){
+
+  if(reqFromOwner(req, res) != 1){
+    return;
+  }
+
+  var productDeleteCallbackForError = function(err){
+    res.send({
+      "result": "fail",
+      "text": err
+    });
+  }
+
+  var productDeleteCallbackForSuccess = function(){
+    updateNumberOfProducts(req, res);
+  }
+
+  var query = 'DELETE FROM ?? WHERE ?? = ?';
+	var params = ['studioProducts', 'product_id', req.body.product_id];
+  logger.debug('SQL Query [DELETE FROM %s WHERE %s=%s]', params[0], params[1], params[2]);
+
+  mysqlDb.doSQLDeleteQuery(query, params, productDeleteCallbackForSuccess, productDeleteCallbackForError);
 }
 
 module.exports = photographerManager;

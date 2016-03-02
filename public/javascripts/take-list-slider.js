@@ -7,9 +7,33 @@ var ListSlider = function(box, url){
   var targetBox = box;
   var postUrl = url;
   var pageNum = 1;
-  var $listSliderArrowLeft = $("<div>&lt;</div>").addClass("list-slider-arrow-box font-lightgrey");
-  var $listSliderArrowRight = $("<div>&gt;</div>").addClass("list-slider-arrow-box font-lightgrey");
-  var $listSliderList = $("<div></div>").addClass("list-slider-list");
+
+  var $listSliderArrowLeft,
+  $listSliderArrowRight,
+  $listSliderList;
+
+  (function(){
+    loadElements();
+    bindEvents();
+  }());
+
+  function loadElements(){
+
+    $listSliderArrowLeft = $("<div>&lt;</div>").addClass("list-slider-arrow-box font-lightgrey");
+    $listSliderArrowRight = $("<div>&gt;</div>").addClass("list-slider-arrow-box font-lightgrey");
+    $listSliderList = $("<div></div>").addClass("list-slider-list");
+
+    targetBox
+    .addClass("list-slider-box")
+    .append($listSliderArrowLeft)
+    .append($listSliderList)
+    .append($listSliderArrowRight)
+    .append($("<div></div>").addClass("float-clear"));
+
+    $listSliderArrowLeft.css({"visibility": "hidden"});
+
+    postList(0);
+  };
 
   function bindEvents(){
     $(window).resize(function(){

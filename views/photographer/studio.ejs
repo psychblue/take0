@@ -118,13 +118,13 @@
             <form id="intro-form">
               <div class="editor-main-box">
                 <div class="editor-input-label font-grey">&nbsp;스튜디오 이름&nbsp;&nbsp;|</div>
-                <input type="text" class="font-darkgrey font-level-default border-solid-thin-lightgrey" name="studio_name"></input>
+                <input type="text" class="take-text-input font-darkgrey font-level-default border-solid-thin-lightgrey" name="studio_name"></input>
                 <div class="editor-input-label font-grey">&nbsp;연락처&nbsp;&nbsp;|</div>
-                <input type="text" class="input-short font-darkgrey font-level-default border-solid-thin-lightgrey" name="tel_num"></input>
+                <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="tel_num"></input>
                 <div class="editor-input-label font-grey">&nbsp;주소&nbsp;&nbsp;|</div>
-                <input type="text" class="font-darkgrey font-level-default border-solid-thin-lightgrey" name="address"></input>
+                <input type="text" class="take-text-input font-darkgrey font-level-default border-solid-thin-lightgrey" name="address"></input>
                 <div class="editor-input-label font-grey">&nbsp;스튜디오 소개글&nbsp;&nbsp;|</div>
-                <textarea class="font-darkgrey font-level-default border-solid-thin-lightgrey" name="introduction"></textarea>
+                <textarea class="take-textarea font-darkgrey font-level-default border-solid-thin-lightgrey" name="introduction"></textarea>
               </div>
             </form>
             <div class="editor-button-box">
@@ -171,6 +171,9 @@
         if(studioData.num_products != 0){
           for(var i = 0; i < productsData.length; i++){
         %>
+        <script type="text/javascript">
+          StudioProductController.setProduct("product-<%= i + 1 %>", <%= productsData[i].studio_id %>);
+        </script>
         <div id="product-<%= i + 1 %>" class="product-box bg-color-white">
           <div class="product-title-box">
             <h1><%= productsData[i].product_name %></h1>
@@ -179,13 +182,37 @@
             <%
             if(isOwner){
             %>
-            <button class="take-button-mint">
+            <button class="product-edit-button take-button-mint">
               <img src="/images/studio/pencil.png"></img><span>&nbsp;&nbsp;수정하기</span>
             </button>
+
+            <div class="product-editor-box">
+              <div class="editor-title-box font-level-large">스튜디오 상품을 소개하세요.</div>
+              <form class="product-form">
+                <div class="editor-main-box">
+                  <input type="hidden" value="<%= productsData[i].product_id %>" name="product_id"></input>
+                  <div class="editor-input-label font-grey">&nbsp;상품 이름&nbsp;&nbsp;|</div>
+                  <input type="text" class="take-text-input font-darkgrey font-level-default border-solid-thin-lightgrey" name="product_name"></input>
+                  <div class="editor-input-label font-grey">&nbsp;상품 소개&nbsp;&nbsp;|</div>
+                  <textarea class="take-textarea font-darkgrey font-level-default border-solid-thin-lightgrey" name="product_desc"></textarea>
+                </div>
+              </form>
+              <div class="editor-button-box">
+                <button type="submit" class="editor-submit-button take-button-mint">
+                  <img src="/images/studio/check.png"></img><span>&nbsp;저장하기</span>
+                </button>
+                <button type="submit" class="editor-delete-button take-button-mint">
+                  <img src="/images/studio/delete.png"></img><span>&nbsp;삭제하기</span>
+                </button>
+                <button type="button" class="editor-cancel-button take-button-white">
+                  <img src="/images/studio/cancel.png"></img><span>&nbsp;취소하기</span>
+                </button>
+              </div>
+            </div>
             <%
             }
             %>
-            <button class="take-button-mint">
+            <button class="product-reserve-button take-button-mint">
               <img src="/images/studio/reserve.png"></img><span>&nbsp;&nbsp;예약하기</span>
             </button>
           </div>
@@ -199,6 +226,13 @@
         </div>
         <%
           }
+        }
+        if(isOwner){
+        %>
+        <div id="product-add-box" class="product-box"><span class="font-level-larger2">+</span>
+
+        </div>
+        <%
         }
         %>
 

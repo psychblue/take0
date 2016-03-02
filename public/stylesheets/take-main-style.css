@@ -117,6 +117,10 @@ h1 a {
   font-size: 2.5em;
 }
 
+.font-level-larger2 {
+  font-size: 3em;
+}
+
 .font-level-max {
   font-size: 5em;
 }
@@ -242,6 +246,55 @@ h1 a {
   vertical-align: -6px;
 }
 
+.take-text-input {
+  width: 500px;
+  height: 40px;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 1em;
+  font-family: "Nanum Gothic";
+  border-radius: 3px;
+  outline-style: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.take-text-shortinput {
+  width: 250px;
+  height: 40px;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 1em;
+  font-family: "Nanum Gothic";
+  border-radius: 3px;
+  outline-style: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.take-textarea {
+  width: 500px;
+  height: 100px;
+  resize: none;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 1em;
+  font-family: "Nanum Gothic";
+  border-radius: 3px;
+  outline-style: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
 .list-slider-box {
   padding-top: 30px;
   padding-bottom: 30px;
@@ -277,7 +330,6 @@ h1 a {
 }
 
 .editor-title-box {
-  width: 100%;
   height: 50px;
   padding-top: 70px;
   line-height: 50px;
@@ -406,58 +458,9 @@ h1 a {
 }
 
 #studio-introduction-window .editor-main-box {
-  width: 502px;
+  width: 542px;
   margin: 0 auto;
   text-align: left;
-}
-
-#studio-introduction-window input {
-  width: 500px;
-  height: 40px;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 20px;
-  padding-right: 20px;
-  font-size: 1em;
-  font-family: "Nanum Gothic";
-  border-radius: 3px;
-  outline-style: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-#studio-introduction-window .input-short {
-  width: 250px;
-  height: 40px;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 20px;
-  padding-right: 20px;
-  font-size: 1em;
-  font-family: "Nanum Gothic";
-  border-radius: 3px;
-  outline-style: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-#studio-introduction-window textarea {
-  width: 500px;
-  height: 100px;
-  resize: none;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
-  font-size: 1em;
-  font-family: "Nanum Gothic";
-  border-radius: 3px;
-  outline-style: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
 }
 
 #stars {
@@ -471,7 +474,16 @@ h1 a {
 
 #studio-product-window .product-box {
   width: 800px;
-  margin: 25px auto;
+  overflow: hidden;
+  margin: 50px auto;
+  position: relative;
+}
+
+#studio-product-window #product-add-box {
+  height: 300px;
+  line-height: 300px;
+  border: 1px dashed #999;
+  cursor: pointer;
 }
 
 #studio-product-window .product-title-box {
@@ -500,6 +512,23 @@ h1 a {
   text-align: left;
   line-height: 1.5em;
   border-top: 1px solid #ccc;
+}
+
+#studio-product-window .product-editor-box {
+  width: 800px;
+  display: none;
+  text-align: center;
+  line-height: 1em;
+  background-color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#studio-product-window .editor-main-box {
+  width: 542px;
+  margin: 0 auto;
+  text-align: left;
 }
 
 #studio-portfolio-window .portfolio-box {
