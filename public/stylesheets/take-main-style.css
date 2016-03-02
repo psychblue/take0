@@ -475,7 +475,7 @@ h1 a {
 }
 
 #studio-product-window .product-title-box {
-  width: 545px;
+  width: 475px;
   padding-top: 25px;
   padding-bottom: 20px;
   padding-left: 30px;
@@ -484,23 +484,11 @@ h1 a {
 }
 
 #studio-product-window .product-button-box {
-  width: 195px;
-  padding-top: 30px;
+  width: 265px;
+  padding-top: 25px;
   padding-right: 30px;
+  text-align: right;
   float: left;
-}
-
-#studio-product-window .product-button {
-  width: 193px;
-  height: 28px;
-  line-height: 28px;
-  cursor: pointer;
-}
-
-#studio-product-window .product-button:hover {
-  background-color: #3db7cc;
-  color: #fff;
-  border: 1px solid #3db7cc;
 }
 
 #studio-product-window .product-desc-box {

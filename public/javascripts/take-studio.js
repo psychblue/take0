@@ -377,3 +377,32 @@ var StudioIntrodunctionController = (function(){
     closeEditor
   }
 }());
+
+var StudioProductController = (function(){
+
+  (function(){
+    $(document).ready(function(){
+      loadElements();
+      bindEvents();
+      loadInputValues();
+      resetInputValues();
+    });
+  }());
+
+  function loadElements(){
+
+  }
+
+  function bindEvents(){
+
+  }
+
+  function loadInputValues(){
+
+  }
+
+  function resetInputValues(){
+
+  }
+
+}());

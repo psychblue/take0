@@ -21,6 +21,42 @@ var reqFromOwner = function(req, res){
   }
 }
 
+var loadProducts = function(req, res, username, studioData){
+
+  var productsSelectCallbackForError = function(err){
+    res.send('DB Error');
+  }
+
+  var productsSelectCallbackForNoResult = function(){
+    res.send('No Products');
+  }
+
+  var productsSelectCallbackForSuccess = function(rows, fields){
+    if(studioData.num_portfolios == 0){
+      var studioOptions = {
+        title: confParams.html.title,
+        service: confParams.html.service_name,
+        isAuth: req.isAuthenticated(),
+        isOwner: (req.isAuthenticated() && (req.user.username == req.params.photographer)),
+        name: username,
+        photographerName: req.params.photographer,
+        studioData: studioData,
+        productsData: rows
+      };
+      res.render('photographer/studio', studioOptions);
+    }
+    else{
+
+    }
+  }
+
+  var query = 'SELECT * FROM ?? WHERE ?? = ?';
+  var params = ['studioProducts', 'studio_id', studioData.studio_id];
+  logger.debug('SQL Query [SELECT * FROM %s WHERE %s=%s]', params[0], params[1], params[2]);
+
+  mysqlDb.doSQLSelectQuery(query, params, productsSelectCallbackForSuccess, productsSelectCallbackForNoResult, productsSelectCallbackForError);
+}
+
 photographerManager.showStudio = function(req, res, next){
 
   var studioSelectCallbackForError = function(err){
@@ -34,18 +70,24 @@ photographerManager.showStudio = function(req, res, next){
   var studioSelectCallbackForSuccess = function(rows, fields){
     var username = '';
     if(req.isAuthenticated()){
-  		username = req.user.username;
-  	}
-    var studioOptions = {
-      title: confParams.html.title,
-      service: confParams.html.service_name,
-      isAuth: req.isAuthenticated(),
-      isOwner: (req.isAuthenticated() && (req.user.username == req.params.photographer)),
-      name: username,
-      photographerName: req.params.photographer,
-      data: rows[0]
-    };
-    res.render('photographer/studio', studioOptions);
+      username = req.user.username;
+    }
+
+    if(rows[0].num_products == 0){
+      var studioOptions = {
+        title: confParams.html.title,
+        service: confParams.html.service_name,
+        isAuth: req.isAuthenticated(),
+        isOwner: (req.isAuthenticated() && (req.user.username == req.params.photographer)),
+        name: username,
+        photographerName: req.params.photographer,
+        studioData: rows[0]
+      };
+      res.render('photographer/studio', studioOptions);
+    }
+    else{
+      loadProducts(req, res, username, rows[0]);
+    }
   }
 
   var query = 'SELECT * FROM ?? WHERE ?? = ?';

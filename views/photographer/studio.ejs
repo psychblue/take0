@@ -39,15 +39,15 @@
 
       <div id="studio-photo-slider-window" class="bg-color-grey">
         <%
-        if(data.num_photo_on_slider > 0){
+        if(studioData.num_photo_on_slider > 0){
         %>
         <script type="text/javascript">
-          StudioPhotoSliderController.enableSlider(<%- data.slider_photo_list %>);
+          StudioPhotoSliderController.enableSlider(<%- studioData.slider_photo_list %>);
         </script>
         <ul>
 
           <%
-          for(var i = 0; i < data.num_photo_on_slider; i++){
+          for(var i = 0; i < studioData.num_photo_on_slider; i++){
           %>
           <li><div class="photo-box"></div></li>
           <%
@@ -68,12 +68,12 @@
 
         <div class="slider-editor-box bg-color-lightergrey font-darkgrey">
           <div class="editor-title-box font-level-large">스튜디오의 대표 사진을 등록하세요.</div>
-          <form action="/studio/<%= data.username %>/slider/update" method="POST" enctype="multipart/form-data">
+          <form action="/studio/<%= studioData.username %>/slider/update" method="POST" enctype="multipart/form-data">
             <div class="editor-main-box">
               <input type="hidden" id="flag" name="flag"></input>
               <%
               for(var i = 0; i < 5; i++){
-                if(data.num_photo_on_slider >= i+1){
+                if(studioData.num_photo_on_slider >= i+1){
                 %>
                 <label for="file-input-<%= i + 1 %>" class="editor-photo-box font-grey"></label>
                 <%
@@ -140,15 +140,15 @@
         }
         %>
 
-        <h1><%= data.studio_name %></h1>
+        <h1><%= studioData.studio_name %></h1>
         <span>by&nbsp;&nbsp;<%= photographerName %></span>
         <div id="stars" class="font-darkgrey font-bold">
           <%
-          for(var i = 0; i < data.stars; i++){
+          for(var i = 0; i < studioData.stars; i++){
           %>
           <img class="star" src="/images/studio/star.png"></img>
           <%
-          }if(data.half_star){
+          }if(studioData.half_star){
           %>
           <img class="star" src="/images/studio/halfstar.png"></img>
           <%
@@ -156,37 +156,51 @@
           %>
         </div>
         <hr class="bg-color-lightgrey">
-        <p class="take-basic-paragraph"><%- data.introduction %></p>
+        <p class="take-basic-paragraph"><%- studioData.introduction %></p>
         <div class="left-aligned-box border-solid-thin-grey">
-          <div class="label-bold">연락처</div>&nbsp;&nbsp;&nbsp;<span id="tel-num"><%= data.tel_num %></span>
+          <div class="label-bold">연락처</div>&nbsp;&nbsp;&nbsp;<span id="tel-num"><%= studioData.tel_num %></span>
           <div class="float-clear"></div>
-          <div class="label-bold">주소</div>&nbsp;&nbsp;&nbsp;<span id="address"><%= data.address %></span>
+          <div class="label-bold">주소</div>&nbsp;&nbsp;&nbsp;<span id="address"><%= studioData.address %></span>
           <div class="float-clear"></div>
         </div>
       </div>
 
       <div id="studio-product-window" class="take-basic-window font-grey bg-color-lightergrey">
 
-        <div class="product-box bg-color-white">
+        <%
+        if(studioData.num_products != 0){
+          for(var i = 0; i < productsData.length; i++){
+        %>
+        <div id="product-<%= i + 1 %>" class="product-box bg-color-white">
           <div class="product-title-box">
-            <h1>돌스냅 Basic</h1>
+            <h1><%= productsData[i].product_name %></h1>
           </div>
           <div class="product-button-box">
-            <div class="product-button font-darkgrey border-solid-thin-lightgrey">
-              예약하기
-            </div>
+            <%
+            if(isOwner){
+            %>
+            <button class="take-button-mint">
+              <img src="/images/studio/pencil.png"></img><span>&nbsp;&nbsp;수정하기</span>
+            </button>
+            <%
+            }
+            %>
+            <button class="take-button-mint">
+              <img src="/images/studio/reserve.png"></img><span>&nbsp;&nbsp;예약하기</span>
+            </button>
           </div>
           <div class="float-clear">
           </div>
           <div class="product-desc-box">
             <ul>
-              <li>고급 인화 60매</li>
-              <li>촬영 원본 CD</li>
-              <li>고급 사진 보관함</li>
-              <li>돌잡이 행사 및 돌잔치 행사 촬영</li>
+              <%- productsData[i].product_desc%>
             </ul>
           </div>
         </div>
+        <%
+          }
+        }
+        %>
 
       </div>
 
