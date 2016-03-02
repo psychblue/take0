@@ -30,16 +30,28 @@ var InputController = (function(){
 
 var ButtonController = (function(){
 
-  var onMouseenter = function(targetButton){
+  function onMouseenter(targetButton){
     targetButton.animate({"font-size": "1.1em"}, 100);
   };
 
-  var onMouseleave = function(targetButton){
+  function onMouseleave(targetButton){
     targetButton.animate({"font-size": "1em"}, 100);
   };
 
+  var setButton = function(targetButton, clickFunc){
+    targetButton.hover(function(){
+      onMouseenter($(this));
+    },
+    function(){
+      onMouseleave($(this));
+    });
+
+    if(clickFunc){
+      targetButton.click(clickFunc);
+    }
+  };
+
   return {
-    onMouseenter,
-    onMouseleave
+    setButton
   }
 }());

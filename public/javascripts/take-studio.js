@@ -89,23 +89,9 @@ var StudioPhotoSliderController = (function(){
     }
 
     var bindEvents = function(){
-      $submitButton.hover(function(){
-        ButtonController.onMouseenter($(this));
-      },
-      function(){
-        ButtonController.onMouseleave($(this));
-      });
+      ButtonController.setButton($submitButton);
 
-      $cancelButton.hover(function(){
-        ButtonController.onMouseenter($(this));
-      },
-      function(){
-        ButtonController.onMouseleave($(this));
-      });
-
-      $cancelButton.click(function(){
-        close();
-      });
+      ButtonController.setButton($cancelButton, close);
 
       $editorPhotoInputs.change(function(){
         if(window.FileReader){
@@ -316,7 +302,7 @@ var StudioIntrodunctionController = (function(){
 
   function loadElements(){
     $studioIntroWindow = $("#studio-introduction-window");
-    $introEditButton = $studioIntroWindow.find("#intro-edit-button");
+    $introEditButton = $studioIntroWindow.find(".intro-edit-button");
     $introEditorBox = $studioIntroWindow.find(".intro-editor-box");
     $introEditorInputs = $introEditorBox.find("input").add($introEditorBox.find("textarea"));
     $submitButton = $introEditorBox.find(".editor-submit-button");
@@ -324,38 +310,11 @@ var StudioIntrodunctionController = (function(){
   };
 
   function bindEvents(){
-    $introEditButton.hover(function(){
-      ButtonController.onMouseenter($(this));
-    },
-    function(){
-      ButtonController.onMouseleave($(this));
-    });
+    ButtonController.setButton($introEditButton, showEditor);
 
-    $introEditButton.click(function(){
-      showEditor();
-    });
+    ButtonController.setButton($submitButton, submit);
 
-    $submitButton.hover(function(){
-      ButtonController.onMouseenter($(this));
-    },
-    function(){
-      ButtonController.onMouseleave($(this));
-    });
-
-    $submitButton.click(function(){
-      submit();
-    });
-
-    $cancelButton.hover(function(){
-      ButtonController.onMouseenter($(this));
-    },
-    function(){
-      ButtonController.onMouseleave($(this));
-    });
-
-    $cancelButton.click(function(){
-      closeEditor();
-    });
+    ButtonController.setButton($cancelButton, closeEditor);
 
     $introEditorInputs.focus(function(){
       InputController.onFocus($(this));

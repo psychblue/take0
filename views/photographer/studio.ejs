@@ -88,11 +88,15 @@
               }
               %>
             </div>
+            <div class="editor-button-box">
+              <button type="submit" class="editor-submit-button take-button-mint">
+                <img src="/images/studio/check.png"></img><span>&nbsp;저장하기</span>
+              </button>
+              <button type="button" class="editor-cancel-button take-button-white">
+                <img src="/images/studio/cancel.png"></img><span>&nbsp;취소하기</span>
+              </button>
+            </div>
           </form>
-          <div class="editor-button-box">
-            <button type="submit" class="editor-submit-button font-white">저장하기</button>
-            <button type="button" class="editor-cancel-button font-mint">취소하기</button>
-          </div>
         </div>
         <%
         }
@@ -105,9 +109,9 @@
         <%
         if(isOwner){
         %>
-          <div id="intro-edit-button" class="studio-edit-button font-white bg-color-mint">
+          <button class="intro-edit-button take-button-mint">
             <img src="/images/studio/pencil.png"></img><span>&nbsp;수정하기</span>
-          </div>
+          </button>
 
           <div class="intro-editor-box bg-color-white font-darkgrey">
             <div class="editor-title-box font-level-large">스튜디오를 소개하세요.</div>
@@ -124,8 +128,12 @@
               </div>
             </form>
             <div class="editor-button-box">
-              <button type="submit" class="editor-submit-button font-white">저장하기</button>
-              <button type="button" class="editor-cancel-button font-mint">취소하기</button>
+              <button type="submit" class="editor-submit-button take-button-mint">
+                <img src="/images/studio/check.png"></img><span>&nbsp;저장하기</span>
+              </button>
+              <button type="button" class="editor-cancel-button take-button-white">
+                <img src="/images/studio/cancel.png"></img><span>&nbsp;취소하기</span>
+              </button>
             </div>
           </div>
         <%
