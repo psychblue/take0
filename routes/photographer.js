@@ -264,6 +264,32 @@ photographerManager.updateIntro = function(req, res, next){
   mysqlDb.doSQLUpdateQuery(query, params, introUpdateCallbackForSuccess, introUpdateCallbackForError);
 }
 
+photographerManager.addProduct = function(req, res, next){
+
+  if(reqFromOwner(req, res) != 1){
+    return;
+  }
+
+  var productDesc = '<li>' + req.body.product_desc.replace(/\r\n/gi, '</li><li>') + '</li>';
+
+  var productInsertCallbackForError = function(err){
+    res.send({
+      "result": "fail",
+      "text": err
+    });
+  }
+
+  var productInsertCallbackForSuccess = function(){
+    updateNumberOfProducts(req, res);
+  }
+
+  var query = 'INSERT INTO ?? SET ?';
+  var params = ['studioProducts', {studio_id: req.body.studio_id, product_name: req.body.product_name, product_desc: productDesc}];
+  logger.debug('SQL Query [INSERT INTO %s SET %s]', params[0], JSON.stringify(params[1]));
+
+  mysqlDb.doSQLInsertQuery(query, params, productInsertCallbackForSuccess, productInsertCallbackForError);
+}
+
 photographerManager.updateProduct = function(req, res, next){
 
   if(reqFromOwner(req, res) != 1){

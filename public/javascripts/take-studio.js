@@ -397,10 +397,12 @@ var StudioProductController = (function(){
   var ProductEditor = function(pid, sid){
 
     var productBoxHeight;
+    var isAdder = 0;
 
     var $productBox,
     $productDescBox,
     $productEditButton,
+    $productAddButton,
     $productEditorBox,
     $productEditorInputs,
     $submitButton,
@@ -418,19 +420,31 @@ var StudioProductController = (function(){
       $(document).ready(function(){
         loadElements();
         bindEvents();
-        loadInputValues();
+
+        if(isAdder != 1){
+          loadInputValues();
+        }
+
         resetInputValues();
       });
     }());
 
     function loadElements(){
-      $productBox = $("#" + pid);
-      $productDescBox = $productBox.find(".product-desc-box");
-      $productEditButton = $productBox.find(".product-edit-button");
-      $productEditorBox = $productBox.find(".product-editor-box");
+      if(isAdder != 1){
+        $productBox = $("#" + pid);
+        $productDescBox = $productBox.find(".product-desc-box");
+        $productEditButton = $productBox.find(".product-edit-button");
+        $productEditorBox = $productBox.find(".product-editor-box");
+        $deleteButton = $productEditorBox.find(".editor-delete-button");
+      }
+      else{
+        $productBox = $("#product-add");
+        $productEditorBox = $productBox.find(".product-editor-box");
+        $productAddButton = $productBox.find(".product-add-button");
+      }
+
       $productEditorInputs = $productEditorBox.find("input").add($productEditorBox.find("textarea"));
       $submitButton = $productEditorBox.find(".editor-submit-button");
-      $deleteButton = $productEditorBox.find(".editor-delete-button");
       $cancelButton = $productEditorBox.find(".editor-cancel-button");
       $productForm = $productEditorBox.find(".product-form");
 
@@ -438,20 +452,37 @@ var StudioProductController = (function(){
     };
 
     function bindEvents(){
-      ButtonController.setButton($productEditButton, showEditor);
+      if(isAdder != 1){
+        ButtonController.setButton($productEditButton, showEditor);
+        ButtonController.setButton($deleteButton, deleteProduct);
+        ButtonController.setButton($submitButton, updateProduct);
+      }
+      else{
+        ButtonController.setButton($submitButton, addProduct);
 
-      ButtonController.setButton($submitButton, submit);
+        $productAddButton.hover(function(){
+          $(this).animate({"font-size": "3.5em"}, 100);
+        },
+        function(){
+          $(this).animate({"font-size": "2.5em"}, 100);
+        });
 
-      ButtonController.setButton($deleteButton, deleteProduct);
+        $productAddButton.click(function(){
+          showEditor();
+        });
+      }
 
       ButtonController.setButton($cancelButton, closeEditor);
     };
 
     function showEditor(){
       closeOtherEditors();
-      loadInputValues();
 
-      $productDescBox.css({"visibility": "hidden"});
+      if(isAdder != 1){
+        loadInputValues();
+        $productDescBox.css({"visibility": "hidden"});
+      }
+
       $productBox.animate({"height": "550px"}, 200);
       $productEditorBox.css({"height": "550px"});
       $productEditorBox.fadeIn("fast");
@@ -481,7 +512,7 @@ var StudioProductController = (function(){
       $productEditorInputs.filter("[name='product_desc']").val(inputValues.productDesc);
     };
 
-    function submit(){
+    function updateProduct(){
       $.ajax({
         type: "POST",
         url: location.href + "/product/update",
@@ -499,6 +530,25 @@ var StudioProductController = (function(){
         }
       });
     };
+
+    function addProduct(){
+      $.ajax({
+        type: "POST",
+        url: location.href + "/product/add",
+        data: $productForm.serialize(),
+        success: function(data){
+          if(data.result == "success"){
+            location.reload();
+          }
+          else if(data.result == "fail"){
+            alert(data.text);
+          }
+        },
+        error: function(xhr, option, error){
+          alert(error);
+        }
+      });
+    }
 
     function deleteProduct(){
       $.ajax({
@@ -528,15 +578,24 @@ var StudioProductController = (function(){
       return $productBox;
     };
 
+    var enableAdder = function(){
+      isAdder = 1;
+    }
+
     var closeEditor = function(){
       $productEditorBox.fadeOut("fast");
       $productBox.animate({"height": productBoxHeight}, 200);
-      $productDescBox.css({"visibility": "visible"});
+
+      if(isAdder != 1){
+        $productDescBox.css({"visibility": "visible"});
+      }
+
       setTimeout(resetInputValues, 200);
     };
 
     return {
       getProductBox,
+      enableAdder,
       closeEditor
     }
   };
@@ -562,8 +621,15 @@ var StudioProductController = (function(){
 
   var setProduct = function(productId, studioId){
     var editor = ProductEditor(productId, studioId);
+
     productEditors.push(editor);
-    numProducts++;
+
+    if(productId != "product-add"){
+      numProducts++;
+    }
+    else{
+      editor.enableAdder();
+    }
   };
 
   var closeEditor = function(){

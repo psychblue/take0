@@ -229,8 +229,33 @@
         }
         if(isOwner){
         %>
-        <div id="product-add-box" class="product-box"><span class="font-level-larger2">+</span>
+        <script type="text/javascript">
+          StudioProductController.setProduct("product-add", <%= studioData.studio_id %>);
+        </script>
+        <div id="product-add" class="product-box">
+          <div class="product-add-button bg-color-mint font-white">+</div>
 
+          <div class="product-editor-box">
+            <div class="editor-title-box font-level-large">스튜디오 상품을 추가하세요.</div>
+            <form class="product-form">
+              <div class="editor-main-box">
+                <input type="hidden" value="<%= studioData.studio_id %>" name="studio_id"></input>
+                <input type="hidden" value="<%= studioData.num_products + 1 %>" name="num_products"></input>
+                <div class="editor-input-label font-grey">&nbsp;상품 이름&nbsp;&nbsp;|</div>
+                <input type="text" class="take-text-input font-darkgrey font-level-default border-solid-thin-lightgrey" name="product_name"></input>
+                <div class="editor-input-label font-grey">&nbsp;상품 소개&nbsp;&nbsp;|</div>
+                <textarea class="take-textarea font-darkgrey font-level-default border-solid-thin-lightgrey" name="product_desc"></textarea>
+              </div>
+            </form>
+            <div class="editor-button-box">
+              <button type="submit" class="editor-submit-button take-button-mint">
+                <img src="/images/studio/check.png"></img><span>&nbsp;저장하기</span>
+              </button>
+              <button type="button" class="editor-cancel-button take-button-white">
+                <img src="/images/studio/cancel.png"></img><span>&nbsp;취소하기</span>
+              </button>
+            </div>
+          </div>
         </div>
         <%
         }

@@ -117,10 +117,6 @@ h1 a {
   font-size: 2.5em;
 }
 
-.font-level-larger2 {
-  font-size: 3em;
-}
-
 .font-level-max {
   font-size: 5em;
 }
@@ -479,11 +475,16 @@ h1 a {
   position: relative;
 }
 
-#studio-product-window #product-add-box {
-  height: 300px;
-  line-height: 300px;
-  border: 1px dashed #999;
+#studio-product-window .product-add-button {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto;
+  font-size: 2.5em;
+  text-align: center;
+  line-height: 60px;
+  border-radius: 30px;
   cursor: pointer;
+  z-index: 80;
 }
 
 #studio-product-window .product-title-box {
