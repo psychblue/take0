@@ -17,7 +17,10 @@
     "name": "TAKE0",
     "secret": "IALWAYSCU8219!",
     "resave": "true",
-    "saveUninitialized": "false"
+    "saveUninitialized": "false",
+    "cookie": {
+      "maxAge": 3600000
+    }
   },
   "kakao": {
     "kakao_client_id": "56d13877f8df6d870842fa9dfcb4bbe7",

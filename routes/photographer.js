@@ -46,7 +46,7 @@ var loadProducts = function(req, res, username, studioData){
       res.render('photographer/studio', studioOptions);
     }
     else{
-      //To Do
+      loadPortfolios(req, res, username, studioData, rows);
     }
   }
 
@@ -55,6 +55,38 @@ var loadProducts = function(req, res, username, studioData){
   logger.debug('SQL Query [SELECT * FROM %s WHERE %s=%s]', params[0], params[1], params[2]);
 
   mysqlDb.doSQLSelectQuery(query, params, productsSelectCallbackForSuccess, productsSelectCallbackForNoResult, productsSelectCallbackForError);
+}
+
+var loadPortfolios = function(req, res, username, studioData, productsData){
+
+  var portfoliosSelectCallbackForError = function(err){
+    res.send('DB Error');
+  }
+
+  var portfoliosSelectCallbackForNoResult = function(){
+    res.send('No Portfolio');
+  }
+
+  var portfoliosSelectCallbackForSuccess = function(rows, fields){
+    var studioOptions = {
+      title: confParams.html.title,
+      service: confParams.html.service_name,
+      isAuth: req.isAuthenticated(),
+      isOwner: (req.isAuthenticated() && (req.user.username == req.params.photographer)),
+      name: username,
+      photographerName: req.params.photographer,
+      studioData: studioData,
+      productsData: productsData,
+      portfoliosData: rows
+    };
+    res.render('photographer/studio', studioOptions);
+  }
+
+  var query = 'SELECT * FROM ?? WHERE ?? = ?';
+  var params = ['studioPortfolios', 'studio_id', studioData.studio_id];
+  logger.debug('SQL Query [SELECT * FROM %s WHERE %s=%s]', params[0], params[1], params[2]);
+
+  mysqlDb.doSQLSelectQuery(query, params, portfoliosSelectCallbackForSuccess, portfoliosSelectCallbackForNoResult, portfoliosSelectCallbackForError);
 }
 
 var updateNumberOfProducts = function(req, res){
@@ -123,8 +155,8 @@ photographerManager.updateSlider = function(req, res, next){
     return;
   }
 
-  var sliderPhotoStoragePath = 'public/images/main';
-  var sliderPhotoUrlPath = '/images/main/';
+  var sliderPhotoStoragePath = 'public/images/studio';
+  var sliderPhotoUrlPath = '/images/studio/';
   var filenamePrefix = req.params.photographer + '_slider_' + Date.now() + '_';
 
   var storage = multer.diskStorage({
@@ -284,7 +316,7 @@ photographerManager.addProduct = function(req, res, next){
   }
 
   var query = 'INSERT INTO ?? SET ?';
-  var params = ['studioProducts', {studio_id: req.body.studio_id, product_name: req.body.product_name, product_desc: productDesc}];
+  var params = ['studioProducts', {studio_id: req.body.studio_id, product_name: req.body.product_name, product_price: req.body.product_price, product_desc: productDesc}];
   logger.debug('SQL Query [INSERT INTO %s SET %s]', params[0], JSON.stringify(params[1]));
 
   mysqlDb.doSQLInsertQuery(query, params, productInsertCallbackForSuccess, productInsertCallbackForError);
@@ -310,7 +342,7 @@ photographerManager.updateProduct = function(req, res, next){
   }
 
   var query = 'UPDATE ?? SET ? WHERE ?? = ?';
-  var params = ['studioProducts', {product_name: req.body.product_name, product_desc: productDesc}, 'product_id', req.body.product_id];
+  var params = ['studioProducts', {product_name: req.body.product_name, product_price: req.body.product_price, product_desc: productDesc}, 'product_id', req.body.product_id];
   logger.debug('SQL Query [UPDATE %s SET %s WHRER %s = %s]', params[0], JSON.stringify(params[1]), params[2], params[3]);
 
   mysqlDb.doSQLUpdateQuery(query, params, productUpdateCallbackForSuccess, productUpdateCallbackForError);

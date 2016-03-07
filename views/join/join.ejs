@@ -26,13 +26,7 @@
             InputController.onKeydown(keyEvent, $(this), $joinSubmitButton);
           });
 
-          $joinInputs.focus(function(){
-            InputController.onFocus($(this));
-          });
-
-          $joinInputs.focusout(function(){
-            InputController.onFocusout($(this));
-          });
+          InputController.setInputFocus($joinInputs);
 
           $joinSubmitButton.click(function(){
             var isFieldChecked = 1;

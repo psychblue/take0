@@ -46,7 +46,10 @@ app.use(session({
 	secret: confParams.express_session.secret,
 	store: new RedisStore({client: redis}),
 	resave: confParams.express_session.resave,
-	saveUninitialized: confParams.express_session.saveUninitialized
+	saveUninitialized: confParams.express_session.saveUninitialized,
+	cookie: {
+		maxAge: confParams.express_session.cookie.maxAge
+	}
 }));
 
 //Express Passport Setting

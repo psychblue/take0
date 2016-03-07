@@ -177,6 +177,7 @@
         <div id="product-<%= i + 1 %>" class="product-box bg-color-white">
           <div class="product-title-box">
             <h1><%= productsData[i].product_name %></h1>
+            <span class="product-price font-level-large">\<%= productsData[i].product_price.toString().split(/(?=(?:\d{3})+(?:\.|$))/g).join(',') %></span>
           </div>
           <div class="product-button-box">
             <%
@@ -193,6 +194,8 @@
                   <input type="hidden" value="<%= productsData[i].product_id %>" name="product_id"></input>
                   <div class="editor-input-label font-grey">&nbsp;상품 이름&nbsp;&nbsp;|</div>
                   <input type="text" class="take-text-input font-darkgrey font-level-default border-solid-thin-lightgrey" name="product_name"></input>
+                  <div class="editor-input-label font-grey">&nbsp;상품 가격&nbsp;&nbsp;|</div>
+                  <input type="text" class="take-text-input font-darkgrey font-level-default border-solid-thin-lightgrey" name="product_price"></input>
                   <div class="editor-input-label font-grey">&nbsp;상품 소개&nbsp;&nbsp;|</div>
                   <textarea class="take-textarea font-darkgrey font-level-default border-solid-thin-lightgrey" name="product_desc"></textarea>
                 </div>
@@ -243,6 +246,8 @@
                 <input type="hidden" value="<%= studioData.num_products + 1 %>" name="num_products"></input>
                 <div class="editor-input-label font-grey">&nbsp;상품 이름&nbsp;&nbsp;|</div>
                 <input type="text" class="take-text-input font-darkgrey font-level-default border-solid-thin-lightgrey" name="product_name"></input>
+                <div class="editor-input-label font-grey">&nbsp;상품 가격&nbsp;&nbsp;|</div>
+                <input type="text" class="take-text-input font-darkgrey font-level-default border-solid-thin-lightgrey" name="product_price"></input>
                 <div class="editor-input-label font-grey">&nbsp;상품 소개&nbsp;&nbsp;|</div>
                 <textarea class="take-textarea font-darkgrey font-level-default border-solid-thin-lightgrey" name="product_desc"></textarea>
               </div>
@@ -267,10 +272,50 @@
         <h1>Portfolio</h1>
 
         <div class="portfolio-box">
-          <div class="portfolio-item bg-color-lightergrey"></div>
-          <div class="portfolio-item bg-color-lightergrey"></div>
-          <div class="portfolio-item bg-color-lightergrey"></div>
-          <div class="float-clear"></div>
+          <%
+          if(studioData.num_portfolios != 0){
+          %>
+          <script type="text/javascript">
+            StudioPortfolioController.setPortfolio(<%- JSON.stringify(portfoliosData) %>);
+          </script>
+            <%
+            for(var i = 0; i < portfoliosData.length; i++){
+            %>
+            <div class="portfolio-item bg-color-lightergrey" for="<%= i %>"><div class="item-img"></div></div>
+              <%
+              if(i % 3 == 2){
+              %>
+              <div class="float-clear"></div>
+              <%
+              }
+            }
+            if(isOwner){
+            %>
+            <div class="portfolio-add bg-color-lightergrey"></div>
+            <div class="float-clear"></div>
+            <%
+            }
+            else{
+              if(i % 3 != 2){
+              %>
+              <div class="float-clear"></div>
+              <%
+              }
+            }
+          }
+          %>
+
+        </div>
+
+        <div id="portfolio-viewer">
+          <div class="orig-image-box"><img class="orig-image"></img></div>
+          <div class="left-arrow font-lightergrey font-level-largest">&lt;</div>
+          <div class="right-arrow font-lightergrey font-level-largest">&gt;</div>
+          <div class="thumb-box">
+            <div class= "inner-box"></div>
+          </div>
+          <div class="counter font-lightergrey"></div>
+          <button class="close-button"><img src="/images/studio/close.png"></img></button>
         </div>
 
       </div>

@@ -59,13 +59,7 @@
       InputController.onKeydown(keyEvent, $(this), $loginSubmitButton);
     });
 
-    $loginInputs.focus(function(){
-      InputController.onFocus($(this));
-    });
-
-    $loginInputs.focusout(function(){
-      InputController.onFocusout($(this));
-    });
+    InputController.setInputFocus($loginInputs);
 
     $loginSubmitButton.click(function(){
       $.ajax({
@@ -112,11 +106,19 @@
       $loginPopupBackground.fadeIn("fast");
       $loginPopup.css({"height": "330"}).fadeIn("fast");
       loginPopupEnabled = 1;
+
+      $("body").css({
+        "overflow": "hidden"
+      });
     }
   };
 
   function closeLoginPopup(){
     if(loginPopupEnabled == 1){
+      $("body").css({
+        "overflow": "auto"
+      });
+      
       $loginPopupBackground.fadeOut("fast");
       $loginPopup.fadeOut("fast");
       loginPopupEnabled = 0;

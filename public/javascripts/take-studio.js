@@ -262,8 +262,8 @@ var StudioPhotoSliderController = (function(){
   var enableSlider = function(list){
     sliderEnabled = 1;
 
-    for(var fileName in list){
-      origPhotoList.push(list[fileName]);
+    for(var fileNo in list){
+      origPhotoList.push(list[fileNo]);
     }
   };
 
@@ -317,13 +317,7 @@ var StudioIntrodunctionController = (function(){
 
     ButtonController.setButton($cancelButton, closeEditor);
 
-    $introEditorInputs.focus(function(){
-      InputController.onFocus($(this));
-    });
-
-    $introEditorInputs.focusout(function(){
-      InputController.onFocusout($(this));
-    });
+    InputController.setInputFocus($introEditorInputs);
   };
 
   function showEditor(){
@@ -413,6 +407,7 @@ var StudioProductController = (function(){
     var inputValues = {
       productId: "",
       productName: "",
+      productPrice: "",
       productDesc: ""
     };
 
@@ -473,6 +468,8 @@ var StudioProductController = (function(){
       }
 
       ButtonController.setButton($cancelButton, closeEditor);
+
+      InputController.setInputFocus($productEditorInputs);
     };
 
     function showEditor(){
@@ -483,8 +480,8 @@ var StudioProductController = (function(){
         $productDescBox.css({"visibility": "hidden"});
       }
 
-      $productBox.animate({"height": "550px"}, 200);
-      $productEditorBox.css({"height": "550px"});
+      $productBox.animate({"height": "650px"}, 200);
+      $productEditorBox.css({"height": "650px"});
       $productEditorBox.fadeIn("fast");
     };
 
@@ -502,6 +499,7 @@ var StudioProductController = (function(){
     function loadInputValues(){
       inputValues.productId = $productForm.find("[name='product_id']").val();
       inputValues.productName = $productBox.find("h1").text();
+      inputValues.productPrice = $productBox.find(".product-price").text().split("\\")[1].split(",").join("");
       inputValues.productDesc = $productDescBox.find("ul").html()
       .trim()
       .replace(/<\/li><li>/gi, "\r\n").replace(/<li>/gi, "").replace(/<\/li>/gi, "");
@@ -509,6 +507,7 @@ var StudioProductController = (function(){
 
     function resetInputValues(){
       $productEditorInputs.filter("[name='product_name']").val(inputValues.productName);
+      $productEditorInputs.filter("[name='product_price']").val(inputValues.productPrice);
       $productEditorInputs.filter("[name='product_desc']").val(inputValues.productDesc);
     };
 
@@ -548,7 +547,7 @@ var StudioProductController = (function(){
           alert(error);
         }
       });
-    }
+    };
 
     function deleteProduct(){
       $.ajax({
@@ -580,7 +579,7 @@ var StudioProductController = (function(){
 
     var enableAdder = function(){
       isAdder = 1;
-    }
+    };
 
     var closeEditor = function(){
       $productEditorBox.fadeOut("fast");
@@ -636,10 +635,272 @@ var StudioProductController = (function(){
     for(var index in productEditors){
       productEditors[index].closeEditor();
     }
-  }
+  };
 
   return {
     setProduct,
     closeEditor
+  }
+}());
+
+/*
+ * Portfolio Controller
+ */
+var StudioPortfolioController = (function(){
+
+  var portfolioData = {};
+  var viewerPhotoList, viewerPhotoId;
+
+  var $portfolioBox,
+  $portfolioItems,
+  $portfolioViewer,
+  $origImageBox,
+  $origImage,
+  $thumbBox,
+  $viewerCloseButton,
+  $viewerLeftArrow,
+  $viewerRightArrow,
+  $viewerThumbBox,
+  $viewerThumbInnerBox,
+  $viewerThumbItems,
+  $viewerCounter;
+
+  (function(){
+    $(document).ready(function(){
+      loadElements();
+      loadItems();
+      bindEvents();
+    });
+  }());
+
+  function loadElements(){
+    $portfolioBox = $(".portfolio-box");
+    $portfolioItems = $portfolioBox.find(".portfolio-item");
+    $portfolioViewer = $portfolioBox.next("#portfolio-viewer");
+    $origImageBox = $portfolioViewer.find(".orig-image-box");
+    $origImage = $origImageBox.find(".orig-image");
+    $thumbBox = $portfolioViewer.find(".thumb-box");
+    $viewerCloseButton = $portfolioViewer.find(".close-button");
+    $viewerLeftArrow = $portfolioViewer.find(".left-arrow");
+    $viewerRightArrow = $portfolioViewer.find(".right-arrow");
+    $viewerThumbBox = $portfolioViewer.find(".thumb-box");
+    $viewerThumbInnerBox = $viewerThumbBox.find(".inner-box");
+    $viewerCounter = $portfolioViewer.find(".counter");
+  };
+
+  function loadItems(){
+    $portfolioItems.each(function(index){
+      $(this).children(".item-img").css({
+        "background-image": "url\(\"" + portfolioData[index].photo_list.split(",")[0] + "\"\)"
+      });
+    });
+  };
+
+  function bindEvents(){
+    $(window).resize(resizeOrigImageSize);
+
+    $portfolioItems.hover(function(){
+      BackgroundController.onMouseenter($(this).children(".item-img"));
+    },
+    function(){
+      BackgroundController.onMouseleave($(this).children(".item-img"));
+    });
+
+    $portfolioItems.click(function(){
+      showViewer($(this));
+    });
+  };
+
+  function resizeOrigImageSize(){
+    $origImage.attr({
+      "width": "",
+      "height": $origImageBox.height() - 100 + "px"
+    });
+
+    if($origImage.width() > $origImageBox.width() - 100){
+      $origImage.attr({
+        "height": "",
+        "width": $origImageBox.width() - 100 + "px"
+      });
+    }
+
+    $origImageBox.css({
+      "padding-top": ( $origImageBox.height() - $origImage.height() ) / 2,
+      "padding-bottom": ( $origImageBox.height() - $origImage.height() ) / 2
+    });
+  };
+
+  function moveThumbBox(item){
+    $viewerThumbItems.css({
+      "border": "none"
+    });
+
+    item.css({
+      "border-bottom": "5px solid #3db7cc"
+    });
+
+    var offset = $viewerThumbInnerBox.offset().left
+      + ( $(window).width() / 2 )
+      - item.offset().left
+      - 100;
+
+    if(offset > 0){
+      offset = 0;
+    }
+
+    $viewerThumbInnerBox.animate({
+      "left": offset
+    }, 200);
+
+    $viewerCounter.text(( viewerPhotoId + 1 ) + " / " + viewerPhotoList.length);
+  };
+
+  function setViewerThumbs(){
+    $viewerThumbInnerBox.empty();
+
+    for(var i = 0; i < viewerPhotoList.length; i++){
+      var thumbBoxItem = $("<div></div>")
+      .addClass("thumb-box-item")
+      .css({
+        "background-image": "url\(\"" + viewerPhotoList[i] + "\"\)"
+      }).attr("for", i);
+
+      if(i == 0){
+        thumbBoxItem.css({
+          "border-bottom": "5px solid #3db7cc"
+        });
+      }
+
+      $viewerThumbInnerBox.append(thumbBoxItem);
+    }
+
+    $viewerThumbInnerBox.append($("<div></div>").addClass("float-clear"));
+
+    $viewerThumbItems = $viewerThumbInnerBox.find(".thumb-box-item");
+
+    $viewerThumbInnerBox.css({
+      "left": "0"
+    });
+  };
+
+  function bindViewerEvents(){
+    $viewerThumbItems.unbind().click(function(){
+      $origImage.attr({
+        "src": viewerPhotoList[$(this).attr("for")]
+      }).load(resizeOrigImageSize);
+
+      viewerPhotoId = Number($(this).attr("for"));
+
+      moveThumbBox($(this));
+
+      if(viewerPhotoId == viewerPhotoList.length - 1){
+        $viewerRightArrow.hide();
+      }
+      else if(viewerPhotoId == 0){
+        $viewerLeftArrow.hide();
+      }
+      else{
+        $viewerLeftArrow.show();
+        $viewerRightArrow.show();
+      }
+    });
+
+    $viewerCloseButton.unbind().click(closeViewer);
+
+    $viewerThumbBox.unbind().hover(function(){
+      $(this).animate({
+        "height": "100px"
+      }, 100);
+    },
+    function(){
+      $(this).animate({
+        "height": "10px"
+      }, 100);
+    });
+
+    $viewerRightArrow.unbind().click(function(){
+      $origImage.attr({
+        "src": viewerPhotoList[viewerPhotoId + 1]
+      }).load(resizeOrigImageSize);
+      viewerPhotoId++;
+
+      moveThumbBox($viewerThumbItems.filter("[for='" + viewerPhotoId + "']"));
+
+      if(viewerPhotoId == 1){
+        $viewerLeftArrow.show();
+      }
+
+      if(viewerPhotoId == viewerPhotoList.length - 1){
+        $(this).hide();
+      }
+    });
+
+    $viewerLeftArrow.unbind().click(function(){
+      $origImage.attr({
+        "src": viewerPhotoList[viewerPhotoId - 1]
+      }).load(resizeOrigImageSize);
+      viewerPhotoId--;
+
+      moveThumbBox($viewerThumbItems.filter("[for='" + viewerPhotoId + "']"));
+
+      if(viewerPhotoId == viewerPhotoList.length - 2){
+        $viewerRightArrow.show();
+      }
+
+      if(viewerPhotoId == 0){
+        $(this).hide();
+      }
+    });
+  }
+
+  function showViewer(targetItem){
+    var portfolioId = targetItem.attr("for");
+    viewerPhotoList = portfolioData[portfolioId].photo_list.split(",");
+
+    $viewerLeftArrow.css({
+      "top": "0",
+      "left": "0",
+      "line-height": $(window).height() + "px",
+    }).hide();
+
+    $viewerRightArrow.css({
+      "top": "0",
+      "right": "0",
+      "line-height": $(window).height() + "px"
+    }).show();
+
+    $portfolioViewer.fadeIn("fast");
+
+    $("body").css({
+      "overflow": "hidden"
+    });
+
+    $origImage.attr({
+      "src": viewerPhotoList[0],
+    })
+    .load(resizeOrigImageSize);
+
+    viewerPhotoId = 0;
+
+    $viewerCounter.text(( viewerPhotoId + 1 ) + " / " + viewerPhotoList.length);
+
+    setViewerThumbs();
+    bindViewerEvents();
+  };
+
+  function closeViewer(){
+    $("body").css({
+      "overflow": "auto"
+    });
+
+    $portfolioViewer.fadeOut("fast");
+  };
+
+  var setPortfolio = function(data){
+    portfolioData = data;
+  };
+
+  return {
+    setPortfolio
   }
 }());

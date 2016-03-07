@@ -81,6 +81,10 @@ h1 a {
   color: #ccc;
 }
 
+.font-lightergrey {
+	color: #eee;
+}
+
 .font-grey {
   color: #999;
 }
@@ -115,6 +119,10 @@ h1 a {
 
 .font-level-larger {
   font-size: 2.5em;
+}
+
+.font-level-largest {
+	font-size: 4em;
 }
 
 .font-level-max {
@@ -498,7 +506,7 @@ h1 a {
 
 #studio-product-window .product-button-box {
   width: 265px;
-  padding-top: 25px;
+  padding-top: 37px;
   padding-right: 30px;
   text-align: right;
   float: left;
@@ -544,6 +552,105 @@ h1 a {
   height: 300px;
   margin: 10px;
   float: left;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+
+#studio-portfolio-window .item-img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+#studio-portfolio-window .portfolio-add {
+  width: 300px;
+  height: 300px;
+  margin: 10px;
+  float: left;
+  cursor: pointer;
+}
+
+#portfolio-viewer {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 110;
+  background-color: rgba(0, 0, 0, 0.9);
+  text-align: center;
+	display: none;
+}
+
+#portfolio-viewer .orig-image-box {
+	width: 100%;
+	height: 100%;
+}
+
+#portfolio-viewer .thumb-box {
+	width: 90%;
+	height: 10px;
+	padding-top: 100px;
+	overflow: hidden;
+	position: fixed;
+	bottom: 20px;
+	left: 5%;
+	background-color: transparent;
+}
+
+#portfolio-viewer .thumb-box .inner-box {
+	width: 10000px;
+	height: 100px;
+	overflow: hidden;
+	position: absolute;
+}
+
+#portfolio-viewer .thumb-box-item {
+	width: 90px;
+	height: 90px;
+	margin: 5px;
+	float: left;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  cursor: pointer;
+}
+
+#portfolio-viewer .close-button {
+	width: 32px;
+  height: 32px;
+  padding: 0;
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  outline: 0;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+#portfolio-viewer .left-arrow, .right-arrow{
+	width: 90px;
+	height: 100%;
+	position: fixed;
+	text-align: center;
+	cursor: pointer;
+}
+
+#portfolio-viewer .counter {
+	width: 100%;
+	position: fixed;
+	top: 25px;
+	text-align: center;
 }
 
 #header {
@@ -576,7 +683,7 @@ h1 a {
   top: 0;
   left: 0;
   z-index: 110;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 #login-popup {
