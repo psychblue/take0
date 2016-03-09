@@ -17,7 +17,7 @@ Show Login Popup
 loginManager.showLoginPopup = function(req, res, next){
 
   var loginOptions = {service: confParams.html.service_name};
-	res.render('login/login', loginOptions);
+	res.render('login/login-popup', loginOptions);
 }
 
 /*

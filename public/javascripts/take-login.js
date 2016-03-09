@@ -2,9 +2,10 @@
  * Login Popup Controller
  */
 
-(function(){
+var LoginController = (function(){
 
-  var loginPopupEnabled = 0;
+  var loginPopupEnabled = 0,
+  redirectUrl = "";
 
   var $loginPopup,
   $loginError,
@@ -19,24 +20,31 @@
 
   (function(){
     $(document).ready(function(){
-      $.get("/login", function(data){
+      $.get("/loginpopup", function(data){
         $("body").append(data);
 
-        $loginPopup = $("#login-popup");
-        $loginError = $("#login-error");
-        $loginForm = $("#login-form");
-        $loginInputs = $(".login-input > input");
-        $loginInputLabels = $(".login-input > label");
-        $loginPopupBackground = $("#login-popup-background");
-        $loginButton = $("#login-button");
-        $loginPopupCloseButton = $("#login-popup-close-button");
-        $loginSubmitButton = $("#login-submit-button");
-        $logoutButton = $("#logout-button");
-
+        loadElements();
         bindEvents();
+
+        if(redirectUrl != ""){
+          viewLoginPopup();
+        }
       });
     });
   }());
+
+  function loadElements(){
+    $loginPopup = $("#login-popup");
+    $loginError = $("#login-error");
+    $loginForm = $("#login-form");
+    $loginInputs = $(".login-input > input");
+    $loginInputLabels = $(".login-input > label");
+    $loginPopupBackground = $("#login-popup-background");
+    $loginButton = $("#login-button");
+    $loginPopupCloseButton = $("#login-popup-close-button");
+    $loginSubmitButton = $("#login-submit-button");
+    $logoutButton = $("#logout-button");
+  };
 
   function bindEvents(){
     $(window).resize(function(){
@@ -52,7 +60,12 @@
     });
 
     $loginPopupCloseButton.click(function(){
-      closeLoginPopup();
+      if(redirectUrl == ""){
+        closeLoginPopup();
+      }
+      else{
+        history.go(-1);
+      }
     });
 
     $loginInputs.keydown(function(keyEvent){
@@ -68,7 +81,12 @@
         data: $loginForm.serialize(),
         success: function(data){
           if(data.result == "success"){
-            location.reload();
+            if(redirectUrl == ""){
+              location.reload();
+            }
+            else{
+              location.href = redirectUrl;
+            }
           }
           else if(data.result == "fail"){
             $loginError.text(data.text).addClass("font-red font-bold").css({"margin-bottom": "30px"});
@@ -97,8 +115,21 @@
     });
   };
 
-  function viewLoginPopup(){
+  function closeLoginPopup(){
+    if(loginPopupEnabled == 1){
+      $("body").css({
+        "overflow": "auto"
+      });
+
+      $loginPopupBackground.fadeOut("fast");
+      $loginPopup.fadeOut("fast");
+      loginPopupEnabled = 0;
+    }
+  };
+
+  var viewLoginPopup = function(){
     if(loginPopupEnabled == 0){
+
       $loginError.empty();
       $loginForm[0].reset();
       $loginInputLabels.show();
@@ -113,15 +144,12 @@
     }
   };
 
-  function closeLoginPopup(){
-    if(loginPopupEnabled == 1){
-      $("body").css({
-        "overflow": "auto"
-      });
-      
-      $loginPopupBackground.fadeOut("fast");
-      $loginPopup.fadeOut("fast");
-      loginPopupEnabled = 0;
-    }
+  var setRedirectUrl = function(url){
+    redirectUrl = url;
   };
+
+  return {
+    viewLoginPopup,
+    setRedirectUrl
+  }
 }());

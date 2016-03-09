@@ -250,6 +250,13 @@ h1 a {
   vertical-align: -6px;
 }
 
+.take-input-box {
+  width: 542px;
+  padding-top: 30px;
+  margin: 0 auto;
+  text-align: left;
+}
+
 .take-text-input {
   width: 500px;
   height: 40px;
@@ -354,9 +361,10 @@ h1 a {
 
 #studio-photo-slider-window {
   width: 100%;
+  height: 500px;
   position: relative;
   text-align: center;
-  line-height: 400px;
+  line-height: 500px;
 }
 
 #studio-photo-slider-window .photo-box {

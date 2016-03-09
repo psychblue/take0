@@ -21,6 +21,23 @@ var reqFromOwner = function(req, res){
   }
 }
 
+var hasStudio = function(req, res, callbackForSuccess){
+
+  var hasStudioSelectCallbackForError = function(err){
+    res.send('DB Error');
+  }
+
+  var hasStudioSelectCallbackForNoResult = function(){
+    res.send('No Studio');
+  }
+
+  var query = 'SELECT ?? FROM ?? WHERE ?? = ?';
+  var params = ['has_studio', 'takeUser', 'username', req.user.username];
+  logger.debug('SQL Query [SELECT * FROM %s WHERE %s=%s]', params[0], params[1], params[2], params[3]);
+
+  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, hasStudioSelectCallbackForNoResult, hasStudioSelectCallbackForError);
+}
+
 var updateNumberOfProducts = function(req, res){
 
   var studioUpdateCallbackForError = function(err){
@@ -196,6 +213,91 @@ photographerManager.showStudio = function(req, res, next){
   logger.debug('SQL Query [SELECT * FROM %s WHERE %s=%s]', params[0], params[1], params[2]);
 
   mysqlDb.doSQLSelectQuery(query, params, studioSelectCallbackForSuccess, studioSelectCallbackForNoResult, studioSelectCallbackForError);
+}
+
+photographerManager.makeStudio = function(req, res, next){
+
+  if(req.isAuthenticated()){
+
+    var hasStudioSelectCallbackForSuccess = function(rows, fields){
+      if(rows[0].has_studio == 1){
+        //TODO
+        res.send('you already have a studio');
+      }
+      else{
+        var makeStudioOptions = {
+          title: confParams.html.title,
+          service: confParams.html.service_name,
+          name: req.user.username
+        };
+
+        res.render('photographer/make-studio', makeStudioOptions);
+      }
+    }
+
+    hasStudio(req, res, hasStudioSelectCallbackForSuccess);
+  }
+  else{
+    var loginOptions = {
+      title: confParams.html.title,
+      service: confParams.html.service_name,
+      redirectUrl: "/makestudio"
+    };
+    res.render("login/login-page", loginOptions);
+  }
+}
+
+photographerManager.addStudio = function(req, res, next){
+
+  if(req.isAuthenticated()){
+
+    var insertStudio = function(req, res){
+      var studioInsertCallbackForError = function(err){
+        res.send({
+          "result": "fail",
+          "text": err
+        });
+      }
+
+      var studioInsertCallbackForSuccess = function(){
+        res.redirect('/studio/' + req.user.username);
+      }
+
+      var query = 'INSERT INTO ?? SET ?';
+      var params = ['studio', {
+        studio_name: req.body.studio_name,
+        username: req.user.username,
+        introduction: req.body.introduction,
+        address: req.body.address,
+        tel_num: req.body.tel_num,
+        region: req.body.region
+      }];
+      logger.debug('SQL Query [INSERT INTO %s SET %s]', params[0], JSON.stringify(params[1]));
+
+      mysqlDb.doSQLInsertQuery(query, params, studioInsertCallbackForSuccess, studioInsertCallbackForError);
+
+    }
+
+    var hasStudioSelectCallbackForSuccess = function(rows, fields){
+      if(rows[0].has_studio == 1){
+        //TODO
+        res.send('you already have a studio');
+      }
+      else{
+        insertStudio(req, res);
+      }
+    }
+
+    hasStudio(req, res, hasStudioSelectCallbackForSuccess);
+  }
+  else{
+    var loginOptions = {
+      title: confParams.html.title,
+      service: confParams.html.service_name,
+      redirectUrl: "/makestudio"
+    };
+    res.render("login/login-page", loginOptions);
+  }
 }
 
 photographerManager.updateSlider = function(req, res, next){

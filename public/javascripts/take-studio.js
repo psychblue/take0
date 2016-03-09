@@ -20,7 +20,8 @@ var StudioPhotoSliderController = (function(){
    */
   var SliderEditor = (function(){
 
-    var flag;
+    var isVisible = 0,
+    flag;
     var $sliderEditorBox,
     $editorPhotoBoxes,
     $editorPhotoInputs,
@@ -150,19 +151,25 @@ var StudioPhotoSliderController = (function(){
       });
 
       $sliderEditorBox.fadeIn("fast");
+
+      isVisible = 1;
     };
 
     var close = function(){
-      $sliderEditorBox.fadeOut("fast");
+      if(isVisible == 1){
+        $sliderEditorBox.fadeOut("fast");
 
-      if(sliderEnabled == 1){
-        $unslider.mouseenter(function(){
+        if(sliderEnabled == 1){
+          $unslider.mouseenter(function(){
+            $unsliderArrows.fadeIn("fast");
+          });
           $unsliderArrows.fadeIn("fast");
-        });
-        $unsliderArrows.fadeIn("fast");
-      }
-      else{
-        $studioPhotoSliderWindow.find(".font-level-larger").fadeIn("fast");
+        }
+        else{
+          $studioPhotoSliderWindow.find(".font-level-larger").fadeIn("fast");
+        }
+
+        isVisible = 0;
       }
     };
 
@@ -279,6 +286,8 @@ var StudioPhotoSliderController = (function(){
  */
 var StudioIntrodunctionController = (function(){
 
+  var isVisible = 0;
+
   var $studioIntroWindow,
   $introEditButton,
   $introEditorInputs,
@@ -325,6 +334,8 @@ var StudioIntrodunctionController = (function(){
     closeOtherEditors();
     loadInputValues();
     $introEditorBox.fadeIn("fast");
+
+    isVisible = 1;
   };
 
   function closeOtherEditors(){
@@ -367,8 +378,12 @@ var StudioIntrodunctionController = (function(){
   }
 
   var closeEditor = function(){
-    $introEditorBox.fadeOut("fast");
-    setTimeout(resetInputValues, 200);
+    if(isVisible == 1){
+      $introEditorBox.fadeOut("fast");
+      setTimeout(resetInputValues, 200);
+
+      isVisible = 0;
+    }
   };
 
   return {
@@ -393,7 +408,8 @@ var StudioProductController = (function(){
   var ProductEditor = function(pid, sid){
 
     var productBoxHeight;
-    var isAdder = 0;
+    var isAdder = 0,
+    isVisible = 0;
 
     var $productBox,
     $productDescBox,
@@ -485,6 +501,8 @@ var StudioProductController = (function(){
       $productBox.animate({"height": "650px"}, 200);
       $productEditorBox.css({"height": "650px"});
       $productEditorBox.fadeIn("fast");
+
+      isVisible = 1;
     };
 
     function closeOtherEditors(){
@@ -585,14 +603,18 @@ var StudioProductController = (function(){
     };
 
     var closeEditor = function(){
-      $productEditorBox.fadeOut("fast");
-      $productBox.animate({"height": productBoxHeight}, 200);
+      if(isVisible == 1){
+        $productEditorBox.fadeOut("fast");
+        $productBox.animate({"height": productBoxHeight}, 200);
 
-      if(isAdder != 1){
-        $productDescBox.css({"visibility": "visible"});
+        if(isAdder != 1){
+          $productDescBox.css({"visibility": "visible"});
+        }
+
+        setTimeout(resetInputValues, 200);
+
+        isVisible = 0;
       }
-
-      setTimeout(resetInputValues, 200);
     };
 
     return {
@@ -666,6 +688,7 @@ var StudioPortfolioController = (function(){
     var portfolioData = {},
     photoList = [],
     inputCounter = 0,
+    isVisible = 0,
     delPhotoList = [],
     portfolioWindowHeight,
     photoBoxWidth;
@@ -740,7 +763,7 @@ var StudioPortfolioController = (function(){
 
     function getPhotoList(){
       if(portfolioData.portfolio_id){
-        $.get("/studio/portfolio/" + portfolioData.portfolio_id + "/photolist", setPhotoList);
+        $.get(location.href + "/portfolio/" + portfolioData.portfolio_id + "/photolist", setPhotoList);
       }
       else{
         setEditor();
@@ -960,6 +983,8 @@ var StudioPortfolioController = (function(){
       window.scrollTo(0, $studioPortfolioWindow.offset().top);
       $portfolioEditorBox.fadeIn("fast");
 
+      isVisible = 1;
+
       if(!portfolioData.portfolio_id){
         $deleteButton.hide();
       }
@@ -984,17 +1009,21 @@ var StudioPortfolioController = (function(){
     };
 
     var closeEditor = function(){
-      portfolioData = {};
-      inputCounter = 0;
-      photoList = [];
-      delPhotoList = [];
+      if(isVisible == 1){
+        portfolioData = {};
+        inputCounter = 0;
+        photoList = [];
+        delPhotoList = [];
 
-      unbindEvents();
+        unbindEvents();
 
-      $portfolioEditorBox.fadeOut("fast");
-      $studioPortfolioWindow.animate({
-        "height": portfolioWindowHeight
-      }, 200);
+        $portfolioEditorBox.fadeOut("fast");
+        $studioPortfolioWindow.animate({
+          "height": portfolioWindowHeight
+        }, 200);
+
+        isVisible = 0;
+      }
     };
 
     return {
@@ -1154,7 +1183,7 @@ var StudioPortfolioController = (function(){
      };
 
      function getPhotoList(){
-       $.get("/studio/portfolio/" + portfolioData.portfolio_id + "/photolist", setPhotoList);
+       $.get(location.href + "/portfolio/" + portfolioData.portfolio_id + "/photolist", setPhotoList);
      };
 
      function setPhotoList(data){

@@ -33,11 +33,19 @@
 
       <div id="header-title" class="float-left"><a href="/"><%= service %></a></div>
       <div id="header-login" class="float-right">
-        <% if(!isAuth){ %>
+        <a href="/makestudio"><span class="make-studio-button">스튜디오 만들기</span></a>&nbsp;&nbsp;|&nbsp;
+        <%
+        if(!isAuth){
+        %>
         <span id="login-button" class="cursor-pointer">로그인</span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/join">회원가입</a>
-        <% }else{ %>
+        <%
+        }
+        else{
+        %>
         <%= name %> 님&nbsp;&nbsp;|&nbsp;&nbsp;<span id="logout-button" class="cursor-pointer">로그아웃</span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/withdraw">탈퇴</a>
-        <% } %>
+        <%
+        }
+        %>
       </div>
       <div class="float-clear"></div>
 
@@ -47,7 +55,7 @@
 
       <div id="search-window" class="width-full bg-color-lightergrey">
 
-        <div class="font-white font-bold font-level-larger center-aligned">
+        <div class="font-white font-level-larger center-aligned">
           일생의 순간, 나만의 사진작가를 만나보세요.
         </div>
 

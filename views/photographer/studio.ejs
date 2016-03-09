@@ -55,10 +55,16 @@
           %>
         </ul>
         <%
-        }else{
+        }
+        else{
           if(isOwner){
           %>
           <div class="center-aligned font-white font-level-larger">스튜디오의 대표 사진을 등록하세요.</div>
+          <%
+          }
+          else{
+          %>
+          <div class="center-aligned font-white font-level-larger"></div>
           <%
           }
         }
@@ -166,6 +172,7 @@
       </div>
 
       <div id="studio-product-window" class="take-basic-window font-grey bg-color-lightergrey">
+        <h1>Product</h1>
 
         <%
         if(studioData.num_products != 0){

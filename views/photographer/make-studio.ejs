@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title><%=title%></title>
+    <link rel="stylesheet" href="/stylesheets/take-main-style.css"/>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="/javascripts/take-util.js"></script>
+    <script type="text/javascript">
+      (function(){
+        $(document).ready(function(){
+
+        });
+      }());
+    </script>
+  </head>
+
+  <body>
+
+    <div id="header" class="width-full font-white">
+
+      <div id="header-title" class="float-left"><a href="/"><%= service %></a></div>
+      <div class="float-clear"></div>
+
+    </div>
+
+    <div class="take-main-window">
+
+      <div class="take-basic-window">
+        <h1>스튜디오 만들기</h1>
+        <span class="font-grey">작가님의 멋진 스튜디오를 개설하세요.</span>
+        <form action="/addstudio" method="POST">
+          <div class="take-input-box">
+            <div class="editor-input-label font-grey">&nbsp;스튜디오 이름&nbsp;&nbsp;|</div>
+            <input type="text" class="take-text-input font-darkgrey font-level-default border-solid-thin-lightgrey" name="studio_name"></input>
+            <div class="editor-input-label font-grey">&nbsp;지역&nbsp;&nbsp;|</div>
+            <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="region"></input>
+            <div class="editor-input-label font-grey">&nbsp;연락처&nbsp;&nbsp;|</div>
+            <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="tel_num"></input>
+            <div class="editor-input-label font-grey">&nbsp;주소&nbsp;&nbsp;|</div>
+            <input type="text" class="take-text-input font-darkgrey font-level-default border-solid-thin-lightgrey" name="address"></input>
+            <div class="editor-input-label font-grey">&nbsp;스튜디오 소개글&nbsp;&nbsp;|</div>
+            <textarea class="take-textarea font-darkgrey font-level-default border-solid-thin-lightgrey" name="introduction"></textarea>
+          </div>
+          <div class="editor-button-box">
+            <button type="submit" class="editor-submit-button take-button-mint">
+              <img src="/images/studio/check.png"></img><span>&nbsp;저장하기</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+    <div id="footer" class="bg-color-darkgrey center-aligned">
+
+      <div id="footer-main">
+      </div>
+
+      <div id="footer-menu" class="font-grey font-level-small">
+        이용약관&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        개인정보취급방침&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        서비스운영정책&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        고객센터
+      </div>
+
+      <hr class="bg-color-grey">
+
+      <div class="font-grey">
+        &copy; <a href="/" class="font-grey"><%= service %></a>, Inc.
+      </div>
+
+    </div>
+
+  </body>
+
+</html>

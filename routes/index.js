@@ -24,8 +24,8 @@ router.get('/', mainManager.showMainPage);
 // Main Photographer List
 router.post('/todaystudiolist', mainManager.showTodayStudioList);
 
-// '/login'
-router.get('/login', loginManager.showLoginPopup);
+// 'Login Popup'
+router.get('/loginpopup', loginManager.showLoginPopup);
 // '/login' post
 router.post('/login', loginManager.loginAuth);
 // "/logout"
@@ -52,6 +52,12 @@ router.post('/list', listManager.showList);
 // Studio
 router.get('/studio/:photographer', photographerManager.showStudio);
 
+// Studio Makepage
+router.get('/makestudio', photographerManager.makeStudio);
+
+// Studio Add
+router.post('/addstudio', photographerManager.addStudio);
+
 // Studio Photo Slider Update
 router.post('/studio/:photographer/slider/update', photographerManager.updateSlider);
 
@@ -74,6 +80,6 @@ router.post('/studio/:photographer/portfolio/update', photographerManager.update
 router.post('/studio/:photographer/portfolio/delete', photographerManager.deletePortfolio);
 
 // Get Portfolio Photo List
-router.get('/studio/portfolio/:portfolio_id/photolist', photographerManager.getPortfolioPhotoList);
+router.get('/studio/:photographer/portfolio/:portfolio_id/photolist', photographerManager.getPortfolioPhotoList);
 
 module.exports = router;
