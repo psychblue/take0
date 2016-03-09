@@ -67,4 +67,13 @@ router.post('/studio/:photographer/product/update', photographerManager.updatePr
 // Studio Product Delete
 router.post('/studio/:photographer/product/delete', photographerManager.deleteProduct);
 
+// Studio Portfolio Update
+router.post('/studio/:photographer/portfolio/update', photographerManager.updatePortfolio);
+
+// Studio Portfolio Delete
+router.post('/studio/:photographer/portfolio/delete', photographerManager.deletePortfolio);
+
+// Get Portfolio Photo List
+router.get('/studio/portfolio/:portfolio_id/photolist', photographerManager.getPortfolioPhotoList);
+
 module.exports = router;

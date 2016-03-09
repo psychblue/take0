@@ -21,74 +21,6 @@ var reqFromOwner = function(req, res){
   }
 }
 
-var loadProducts = function(req, res, username, studioData){
-
-  var productsSelectCallbackForError = function(err){
-    res.send('DB Error');
-  }
-
-  var productsSelectCallbackForNoResult = function(){
-    res.send('No Products');
-  }
-
-  var productsSelectCallbackForSuccess = function(rows, fields){
-    if(studioData.num_portfolios == 0){
-      var studioOptions = {
-        title: confParams.html.title,
-        service: confParams.html.service_name,
-        isAuth: req.isAuthenticated(),
-        isOwner: (req.isAuthenticated() && (req.user.username == req.params.photographer)),
-        name: username,
-        photographerName: req.params.photographer,
-        studioData: studioData,
-        productsData: rows
-      };
-      res.render('photographer/studio', studioOptions);
-    }
-    else{
-      loadPortfolios(req, res, username, studioData, rows);
-    }
-  }
-
-  var query = 'SELECT * FROM ?? WHERE ?? = ?';
-  var params = ['studioProducts', 'studio_id', studioData.studio_id];
-  logger.debug('SQL Query [SELECT * FROM %s WHERE %s=%s]', params[0], params[1], params[2]);
-
-  mysqlDb.doSQLSelectQuery(query, params, productsSelectCallbackForSuccess, productsSelectCallbackForNoResult, productsSelectCallbackForError);
-}
-
-var loadPortfolios = function(req, res, username, studioData, productsData){
-
-  var portfoliosSelectCallbackForError = function(err){
-    res.send('DB Error');
-  }
-
-  var portfoliosSelectCallbackForNoResult = function(){
-    res.send('No Portfolio');
-  }
-
-  var portfoliosSelectCallbackForSuccess = function(rows, fields){
-    var studioOptions = {
-      title: confParams.html.title,
-      service: confParams.html.service_name,
-      isAuth: req.isAuthenticated(),
-      isOwner: (req.isAuthenticated() && (req.user.username == req.params.photographer)),
-      name: username,
-      photographerName: req.params.photographer,
-      studioData: studioData,
-      productsData: productsData,
-      portfoliosData: rows
-    };
-    res.render('photographer/studio', studioOptions);
-  }
-
-  var query = 'SELECT * FROM ?? WHERE ?? = ?';
-  var params = ['studioPortfolios', 'studio_id', studioData.studio_id];
-  logger.debug('SQL Query [SELECT * FROM %s WHERE %s=%s]', params[0], params[1], params[2]);
-
-  mysqlDb.doSQLSelectQuery(query, params, portfoliosSelectCallbackForSuccess, portfoliosSelectCallbackForNoResult, portfoliosSelectCallbackForError);
-}
-
 var updateNumberOfProducts = function(req, res){
 
   var studioUpdateCallbackForError = function(err){
@@ -109,7 +41,124 @@ var updateNumberOfProducts = function(req, res){
   mysqlDb.doSQLUpdateQuery(query, params, studioUpdateCallbackForSuccess, studioUpdateCallbackForError);
 }
 
+var updateNumberOfPortfolios = function(req, res){
+
+  var studioUpdateCallbackForError = function(err){
+    res.send({
+      "result": "fail",
+      "text": err
+    });
+  }
+
+  var studioUpdateCallbackForSuccess = function(){
+    if(req.body.portfolio_id == "new"){
+      res.redirect('/studio/' + req.params.photographer);
+    }
+    else{
+      res.send({"result": "success"});
+    }
+  }
+
+  var query = 'UPDATE ?? SET ? WHERE ?? = ?';
+  var params = ['studio', {num_portfolios: req.body.num_portfolios}, 'studio_id', req.body.studio_id];
+  logger.debug('SQL Query [UPDATE %s SET %s WHRER %s = %s]', params[0], JSON.stringify(params[1]), params[2], params[3]);
+
+  mysqlDb.doSQLUpdateQuery(query, params, studioUpdateCallbackForSuccess, studioUpdateCallbackForError);
+}
+
+var addPortfolio = function(req, res, studio_id, photo_list, num_photos){
+
+  var portfolioInsertCallbackForError = function(err){
+    res.send({
+      "result": "fail",
+      "text": err
+    });
+  }
+
+  var portfolioInsertCallbackForSuccess = function(){
+    updateNumberOfPortfolios(req, res);
+  }
+
+  var query = 'INSERT INTO ?? SET ?';
+  var params = ['studioPortfolios', {studio_id: studio_id, photo_list: photo_list, num_photos: num_photos}];
+  logger.debug('SQL Query [INSERT INTO %s SET %s]', params[0], JSON.stringify(params[1]));
+
+  mysqlDb.doSQLInsertQuery(query, params, portfolioInsertCallbackForSuccess, portfolioInsertCallbackForError);
+}
+
 photographerManager.showStudio = function(req, res, next){
+
+  var loadProducts = function(req, res, username, studioData){
+
+    var productsSelectCallbackForError = function(err){
+      res.send('DB Error');
+    }
+
+    var productsSelectCallbackForNoResult = function(){
+      res.send('No Products');
+    }
+
+    var productsSelectCallbackForSuccess = function(rows, fields){
+      if(studioData.num_portfolios == 0){
+        var studioOptions = {
+          title: confParams.html.title,
+          service: confParams.html.service_name,
+          isAuth: req.isAuthenticated(),
+          isOwner: (req.isAuthenticated() && (req.user.username == req.params.photographer)),
+          name: username,
+          photographerName: req.params.photographer,
+          studioData: studioData,
+          productsData: rows
+        };
+        res.render('photographer/studio', studioOptions);
+      }
+      else{
+        loadPortfolios(req, res, username, studioData, rows);
+      }
+    }
+
+    var query = 'SELECT * FROM ?? WHERE ?? = ?';
+    var params = ['studioProducts', 'studio_id', studioData.studio_id];
+    logger.debug('SQL Query [SELECT * FROM %s WHERE %s=%s]', params[0], params[1], params[2]);
+
+    mysqlDb.doSQLSelectQuery(query, params, productsSelectCallbackForSuccess, productsSelectCallbackForNoResult, productsSelectCallbackForError);
+  }
+
+  var loadPortfolios = function(req, res, username, studioData, productsData){
+
+    var portfoliosSelectCallbackForError = function(err){
+      res.send('DB Error');
+    }
+
+    var portfoliosSelectCallbackForNoResult = function(){
+      res.send('No Portfolio');
+    }
+
+    var portfoliosSelectCallbackForSuccess = function(rows, fields){
+      for(var i = 0; i < rows.length; i++){
+        rows[i].photo_list = rows[i].photo_list.split(',')[0];
+      }
+
+      var studioOptions = {
+        title: confParams.html.title,
+        service: confParams.html.service_name,
+        isAuth: req.isAuthenticated(),
+        isOwner: (req.isAuthenticated() && (req.user.username == req.params.photographer)),
+        name: username,
+        photographerName: req.params.photographer,
+        studioData: studioData,
+        productsData: productsData,
+        portfoliosData: rows
+      };
+      res.render('photographer/studio', studioOptions);
+    }
+
+    var query = 'SELECT * FROM ?? WHERE ?? = ?';
+    var params = ['studioPortfolios', 'studio_id', studioData.studio_id];
+    logger.debug('SQL Query [SELECT * FROM %s WHERE %s=%s]', params[0], params[1], params[2]);
+
+    mysqlDb.doSQLSelectQuery(query, params, portfoliosSelectCallbackForSuccess, portfoliosSelectCallbackForNoResult, portfoliosSelectCallbackForError);
+  }
 
   var studioSelectCallbackForError = function(err){
     res.send('DB Error');
@@ -370,6 +419,145 @@ photographerManager.deleteProduct = function(req, res, next){
   logger.debug('SQL Query [DELETE FROM %s WHERE %s=%s]', params[0], params[1], params[2]);
 
   mysqlDb.doSQLDeleteQuery(query, params, productDeleteCallbackForSuccess, productDeleteCallbackForError);
+}
+
+photographerManager.updatePortfolio = function(req, res, next){
+
+  if(reqFromOwner(req, res) != 1){
+    return;
+  }
+
+  var portfolioStoragePath = 'public/images/studio';
+  var portfolioUrlPath = '/images/studio/';
+  var filenamePrefix = req.params.photographer + '_portfolio_' + Date.now() + '_';
+
+  var storage = multer.diskStorage({
+    destination: portfolioStoragePath,
+    filename: function(req, file, callback){
+      callback(null, filenamePrefix + file.originalname);
+    }
+  });
+
+  var fileController = multer({
+    storage: storage
+  }).fields([
+    {name: 'portfolio_id'},
+    {name: 'photo_list'},
+    {name: 'del_photo_list'},
+    {name: 'photofile'}
+  ]);
+
+  fileController(req, res, function(err){
+    if(!err){
+      var numPhoto;
+      var newPhotoList = req.body.photo_list.split(',');
+      var delPhotoList = req.body.del_photo_list.split(',');
+
+      if(newPhotoList[0] == ""){
+        newPhotoList = [];
+      }
+
+      if(req.files['photofile']){
+        for(var i = 0; i < req.files['photofile'].length; i++){
+          newPhotoList.push(portfolioUrlPath + filenamePrefix + req.files['photofile'][i].originalname);
+        }
+      }
+
+      if(newPhotoList[0] != ""){
+        numPhoto = newPhotoList.length;
+      }
+      else{
+        numPhoto = 0;
+      }
+
+      if(delPhotoList[0] != ""){
+        for(var i = 0; i < delPhotoList.length; i++){
+          fs.unlinkSync('public' + delPhotoList[i]);
+        }
+      }
+
+      if(req.body.portfolio_id == "new"){
+        addPortfolio(req, res, req.body.studio_id, newPhotoList.toString(), numPhoto);
+      }
+      else{
+        var portfolioUpdateCallbackForError = function(err){
+          res.send(err);
+        }
+
+        var portfolioUpdateCallbackForSuccess = function(){
+          res.redirect('/studio/' + req.params.photographer);
+        }
+
+        var query = 'UPDATE ?? SET ? WHERE ?? = ?';
+      	var params = ['studioPortfolios', {photo_list: newPhotoList.toString(), num_photos: numPhoto}, 'portfolio_id', req.body.portfolio_id];
+        logger.debug('SQL Query [UPDATE %s SET %s WHRER %s = %s]', params[0], JSON.stringify(params[1]), params[2], params[3]);
+
+        mysqlDb.doSQLUpdateQuery(query, params, portfolioUpdateCallbackForSuccess, portfolioUpdateCallbackForError);
+      }
+    }
+    else{
+      res.send(err);
+    }
+  });
+}
+
+photographerManager.deletePortfolio = function(req, res, next){
+
+  if(reqFromOwner(req, res) != 1){
+    return;
+  }
+
+  var portfolioDeleteCallbackForError = function(err){
+    res.send({
+      "result": "fail",
+      "text": err
+    });
+  }
+
+  var portfolioDeleteCallbackForSuccess = function(){
+    var photoList = req.body.photo_list.split(',');
+    for(var i = 0; i < photoList.length; i++){
+      fs.unlinkSync('public' + photoList[i]);
+    }
+
+    updateNumberOfPortfolios(req, res);
+  }
+
+  var query = 'DELETE FROM ?? WHERE ?? = ?';
+	var params = ['studioPortfolios', 'portfolio_id', req.body.portfolio_id];
+  logger.debug('SQL Query [DELETE FROM %s WHERE %s=%s]', params[0], params[1], params[2]);
+
+  mysqlDb.doSQLDeleteQuery(query, params, portfolioDeleteCallbackForSuccess, portfolioDeleteCallbackForError);
+}
+
+photographerManager.getPortfolioPhotoList = function(req, res, next){
+
+  var photoListSelectCallbackForError = function(err){
+    res.send({
+      "result": "fail",
+      "text": err
+    });
+  }
+
+  var photoListSelectCallbackForNoResult = function(){
+    res.send({
+      "result": "fail",
+      "text": "No data"
+    });
+  }
+
+  var photoListSelectCallbackForSuccess = function(rows, fields){
+    res.send({
+      "result": "success",
+      "body": rows[0]
+    });
+  }
+
+  var query = 'SELECT ?? FROM ?? WHERE ?? = ?';
+  var params = ['photo_list', 'studioPortfolios', 'portfolio_id', req.params.portfolio_id];
+  logger.debug('SQL Query [SELECT %s FROM %s WHERE %s=%s]', params[0], params[1], params[2], params[3]);
+
+  mysqlDb.doSQLSelectQuery(query, params, photoListSelectCallbackForSuccess, photoListSelectCallbackForNoResult, photoListSelectCallbackForError);
 }
 
 module.exports = photographerManager;

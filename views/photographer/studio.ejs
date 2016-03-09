@@ -187,7 +187,7 @@
               <img src="/images/studio/pencil.png"></img><span>&nbsp;&nbsp;수정하기</span>
             </button>
 
-            <div class="product-editor-box">
+            <div class="product-editor-box font-darkgrey">
               <div class="editor-title-box font-level-large">스튜디오 상품을 소개하세요.</div>
               <form class="product-form">
                 <div class="editor-main-box">
@@ -238,7 +238,7 @@
         <div id="product-add" class="product-box">
           <div class="product-add-button bg-color-mint font-white">+</div>
 
-          <div class="product-editor-box">
+          <div class="product-editor-box font-darkgrey">
             <div class="editor-title-box font-level-large">스튜디오 상품을 추가하세요.</div>
             <form class="product-form">
               <div class="editor-main-box">
@@ -276,12 +276,23 @@
           if(studioData.num_portfolios != 0){
           %>
           <script type="text/javascript">
-            StudioPortfolioController.setPortfolio(<%- JSON.stringify(portfoliosData) %>);
+            StudioPortfolioController.initPortfolio(<%- JSON.stringify(portfoliosData) %>);
           </script>
             <%
             for(var i = 0; i < portfoliosData.length; i++){
             %>
-            <div class="portfolio-item bg-color-lightergrey" for="<%= i %>"><div class="item-img"></div></div>
+            <div class="portfolio-item bg-color-lightergrey" for="<%= i %>">
+              <div class="item-img"></div>
+              <%
+              if(isOwner){
+              %>
+              <button class="portfolio-edit-button take-button-mint" for="<%= i %>">
+                <img src="/images/studio/pencil.png"></img><span>&nbsp;&nbsp;수정하기</span>
+              </button>
+              <%
+              }
+              %>
+            </div>
               <%
               if(i % 3 == 2){
               %>
@@ -291,16 +302,24 @@
             }
             if(isOwner){
             %>
-            <div class="portfolio-add bg-color-lightergrey"></div>
+            <div class="portfolio-add-button">+</div>
             <div class="float-clear"></div>
             <%
             }
             else{
-              if(i % 3 != 2){
+              if((i - 1) % 3 != 2){
               %>
               <div class="float-clear"></div>
               <%
               }
+            }
+          }
+          else{
+            if(isOwner){
+            %>
+            <div class="portfolio-add-button">+</div>
+            <div class="float-clear"></div>
+            <%
             }
           }
           %>
@@ -316,6 +335,30 @@
           </div>
           <div class="counter font-lightergrey"></div>
           <button class="close-button"><img src="/images/studio/close.png"></img></button>
+        </div>
+
+        <div class="portfolio-editor-box bg-color-white font-darkgrey">
+          <div class="editor-title-box font-level-large">포트폴리오를 수정하세요.</div>
+          <form action="/studio/<%= studioData.username %>/portfolio/update" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="portfolio_id"></input>
+            <input type="hidden" name="studio_id" value=<%= studioData.studio_id %>></input>
+            <input type="hidden" name="photo_list"></input>
+            <input type="hidden" name="num_portfolios"></input>
+            <input type="hidden" name="del_photo_list"></input>
+            <div class="editor-main-box">
+            </div>
+            <div class="editor-button-box">
+              <button type="submit" class="editor-submit-button take-button-mint">
+                <img src="/images/studio/check.png"></img><span>&nbsp;저장하기</span>
+              </button>
+              <button type="button" class="editor-delete-button take-button-mint">
+                <img src="/images/studio/delete.png"></img><span>&nbsp;삭제하기</span>
+              </button>
+              <button type="button" class="editor-cancel-button take-button-white">
+                <img src="/images/studio/cancel.png"></img><span>&nbsp;취소하기</span>
+              </button>
+            </div>
+          </form>
         </div>
 
       </div>

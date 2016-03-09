@@ -545,7 +545,7 @@ h1 a {
   padding-top: 20px;
   padding-bottom: 50px;
   margin: 0 auto;
-}
+ }
 
 #studio-portfolio-window .portfolio-item {
   width: 300px;
@@ -568,12 +568,59 @@ h1 a {
   background-size: cover;
 }
 
-#studio-portfolio-window .portfolio-add {
-  width: 300px;
-  height: 300px;
+#studio-portfolio-window .portfolio-add-button {
+  width: 299px;
+  height: 299px;
   margin: 10px;
+  border: 1px dashed #999;
   float: left;
+  font-size: 3em;
+  line-height: 299px;
   cursor: pointer;
+}
+
+#studio-portfolio-window .portfolio-edit-button {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+}
+
+#studio-portfolio-window .portfolio-editor-box {
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: none;
+}
+
+#studio-portfolio-window .editor-main-box {
+	padding-top: 50px;
+	padding-bottom: 150px;
+}
+
+#studio-portfolio-window .editor-photo-box {
+	margin: 10px;
+	position: relative;
+	float: left;
+	background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+#studio-portfolio-window .editor-input-box {
+  border: 1px dashed #999;
+  font-size: 3em;
+  cursor: pointer;
+}
+
+#studio-portfolio-window .editor-photo-input {
+  position: absolute;
+  width: 0px;
+  height: 0px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  border: 0;
 }
 
 #portfolio-viewer {

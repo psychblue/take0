@@ -47,7 +47,7 @@ var ButtonController = (function(){
     targetButton.animate({"font-size": "1em"}, 100);
   };
 
-  var setButton = function(targetButton, clickFunc){
+  var setButton = function(targetButton, clickFunc, target){
     targetButton.hover(function(){
       onMouseenter($(this));
     },
@@ -56,7 +56,18 @@ var ButtonController = (function(){
     });
 
     if(clickFunc){
-      targetButton.click(clickFunc);
+      if(target){
+        targetButton.click(function(){
+          clickFunc(target);
+
+          return false;
+        });
+      }
+      else{
+        targetButton.click(clickFunc);
+
+        return false;
+      }
     }
   };
 

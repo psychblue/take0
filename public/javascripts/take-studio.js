@@ -40,7 +40,7 @@ var StudioPhotoSliderController = (function(){
     function addDelButton(target){
       var $delButton = $("<img></img>");
 
-      $delButton.addClass("del-button")
+      $delButton.addClass("del-button cursor-pointer")
       .attr("src", "/images/studio/del.png")
       .css({
         "position": "absolute",
@@ -52,7 +52,7 @@ var StudioPhotoSliderController = (function(){
       .append($delButton);
     };
 
-    function clickDelButton(target){
+    function onClickDelButton(target){
       target.find(".del-button").click(function(){
         var parent = $(this).parent();
         var inputId = parent.attr("for");
@@ -61,7 +61,7 @@ var StudioPhotoSliderController = (function(){
         $flag.val(flag);
 
         $(this).hide();
-        parent
+
         resetPhotoBox(parent)
         .text("+")
         .next().val("");
@@ -115,7 +115,7 @@ var StudioPhotoSliderController = (function(){
                 setPreview($(this), src);
               }
 
-              clickDelButton($(this));
+              onClickDelButton($(this));
             });
           }
           reader.readAsDataURL($(this)[0].files[0]);
@@ -146,7 +146,7 @@ var StudioPhotoSliderController = (function(){
           .next().val("");
         }
 
-        clickDelButton($(this));
+        onClickDelButton($(this));
       });
 
       $sliderEditorBox.fadeIn("fast");
@@ -257,6 +257,7 @@ var StudioPhotoSliderController = (function(){
   function closeOtherEditors(){
       StudioIntrodunctionController.closeEditor();
       StudioProductController.closeEditor();
+      StudioPortfolioController.closeEditor();
   }
 
   var enableSlider = function(list){
@@ -329,6 +330,7 @@ var StudioIntrodunctionController = (function(){
   function closeOtherEditors(){
     StudioPhotoSliderController.closeEditor();
     StudioProductController.closeEditor();
+    StudioPortfolioController.closeEditor();
   };
 
   function loadInputValues(){
@@ -488,6 +490,7 @@ var StudioProductController = (function(){
     function closeOtherEditors(){
       StudioPhotoSliderController.closeEditor();
       StudioIntrodunctionController.closeEditor();
+      StudioPortfolioController.closeEditor();
 
       for(var index in productEditors){
         if(productEditors[index].getProductBox().attr("id") != $productBox.attr("id")){
@@ -648,22 +651,637 @@ var StudioProductController = (function(){
  */
 var StudioPortfolioController = (function(){
 
-  var portfolioData = {};
-  var viewerPhotoList, viewerPhotoId;
+  var portfolioDataSet = {};
 
-  var $portfolioBox,
+  var $studioPortfolioWindow,
+  $portfolioBox,
   $portfolioItems,
-  $portfolioViewer,
-  $origImageBox,
-  $origImage,
-  $thumbBox,
-  $viewerCloseButton,
-  $viewerLeftArrow,
-  $viewerRightArrow,
-  $viewerThumbBox,
-  $viewerThumbInnerBox,
-  $viewerThumbItems,
-  $viewerCounter;
+  $portfolioEditButtons,
+  $portfolioAddButton;
+
+  /***************************************************
+   * Portfolio Editor
+   */
+  var PortfolioEditor = (function(){
+    var portfolioData = {},
+    photoList = [],
+    inputCounter = 0,
+    delPhotoList = [],
+    portfolioWindowHeight,
+    photoBoxWidth;
+
+    var $portfolioEditorBox,
+    $editorMainBox,
+    $editorPhotoBoxes,
+    $delButtons,
+    $submitButton,
+    $deleteButton,
+    $cancelButton,
+    $portfolioIdInput,
+    $photoListInput,
+    $numPortfoliosInput,
+    $delPhotoListInput;
+
+    (function(){
+      $(document).ready(function(){
+        $(window).resize(resizeEditorBoxes);
+      });
+    }());
+
+    function init(targetElement){
+      loadElements();
+      if(targetElement.attr("for")){
+        portfolioData = portfolioDataSet[targetElement.attr("for")];
+      }
+      getPhotoList();
+    }
+
+    function loadElements(){
+      $portfolioEditorBox = $portfolioBox.siblings(".portfolio-editor-box");
+      $editorMainBox = $portfolioEditorBox.find(".editor-main-box");
+      $submitButton = $portfolioEditorBox.find(".editor-submit-button");
+      $deleteButton = $portfolioEditorBox.find(".editor-delete-button");
+      $cancelButton = $portfolioEditorBox.find(".editor-cancel-button");
+      $portfolioIdInput = $portfolioEditorBox.find("input[name='portfolio_id']");
+      $photoListInput = $portfolioEditorBox.find("input[name='photo_list']");
+      $numPortfoliosInput = $portfolioEditorBox.find("input[name='num_portfolios']");
+      $delPhotoListInput = $portfolioEditorBox.find("input[name='del_photo_list']");
+    };
+
+    function bindEvents(){
+      ButtonController.setButton($submitButton);
+      ButtonController.setButton($deleteButton, deletePortfolio);
+      ButtonController.setButton($cancelButton, closeEditor);
+
+      $delButtons.click(function(){
+        $(this).parent().hide();
+        resizePortfolioWindow();
+
+        delPhotoList.push(photoList[Number($(this).parent().attr("for"))]);
+        photoList[Number($(this).parent().attr("for"))] = "";
+
+        $photoListInput.val(photoList.filter(function(element){
+          return element != "";
+        }));
+
+        $delPhotoListInput.val(delPhotoList);
+      });
+    };
+
+    function unbindEvents(){
+      $submitButton.unbind("hover");
+      $submitButton.unbind("click");
+      $deleteButton.unbind("hover");
+      $deleteButton.unbind("click");
+      $cancelButton.unbind("hover");
+      $cancelButton.unbind("click");
+      $delButtons.unbind("click");
+    };
+
+    function getPhotoList(){
+      if(portfolioData.portfolio_id){
+        $.get("/studio/portfolio/" + portfolioData.portfolio_id + "/photolist", setPhotoList);
+      }
+      else{
+        setEditor();
+      }
+    };
+
+    function setPhotoList(data){
+      if(data.result == "success"){
+        if(data.body.photo_list != ""){
+          photoList = data.body.photo_list.split(",");
+        }
+        setEditor();
+      }
+      else{
+        alert(data.text);
+      }
+    };
+
+    function deletePortfolio(){
+      $.ajax({
+        type: "POST",
+        url: location.href + "/portfolio/delete",
+        data: {
+          portfolio_id: portfolioData.portfolio_id,
+          studio_id: portfolioData.studio_id,
+          num_portfolios: portfolioDataSet.length - 1,
+          photo_list: photoList.toString()
+        },
+        success: function(data){
+          if(data.result == "success"){
+            location.reload();
+          }
+          else if(data.result == "fail"){
+            alert(data.text);
+          }
+        },
+        error: function(xhr, option, error){
+          alert(error);
+        }
+      });
+    };
+
+    function resizeEditorBoxes(){
+      var mainBoxPadding = 0.1 * $(window).width();
+
+      $editorMainBox.css({
+        "padding-left": mainBoxPadding,
+        "padding-right": mainBoxPadding
+      });
+
+      photoBoxWidth = ( 0.8 * $(window).width() - 100 ) / 5;
+
+      $editorPhotoBoxes.each(function(){
+        $(this).css({
+          "width": photoBoxWidth,
+          "height": photoBoxWidth
+        });
+      });
+
+      $editorPhotoBoxes.filter(".editor-input-box").css({
+        "width": photoBoxWidth - 2,
+        "height": photoBoxWidth - 2,
+        "line-height": ( photoBoxWidth - 2 ) + "px"
+      });
+    };
+
+    function resizePortfolioWindow(){
+      $studioPortfolioWindow.css({
+        "height": $portfolioEditorBox.height() - 150
+      }, 200);
+    };
+
+    function addDelButton(target){
+      var $delButton = $("<img></img>");
+
+      $delButton.addClass("del-button cursor-pointer")
+      .attr("src", "/images/studio/del.png")
+      .css({
+        "position": "absolute",
+        "right": "-12px",
+        "top": "-12px"
+      });
+
+      target.append($delButton);
+    };
+
+    function onClickDelButton(target){
+      target.find(".del-button").click(function(){
+        var parent = $(this).parent();
+        parent.next().val("").hide();
+        parent.hide();
+
+        resizePortfolioWindow();
+
+        return false;
+      });
+    };
+
+    function setPreview(target, src){
+      target.empty().css({
+        "width": photoBoxWidth,
+        "height": photoBoxWidth,
+        "background-image": "url\(\"" + src + "\"\)",
+        "border": "none"
+      });
+
+      return target;
+    }
+
+    function onChangeInput(target){
+      target.change(function(){
+        if(window.FileReader){
+          var label = $(this).siblings("label");
+          var inputId = $(this).attr("id");
+          if (!$(this)[0].files[0].type.match(/image\//)){
+            return;
+          }
+
+          var reader = new FileReader();
+          reader.onload = function(e){
+
+            var src = e.target.result;
+
+            label.each(function(){
+              if($(this).attr("for") == inputId){
+                setPreview($(this), src);
+                addDelButton($(this));
+              }
+
+              onClickDelButton($(this));
+            });
+          }
+          reader.readAsDataURL($(this)[0].files[0]);
+
+          addInput();
+          resizePortfolioWindow();
+        }
+        else{
+          //under IE10
+        }
+      });
+    };
+
+    function addInput(){
+      inputCounter++;
+
+      var $floatClear = $editorMainBox.find(".float-clear");
+      $floatClear.before($("<label></label>")
+        .addClass("editor-photo-box editor-input-box font-grey")
+        .attr("for", inputCounter)
+        .css({
+          "width": photoBoxWidth - 2,
+          "height": photoBoxWidth - 2,
+          "line-height": ( photoBoxWidth - 2 ) + "px"
+        })
+        .text("+"));
+
+      $floatClear.before($("<input></input>")
+        .addClass("editor-photo-input")
+        .attr({
+          "id": inputCounter,
+          "type": "file",
+          "name": "photofile"
+        }));
+
+        onChangeInput($editorMainBox.find("#" + inputCounter));
+
+        $editorPhotoBoxes = $editorPhotoBoxes.add($editorMainBox.find("[for='" + inputCounter + "']"));
+    };
+
+    function setEditor(){
+      $editorMainBox.empty();
+
+      for(var i = 0; i < photoList.length; i++){
+        var editorPhotoBox = $("<div></div>")
+        .addClass("editor-photo-box")
+        .css({
+          "background-image": "url\(\"" + photoList[i] + "\"\)"
+        }).attr("for", i);
+
+        addDelButton(editorPhotoBox);
+
+        $editorMainBox.append(editorPhotoBox);
+      }
+
+      $editorMainBox.append($("<div></div>").addClass("float-clear"));
+
+      $editorPhotoBoxes = $editorMainBox.find(".editor-photo-box");
+      $delButtons =$editorMainBox.find(".del-button");
+
+      if(portfolioData.portfolio_id){
+        $portfolioIdInput.val(portfolioData.portfolio_id);
+      }
+      else{
+        $portfolioIdInput.val("new");
+        if(portfolioDataSet.length > 0){
+          $numPortfoliosInput.val(portfolioDataSet.length + 1);
+        }
+        else{
+          $numPortfoliosInput.val(1);
+        }
+      }
+      $photoListInput.val(photoList);
+      $delPhotoListInput.val(delPhotoList);
+
+      addInput();
+
+      resizeEditorBoxes();
+
+      $studioPortfolioWindow.css({
+        "overflow": "hidden"
+      });
+
+      portfolioWindowHeight = $studioPortfolioWindow.height();
+      resizePortfolioWindow();
+
+      window.scrollTo(0, $studioPortfolioWindow.offset().top);
+      $portfolioEditorBox.fadeIn("fast");
+
+      if(!portfolioData.portfolio_id){
+        $deleteButton.hide();
+      }
+      else{
+        $deleteButton.show();
+      }
+
+      bindEvents();
+    };
+
+    function closeOtherEditors(){
+      StudioPhotoSliderController.closeEditor();
+      StudioIntrodunctionController.closeEditor();
+      StudioProductController.closeEditor();
+    };
+
+    var showEditor = function(targetElement){
+      closeOtherEditors();
+      init(targetElement);
+
+      return false;
+    };
+
+    var closeEditor = function(){
+      portfolioData = {};
+      inputCounter = 0;
+      photoList = [];
+      delPhotoList = [];
+
+      unbindEvents();
+
+      $portfolioEditorBox.fadeOut("fast");
+      $studioPortfolioWindow.animate({
+        "height": portfolioWindowHeight
+      }, 200);
+    };
+
+    return {
+      showEditor,
+      closeEditor
+    }
+  }());
+  /***************************************************/
+
+  /***************************************************
+   * Portfolio Viewer
+   */
+   var PortfolioViewer = (function(){
+
+     var portfolioData = {},
+     photoList = [],
+     viewerThumbIndex = 0;
+
+     var $portfolioViewer,
+     $origImageBox,
+     $origImage,
+     $thumbBox,
+     $viewerCloseButton,
+     $viewerLeftArrow,
+     $viewerRightArrow,
+     $viewerThumbBox,
+     $viewerThumbInnerBox,
+     $viewerThumbItems,
+     $viewerCounter;
+
+     (function(){
+       $(document).ready(function(){
+         $(window).resize(resizeOrigImageSize);
+       });
+     }());
+
+     function init(targetElement){
+       loadElements();
+       portfolioData = portfolioDataSet[Number(targetElement.attr("for"))];
+       getPhotoList();
+     };
+
+     function loadElements(){
+       $portfolioViewer = $portfolioBox.next("#portfolio-viewer");
+       $origImageBox = $portfolioViewer.find(".orig-image-box");
+       $origImage = $origImageBox.find(".orig-image");
+       $thumbBox = $portfolioViewer.find(".thumb-box");
+       $viewerCloseButton = $portfolioViewer.find(".close-button");
+       $viewerLeftArrow = $portfolioViewer.find(".left-arrow");
+       $viewerRightArrow = $portfolioViewer.find(".right-arrow");
+       $viewerThumbBox = $portfolioViewer.find(".thumb-box");
+       $viewerThumbInnerBox = $viewerThumbBox.find(".inner-box");
+       $viewerCounter = $portfolioViewer.find(".counter");
+     };
+
+     function bindEvents(){
+       $viewerThumbItems.click(function(){
+         $origImage.attr({
+           "src": photoList[$(this).attr("for")]
+         }).load(resizeOrigImageSize);
+
+         viewerThumbIndex = Number($(this).attr("for"));
+
+         moveThumbBox($(this));
+
+         if(viewerThumbIndex == photoList.length - 1){
+           $viewerRightArrow.hide();
+         }
+         else if(viewerThumbIndex == 0){
+           $viewerLeftArrow.hide();
+         }
+         else{
+           $viewerLeftArrow.show();
+           $viewerRightArrow.show();
+         }
+       });
+
+       $viewerCloseButton.click(closeViewer);
+
+       $viewerThumbBox.hover(function(){
+         $(this).animate({
+           "height": "100px"
+         }, 100);
+       },
+       function(){
+         $(this).animate({
+           "height": "10px"
+         }, 100);
+       });
+
+       $viewerRightArrow.click(function(){
+         $origImage.attr({
+           "src": photoList[viewerThumbIndex + 1]
+         }).load(resizeOrigImageSize);
+         viewerThumbIndex++;
+
+         moveThumbBox($viewerThumbItems.filter("[for='" + viewerThumbIndex + "']"));
+
+         if(viewerThumbIndex == 1){
+           $viewerLeftArrow.show();
+         }
+
+         if(viewerThumbIndex == photoList.length - 1){
+           $(this).hide();
+         }
+       });
+
+       $viewerLeftArrow.click(function(){
+         $origImage.attr({
+           "src": photoList[viewerThumbIndex - 1]
+         }).load(resizeOrigImageSize);
+         viewerThumbIndex--;
+
+         moveThumbBox($viewerThumbItems.filter("[for='" + viewerThumbIndex + "']"));
+
+         if(viewerThumbIndex == photoList.length - 2){
+           $viewerRightArrow.show();
+         }
+
+         if(viewerThumbIndex == 0){
+           $(this).hide();
+         }
+       });
+     };
+
+     function unbindEvents(){
+       $viewerThumbItems.unbind("click");
+       $viewerCloseButton.unbind("click");
+       $viewerThumbBox.unbind("hover");
+       $viewerRightArrow.unbind("click");
+       $viewerLeftArrow.unbind("click");
+     };
+
+     function moveThumbBox(item){
+       $viewerThumbItems.css({
+         "border": "none"
+       });
+
+       item.css({
+         "border-bottom": "5px solid #3db7cc"
+       });
+
+       var offset = $viewerThumbInnerBox.offset().left
+         + ( $(window).width() / 2 )
+         - item.offset().left
+         - 100;
+
+       if(offset > 0){
+         offset = 0;
+       }
+
+       $viewerThumbInnerBox.animate({
+         "left": offset
+       }, 200);
+
+       $viewerCounter.text(( viewerThumbIndex + 1 ) + " / " + photoList.length);
+     };
+
+     function getPhotoList(){
+       $.get("/studio/portfolio/" + portfolioData.portfolio_id + "/photolist", setPhotoList);
+     };
+
+     function setPhotoList(data){
+       if(data.result == "success"){
+         if(data.body.photo_list != ""){
+           photoList = data.body.photo_list.split(",");
+         }
+         setViewer();
+       }
+       else{
+         alert(data.text);
+       }
+     };
+
+     function setViewer(){
+       $viewerLeftArrow.css({
+         "top": "0",
+         "left": "0",
+         "line-height": $(window).height() + "px",
+       }).hide();
+
+       $viewerRightArrow.css({
+         "top": "0",
+         "right": "0",
+         "line-height": $(window).height() + "px"
+       });
+
+       if(photoList.length > 1){
+         $viewerRightArrow.show();
+       }
+       else{
+         $viewerRightArrow.hide();
+       }
+
+       $portfolioViewer.fadeIn("fast");
+
+       $("body").css({
+         "overflow": "hidden"
+       });
+
+       $origImage.attr({
+         "src": photoList[0],
+       })
+       .load(resizeOrigImageSize);
+
+       viewerThumbIndex = 0;
+       setCounter();
+       setViewerThumbs();
+       bindEvents();
+     };
+
+     function setCounter(){
+       if(photoList.length > 0){
+         $viewerCounter.text(( viewerThumbIndex + 1 ) + " / " + photoList.length);
+       }
+       else{
+         $viewerCounter.text("0 / " + photoList.length);
+       }
+     };
+
+     function resizeOrigImageSize(){
+       $origImage.attr({
+         "width": "",
+         "height": $origImageBox.height() - 100 + "px"
+       });
+
+       if($origImage.width() > $origImageBox.width() - 100){
+         $origImage.attr({
+           "height": "",
+           "width": $origImageBox.width() - 100 + "px"
+         });
+       }
+
+       $origImageBox.css({
+         "padding-top": ( $origImageBox.height() - $origImage.height() ) / 2,
+         "padding-bottom": ( $origImageBox.height() - $origImage.height() ) / 2
+       });
+     };
+
+     function setViewerThumbs(){
+       $viewerThumbInnerBox.empty();
+
+       for(var i = 0; i < photoList.length; i++){
+         var thumbBoxItem = $("<div></div>")
+         .addClass("thumb-box-item")
+         .css({
+           "background-image": "url\(\"" + photoList[i] + "\"\)"
+         }).attr("for", i);
+
+         if(i == 0){
+           thumbBoxItem.css({
+             "border-bottom": "5px solid #3db7cc"
+           });
+         }
+
+         $viewerThumbInnerBox.append(thumbBoxItem);
+       }
+
+       $viewerThumbInnerBox.append($("<div></div>").addClass("float-clear"));
+
+       $viewerThumbItems = $viewerThumbInnerBox.find(".thumb-box-item");
+
+       $viewerThumbInnerBox.css({
+         "left": "0"
+       });
+     };
+
+     function closeViewer(){
+       $("body").css({
+         "overflow": "auto"
+       });
+
+       unbindEvents();
+
+       $portfolioViewer.fadeOut("fast");
+     };
+
+     var showViewer = function(targetElement){
+       init(targetElement);
+     };
+
+     return {
+       showViewer
+     }
+   }());
+   /***************************************************/
+
 
   (function(){
     $(document).ready(function(){
@@ -674,31 +1292,24 @@ var StudioPortfolioController = (function(){
   }());
 
   function loadElements(){
-    $portfolioBox = $(".portfolio-box");
+    $studioPortfolioWindow = $("#studio-portfolio-window");
+    $portfolioBox = $studioPortfolioWindow.find(".portfolio-box");
     $portfolioItems = $portfolioBox.find(".portfolio-item");
-    $portfolioViewer = $portfolioBox.next("#portfolio-viewer");
-    $origImageBox = $portfolioViewer.find(".orig-image-box");
-    $origImage = $origImageBox.find(".orig-image");
-    $thumbBox = $portfolioViewer.find(".thumb-box");
-    $viewerCloseButton = $portfolioViewer.find(".close-button");
-    $viewerLeftArrow = $portfolioViewer.find(".left-arrow");
-    $viewerRightArrow = $portfolioViewer.find(".right-arrow");
-    $viewerThumbBox = $portfolioViewer.find(".thumb-box");
-    $viewerThumbInnerBox = $viewerThumbBox.find(".inner-box");
-    $viewerCounter = $portfolioViewer.find(".counter");
+    $portfolioEditButtons = $portfolioBox.find(".portfolio-edit-button");
+    $portfolioAddButton = $portfolioBox.find(".portfolio-add-button");
   };
 
   function loadItems(){
     $portfolioItems.each(function(index){
-      $(this).children(".item-img").css({
-        "background-image": "url\(\"" + portfolioData[index].photo_list.split(",")[0] + "\"\)"
-      });
+      if(portfolioDataSet[index].photo_list != ""){
+        $(this).children(".item-img").css({
+          "background-image": "url\(\"" + portfolioDataSet[index].photo_list + "\"\)"
+        });
+      }
     });
   };
 
   function bindEvents(){
-    $(window).resize(resizeOrigImageSize);
-
     $portfolioItems.hover(function(){
       BackgroundController.onMouseenter($(this).children(".item-img"));
     },
@@ -707,200 +1318,28 @@ var StudioPortfolioController = (function(){
     });
 
     $portfolioItems.click(function(){
-      showViewer($(this));
+      PortfolioViewer.showViewer($(this));
+    });
+
+    $portfolioEditButtons.each(function(){
+      ButtonController.setButton($(this), PortfolioEditor.showEditor, $(this));
+    });
+
+    $portfolioAddButton.click(function(){
+      PortfolioEditor.showEditor($(this));
     });
   };
 
-  function resizeOrigImageSize(){
-    $origImage.attr({
-      "width": "",
-      "height": $origImageBox.height() - 100 + "px"
-    });
-
-    if($origImage.width() > $origImageBox.width() - 100){
-      $origImage.attr({
-        "height": "",
-        "width": $origImageBox.width() - 100 + "px"
-      });
-    }
-
-    $origImageBox.css({
-      "padding-top": ( $origImageBox.height() - $origImage.height() ) / 2,
-      "padding-bottom": ( $origImageBox.height() - $origImage.height() ) / 2
-    });
+  var initPortfolio = function(data){
+    portfolioDataSet = data;
   };
 
-  function moveThumbBox(item){
-    $viewerThumbItems.css({
-      "border": "none"
-    });
-
-    item.css({
-      "border-bottom": "5px solid #3db7cc"
-    });
-
-    var offset = $viewerThumbInnerBox.offset().left
-      + ( $(window).width() / 2 )
-      - item.offset().left
-      - 100;
-
-    if(offset > 0){
-      offset = 0;
-    }
-
-    $viewerThumbInnerBox.animate({
-      "left": offset
-    }, 200);
-
-    $viewerCounter.text(( viewerPhotoId + 1 ) + " / " + viewerPhotoList.length);
-  };
-
-  function setViewerThumbs(){
-    $viewerThumbInnerBox.empty();
-
-    for(var i = 0; i < viewerPhotoList.length; i++){
-      var thumbBoxItem = $("<div></div>")
-      .addClass("thumb-box-item")
-      .css({
-        "background-image": "url\(\"" + viewerPhotoList[i] + "\"\)"
-      }).attr("for", i);
-
-      if(i == 0){
-        thumbBoxItem.css({
-          "border-bottom": "5px solid #3db7cc"
-        });
-      }
-
-      $viewerThumbInnerBox.append(thumbBoxItem);
-    }
-
-    $viewerThumbInnerBox.append($("<div></div>").addClass("float-clear"));
-
-    $viewerThumbItems = $viewerThumbInnerBox.find(".thumb-box-item");
-
-    $viewerThumbInnerBox.css({
-      "left": "0"
-    });
-  };
-
-  function bindViewerEvents(){
-    $viewerThumbItems.unbind().click(function(){
-      $origImage.attr({
-        "src": viewerPhotoList[$(this).attr("for")]
-      }).load(resizeOrigImageSize);
-
-      viewerPhotoId = Number($(this).attr("for"));
-
-      moveThumbBox($(this));
-
-      if(viewerPhotoId == viewerPhotoList.length - 1){
-        $viewerRightArrow.hide();
-      }
-      else if(viewerPhotoId == 0){
-        $viewerLeftArrow.hide();
-      }
-      else{
-        $viewerLeftArrow.show();
-        $viewerRightArrow.show();
-      }
-    });
-
-    $viewerCloseButton.unbind().click(closeViewer);
-
-    $viewerThumbBox.unbind().hover(function(){
-      $(this).animate({
-        "height": "100px"
-      }, 100);
-    },
-    function(){
-      $(this).animate({
-        "height": "10px"
-      }, 100);
-    });
-
-    $viewerRightArrow.unbind().click(function(){
-      $origImage.attr({
-        "src": viewerPhotoList[viewerPhotoId + 1]
-      }).load(resizeOrigImageSize);
-      viewerPhotoId++;
-
-      moveThumbBox($viewerThumbItems.filter("[for='" + viewerPhotoId + "']"));
-
-      if(viewerPhotoId == 1){
-        $viewerLeftArrow.show();
-      }
-
-      if(viewerPhotoId == viewerPhotoList.length - 1){
-        $(this).hide();
-      }
-    });
-
-    $viewerLeftArrow.unbind().click(function(){
-      $origImage.attr({
-        "src": viewerPhotoList[viewerPhotoId - 1]
-      }).load(resizeOrigImageSize);
-      viewerPhotoId--;
-
-      moveThumbBox($viewerThumbItems.filter("[for='" + viewerPhotoId + "']"));
-
-      if(viewerPhotoId == viewerPhotoList.length - 2){
-        $viewerRightArrow.show();
-      }
-
-      if(viewerPhotoId == 0){
-        $(this).hide();
-      }
-    });
-  }
-
-  function showViewer(targetItem){
-    var portfolioId = targetItem.attr("for");
-    viewerPhotoList = portfolioData[portfolioId].photo_list.split(",");
-
-    $viewerLeftArrow.css({
-      "top": "0",
-      "left": "0",
-      "line-height": $(window).height() + "px",
-    }).hide();
-
-    $viewerRightArrow.css({
-      "top": "0",
-      "right": "0",
-      "line-height": $(window).height() + "px"
-    }).show();
-
-    $portfolioViewer.fadeIn("fast");
-
-    $("body").css({
-      "overflow": "hidden"
-    });
-
-    $origImage.attr({
-      "src": viewerPhotoList[0],
-    })
-    .load(resizeOrigImageSize);
-
-    viewerPhotoId = 0;
-
-    $viewerCounter.text(( viewerPhotoId + 1 ) + " / " + viewerPhotoList.length);
-
-    setViewerThumbs();
-    bindViewerEvents();
-  };
-
-  function closeViewer(){
-    $("body").css({
-      "overflow": "auto"
-    });
-
-    $portfolioViewer.fadeOut("fast");
-  };
-
-  var setPortfolio = function(data){
-    portfolioData = data;
+  var closeEditor = function(){
+    PortfolioEditor.closeEditor();
   };
 
   return {
-    setPortfolio
+    initPortfolio,
+    closeEditor
   }
 }());
