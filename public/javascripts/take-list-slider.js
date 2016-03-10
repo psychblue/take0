@@ -10,7 +10,8 @@ var ListSlider = function(box, url){
 
   var $listSliderArrowLeft,
   $listSliderArrowRight,
-  $listSliderList;
+  $listSliderList,
+  $listBoxes;
 
   (function(){
     loadElements();
@@ -63,15 +64,25 @@ var ListSlider = function(box, url){
     });
   };
 
+  function onHoverListBox(){
+    $listBoxes.hover(function(){
+      BackgroundController.onMouseenter($(this).children(".take-item-img"));
+    },
+    function(){
+      BackgroundController.onMouseleave($(this).children(".take-item-img"));
+    });
+  };
+
   function postList(pageNum){
     $.post(postUrl, {start:(pageNum * 3), end:3}, function(data){
       $listSliderList.empty().append(data);
       resizeListItemBox();
+      onHoverListBox();
     });
   };
 
   function resizeListItemBox(){
-    var $listBoxes = targetBox.find(".list-box");
+    $listBoxes = targetBox.find(".list-box");
     var listBoxWidth = Math.floor(($listSliderList.width() / 3) - 11);
     var listBoxHeight = listBoxWidth * 1.2;
 
@@ -95,28 +106,9 @@ var ListSlider = function(box, url){
     });
 
     var $listBoxNotes = targetBox.find(".list-box-note");
-    var listBoxMarginTop = listBoxHeight - 100;
 
     $listBoxNotes.css({
-      "margin-top": listBoxMarginTop
+      "width": listBoxWidth - 40
     });
   };
-
-  var init = function(){
-    targetBox
-    .addClass("list-slider-box")
-    .append($listSliderArrowLeft)
-    .append($listSliderList)
-    .append($listSliderArrowRight)
-    .append($("<div></div>").addClass("float-clear"));
-
-    $listSliderArrowLeft.css({"visibility": "hidden"});
-
-    postList(0);
-    bindEvents();
-  };
-
-  return {
-    init
-  }
 };

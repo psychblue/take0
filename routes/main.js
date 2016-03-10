@@ -44,12 +44,14 @@ mainManager.showTodayStudioList = function(req, res, next){
   }
 
   var listSelectCallbackForList = function(rows, fields){
-    //logger.debug(JSON.stringify(rows));
-    res.render('main/main-list', {data: rows});
+    var todayStudioOptions = {
+      data: rows
+    };
+    res.render('main/main-list', todayStudioOptions);
   }
 
   var query = 'SELECT ?? FROM ?? INNER JOIN ?? WHERE ?? = ?? LIMIT ?,?';
-  var params = [['studio.username', 'studio.studio_name'], 'studio', 'todayStudioList', 'studio.username', 'todayStudioList.username', Number(req.body.start), Number(req.body.end)];
+  var params = [['studio.username', 'studio.studio_name', 'studio.slider_photo_list'], 'studio', 'todayStudioList', 'studio.username', 'todayStudioList.username', Number(req.body.start), Number(req.body.end)];
   logger.debug('SQL Query [SELECT %s, %s FROM %s INNER JOIN %s WHERE %s=%s LIMIT %d,%d]', params[0][0], params[0][1], params[1], params[2], params[3], params[4], params[5], params[6]);
 
   mysqlDb.doSQLSelectQuery(query, params, listSelectCallbackForList, listSelectCallbackForNoList, listSelectCallbackForError);

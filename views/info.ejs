@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title><%=title%></title>
+    <link rel="stylesheet" href="/stylesheets/take-main-style.css"/>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+
+        $("body").addClass("bg-color-lightergrey");
+      });
+      </script>
+  </head>
+
+  <body>
+
+    <div id="header" class="width-full font-white">
+
+      <div id="header-title" class="float-left"><a href="/"><%= service %></a></div>
+
+    </div>
+
+    <div class="take-info-window">
+      <h1><%- infoText %></h1>
+      <br>
+      <%
+      if(infoLink){
+      %>
+      <span><%- infoLink %></span>
+      <%
+      }
+      %>
+    </div>
+
+    <div id="footer" class="bg-color-darkgrey center-aligned">
+
+      <div id="footer-main">
+      </div>
+
+      <div id="footer-menu" class="font-grey font-level-small">
+        이용약관&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        개인정보취급방침&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        서비스운영정책&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        고객센터
+      </div>
+
+      <hr class="bg-color-grey">
+
+      <div class="font-grey">
+        &copy; <a href="/" class="font-grey"><%= service %></a>, Inc.
+      </div>
+
+    </div>
+
+  </body>
+
+</html>

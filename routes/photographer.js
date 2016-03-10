@@ -38,6 +38,26 @@ var hasStudio = function(req, res, callbackForSuccess){
   mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, hasStudioSelectCallbackForNoResult, hasStudioSelectCallbackForError);
 }
 
+var updateHasStuido = function(req, res){
+
+  var userUpdateCallbackForError = function(err){
+    res.send({
+      "result": "fail",
+      "text": err
+    });
+  }
+
+  var userUpdateCallbackForSuccess = function(){
+    res.redirect('/studio/' + req.user.username);
+  }
+
+  var query = 'UPDATE ?? SET ? WHERE ?? = ?';
+  var params = ['takeUser', {has_studio: 1}, 'username', req.user.username];
+  logger.debug('SQL Query [UPDATE %s SET %s WHRER %s = %s]', params[0], JSON.stringify(params[1]), params[2], params[3]);
+
+  mysqlDb.doSQLUpdateQuery(query, params, userUpdateCallbackForSuccess, userUpdateCallbackForError);
+}
+
 var updateNumberOfProducts = function(req, res){
 
   var studioUpdateCallbackForError = function(err){
@@ -221,8 +241,13 @@ photographerManager.makeStudio = function(req, res, next){
 
     var hasStudioSelectCallbackForSuccess = function(rows, fields){
       if(rows[0].has_studio == 1){
-        //TODO
-        res.send('you already have a studio');
+        var hasStudioOptions = {
+          title: confParams.html.title,
+          service: confParams.html.service_name,
+          infoText: '이미 개설된 스튜디오가 있습니다.',
+          infoLink: '<a href="/studio/' + req.user.username + '" class="font-darkgrey">스튜디오 바로가기</a>'
+        };
+        res.render('info', hasStudioOptions);
       }
       else{
         var makeStudioOptions = {
@@ -260,7 +285,7 @@ photographerManager.addStudio = function(req, res, next){
       }
 
       var studioInsertCallbackForSuccess = function(){
-        res.redirect('/studio/' + req.user.username);
+        updateHasStuido(req, res);
       }
 
       var query = 'INSERT INTO ?? SET ?';
@@ -275,13 +300,17 @@ photographerManager.addStudio = function(req, res, next){
       logger.debug('SQL Query [INSERT INTO %s SET %s]', params[0], JSON.stringify(params[1]));
 
       mysqlDb.doSQLInsertQuery(query, params, studioInsertCallbackForSuccess, studioInsertCallbackForError);
-
     }
 
     var hasStudioSelectCallbackForSuccess = function(rows, fields){
       if(rows[0].has_studio == 1){
-        //TODO
-        res.send('you already have a studio');
+        var hasStudioOptions = {
+          title: confParams.html.title,
+          service: confParams.html.service_name,
+          infoText: "이미 개설된 스튜디오가 있습니다.",
+          infoLink: '<a href="/studio/' + req.user.username + '" class="font-darkgrey">스튜디오 바로가기</a>'
+        };
+        res.render('info', hasStudioOptions);
       }
       else{
         insertStudio(req, res);

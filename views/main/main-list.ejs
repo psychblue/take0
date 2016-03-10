@@ -1,11 +1,13 @@
 <%
 for(var i = 0;i < data.length;i++) {
 %>
-<a href="/studio/<%=data[i].username%>">
+<a href="/studio/<%= data[i].username %>">
   <div class="list-box bg-color-lightergrey">
+    <div class="take-item-img" style="background-image: url('<%= JSON.parse(data[i].slider_photo_list)['1'] %>')">
+    </div>
     <div class="list-box-note">
-      <span class="font-darkgrey"><%=data[i].username%></span><br>
-      <span class="font-darkgrey font-level-large"><%=data[i].studio_name%><span>
+      <span class="font-darkgrey"><%= data[i].username %></span><br>
+      <span class="font-darkgrey font-level-large"><%= data[i].studio_name %><span>
     </div>
   </div>
 </a>

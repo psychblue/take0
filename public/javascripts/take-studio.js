@@ -1331,7 +1331,7 @@ var StudioPortfolioController = (function(){
   function loadItems(){
     $portfolioItems.each(function(index){
       if(portfolioDataSet[index].photo_list != ""){
-        $(this).children(".item-img").css({
+        $(this).children(".take-item-img").css({
           "background-image": "url\(\"" + portfolioDataSet[index].photo_list + "\"\)"
         });
       }
@@ -1340,10 +1340,10 @@ var StudioPortfolioController = (function(){
 
   function bindEvents(){
     $portfolioItems.hover(function(){
-      BackgroundController.onMouseenter($(this).children(".item-img"));
+      BackgroundController.onMouseenter($(this).children(".take-item-img"));
     },
     function(){
-      BackgroundController.onMouseleave($(this).children(".item-img"));
+      BackgroundController.onMouseleave($(this).children(".take-item-img"));
     });
 
     $portfolioItems.click(function(){

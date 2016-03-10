@@ -87,8 +87,13 @@ Show User Withdraw Page
 */
 joinManager.showWithdrawPage = function(req, res, next){
 
-  var withdrawOptions = {title: confParams.html.title, service: confParams.html.service_name};
-	res.render('withdraw', withdrawOptions);
+  var withdrawOptions = {
+		title: confParams.html.title,
+		service: confParams.html.service_name,
+		infoText: '<a href="/">' + confParams.html.service_name + "</a>를 떠나시겠습니까?",
+		infoLink: '<a href="/withdraw/confirmed" class="font-darkgrey">네</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/" class="font-darkgrey" onclick="history.back()">아니오</a>'
+	};
+	res.render('info', withdrawOptions);
 }
 
 /*
