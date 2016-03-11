@@ -5,12 +5,8 @@
     <title><%=title%></title>
     <link rel="stylesheet" href="/stylesheets/take-main-style.css"/>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function(){
-
-        $("body").addClass("bg-color-lightergrey");
-      });
-      </script>
+    <script type="text/javascript" src="/javascripts/take-util.js"></script>
+    <script type="text/javascript" src="/javascripts/take-login.js"></script>
   </head>
 
   <body>
@@ -18,10 +14,24 @@
     <div id="header" class="width-full font-white">
 
       <div id="header-title" class="float-left"><a href="/"><%= service %></a></div>
+      <div id="header-login" class="float-right">
+        <%
+        if(!isAuth){
+        %>
+        <span id="login-button" class="cursor-pointer">로그인</span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/join">회원가입</a>
+        <%
+        }else{
+        %>
+        <%= name %> 님&nbsp;&nbsp;|&nbsp;&nbsp;<span id="logout-button" class="cursor-pointer">로그아웃</span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/withdraw">탈퇴</a>
+        <%
+        }
+        %>
+      </div>
+      <div class="float-clear"></div>
 
     </div>
 
-    <div class="take-info-window">
+    <div class="take-info-window bg-color-lightergrey">
       <h1><%- infoText %></h1>
       <br>
       <%

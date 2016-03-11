@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/stylesheets/take-main-style.css"/>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/javascripts/take-util.js"></script>
+    <script type="text/javascript" src="/javascripts/take-login.js"></script>
   </head>
 
   <body>
@@ -13,11 +14,14 @@
     <div id="header" class="width-full font-white">
 
       <div id="header-title" class="float-left"><a href="/"><%= service %></a></div>
+      <div id="header-login" class="float-right">
+        <%= name %> 님&nbsp;&nbsp;|&nbsp;&nbsp;<span id="logout-button" class="cursor-pointer">로그아웃</span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/withdraw">탈퇴</a>
+      </div>
       <div class="float-clear"></div>
 
     </div>
 
-    <div class="take-main-window">
+    <div class="take-main-window bg-color-lightergrey">
 
       <div class="take-basic-window">
         <h1>스튜디오 만들기</h1>

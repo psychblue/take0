@@ -29,5 +29,12 @@
   "html": {
     "title": "TAKE",
     "service_name": "TAKE"
+  },
+  "file": {
+    "image_file_path_prefix": "public",
+    "slider_photo_storage_path_prefix": "public/images/studio",
+    "slider_photo_url_path_prefix": "/images/studio/",
+    "portfolio_storage_path_prefix": "public/images/studio",
+    "portfolio_url_path_prefix": "/images/studio/"
   }
 }
