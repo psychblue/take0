@@ -48,7 +48,7 @@ mysqlDb.doSQLInsertQuery = function(query, params, callbackForSuccess, callbackF
 			callbackForError(err);
 		}
 		else{
-			callbackForSuccess();
+			callbackForSuccess(rows);
 		}
 	});
 };

@@ -52,7 +52,52 @@ var hasStudio = function(req, res, callback){
   mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
 };
 
-var updateHasStuido = function(req, res){
+var addServiceCategory = function(req, res, studioId){
+  if(req.body.category){
+    var query = "INSERT INTO ?? (??, ??) VALUES ";
+    var params = [
+      "studioServiceCategory",
+      "studio_id",
+      "service_category"
+    ];
+
+    for(var categoryIndex = 0; categoryIndex < req.body.category.length; categoryIndex++){
+      if(categoryIndex == req.body.category.length - 1){
+        query = query + "(?, ?)"
+      }
+      else{
+        query = query + "(?, ?),"
+      }
+
+      params.push(studioId);
+      params.push(Number(req.body.category[categoryIndex]));
+    }
+
+    logger.debug("SQL Query [INSERT INTO %s (%s, %s)]",
+      params[0],
+      params[1],
+      params[2]
+    );
+
+    var callbackForError = function(err){
+      res.send({
+        "result": "fail",
+        "text": err
+      });
+    };
+
+    var callbackForSuccess = function(result){
+      res.redirect("/studio/" + req.user.username);
+    };
+
+    mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
+  }
+  else{
+    res.redirect("/studio/" + req.user.username);
+  }
+}
+
+var updateHasStudio = function(req, res, studioId){
 
   var query = "UPDATE ?? SET ? WHERE ?? = ?";
 
@@ -73,7 +118,7 @@ var updateHasStuido = function(req, res){
   };
 
   var callbackForSuccess = function(){
-    res.redirect("/studio/" + req.user.username);
+    addServiceCategory(req, res, studioId);
   };
 
   mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
@@ -173,7 +218,7 @@ var addPortfolio = function(req, res, studio_id, photo_list, num_photos){
     });
   };
 
-  var callbackForSuccess = function(){
+  var callbackForSuccess = function(result){
     updateNumberOfPortfolios(req, res);
   };
 
@@ -349,13 +394,16 @@ photographerManager.addStudio = function(req, res, next){
     var insertStudio = function(req, res){
       var query = "INSERT INTO ?? SET ?";
 
-      var params = ["studio", {
-        studio_name: req.body.studio_name,
-        username: req.user.username,
-        introduction: req.body.introduction,
-        address: req.body.address,
-        tel_num: req.body.tel_num
-      }];
+      var params = [
+        "studio",
+        {
+          studio_name: req.body.studio_name,
+          username: req.user.username,
+          introduction: req.body.introduction,
+          address: req.body.address,
+          tel_num: req.body.tel_num
+        }
+      ];
 
       logger.debug("SQL Query [INSERT INTO %s SET %s]",
         params[0],
@@ -369,8 +417,8 @@ photographerManager.addStudio = function(req, res, next){
         });
       };
 
-      var callbackForSuccess = function(){
-        updateHasStuido(req, res);
+      var callbackForSuccess = function(result){
+        updateHasStudio(req, res, result.insertId);
       };
 
       mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
@@ -624,7 +672,7 @@ photographerManager.addProduct = function(req, res, next){
     });
   };
 
-  var callbackForSuccess = function(){
+  var callbackForSuccess = function(result){
     updateNumberOfProducts(req, res);
   };
 

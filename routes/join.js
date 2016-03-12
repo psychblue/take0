@@ -94,7 +94,7 @@ joinManager.joinUser = function(req, res, next){
       }
     };
 
-    var callbackForSuccess = function(){
+    var callbackForSuccess = function(result){
       var user = {"username": req.body.username};
       //Session Login
       req.login(user, function(err){
