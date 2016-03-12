@@ -37,6 +37,32 @@ var InputController = (function(){
   }
 }());
 
+var CheckboxController = (function(){
+
+  var setCheckbox = function(targetCheckbox){
+    targetCheckbox.each(function(){
+      if($(this).is(":checked")){
+        $(this).next("label").find(".box").addClass("checked");
+      }
+    });
+
+    targetCheckbox.change(function(){
+      var isChecked = $(this).is(":checked");
+
+      if(!isChecked){
+        $(this).next("label").find(".box").removeClass("checked");
+      }
+      else{
+        $(this).next("label").find(".box").addClass("checked");
+      }
+    });
+  };
+
+  return {
+    setCheckbox
+  }
+}());
+
 var ButtonController = (function(){
 
   function onMouseenter(targetButton){

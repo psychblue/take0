@@ -199,7 +199,7 @@ h1 a {
 .take-info-window {
   width: 100%;
   height: 400px;
-  padding-top: 250px;
+  padding-top: 270px;
   text-align: center;
 }
 
@@ -307,6 +307,42 @@ h1 a {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+}
+
+.take-checkbox {
+  width: 100px;
+  height: 20px;
+  position: relative;
+  float: left;
+}
+
+.take-checkbox input[type="checkbox"] {
+  opacity: 0;
+  filter: alpha(opacity: "0%");
+}
+
+.take-checkbox label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}
+
+.take-checkbox .box {
+  width: 1.1em;
+  height: 1.1em;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: #fff;
+  float: left;
+}
+
+.take-checkbox .checked {
+  border: 1px solid #3db7cc;
+  background-image: url("/images/common/check.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100;
 }
 
 .take-item-img {
@@ -746,6 +782,7 @@ h1 a {
   left: 0;
   z-index: 110;
   opacity: 0.9;
+  filter: alpha(opacity: "90%");
 }
 
 #login-popup {

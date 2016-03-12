@@ -799,6 +799,9 @@ var StudioPortfolioController = (function(){
           else if(data.result == "fail"){
             alert(data.text);
           }
+          else{
+            $(document.documentElement).html(data);
+          }
         },
         error: function(xhr, option, error){
           alert(error);

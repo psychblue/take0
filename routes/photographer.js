@@ -199,7 +199,7 @@ photographerManager.showStudio = function(req, res, next){
     };
 
     var callbackForNoResult = function(){
-      httpUtil.sendNoDataFromDBPage(req, res);
+      httpUtil.sendNoDataFromDPage(req, res);
     };
 
     var callbackForSuccess = function(rows, fields){
@@ -280,7 +280,7 @@ photographerManager.showStudio = function(req, res, next){
   };
 
   var callbackForNoResult = function(){
-    httpUtil.sendNoDataFromDBPage(req, res);
+    httpUtil.send404Page(req, res);
   };
 
   var callbackForSuccess = function(rows, fields){
@@ -289,7 +289,20 @@ photographerManager.showStudio = function(req, res, next){
     var username = isAuth ? req.user.username : "";
 
     if(rows[0].num_products == 0){
-      loadPortfolios(req, res, username, rows[0], undefined);
+      if(rows[0].num_portfolios == 0){
+        res.render("photographer/studio", {
+          title: confParams.html.title,
+          service: confParams.html.service_name,
+          isAuth: req.isAuthenticated(),
+          isOwner: (req.isAuthenticated() && (req.user.username == req.params.photographer)),
+          name: username,
+          photographerName: req.params.photographer,
+          studioData: rows[0]
+        });
+      }
+      else{
+        loadPortfolios(req, res, username, rows[0], undefined);
+      }
     }
     else{
       loadProducts(req, res, username, rows[0]);
@@ -341,8 +354,7 @@ photographerManager.addStudio = function(req, res, next){
         username: req.user.username,
         introduction: req.body.introduction,
         address: req.body.address,
-        tel_num: req.body.tel_num,
-        region: req.body.region
+        tel_num: req.body.tel_num
       }];
 
       logger.debug("SQL Query [INSERT INTO %s SET %s]",

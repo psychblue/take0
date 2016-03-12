@@ -9,19 +9,17 @@ var confParams = require("../conf/conf").getParams();
 var httpUtil = {};
 
 /*
-Send Information Page to Client
+Send 404 Error Page to Client
 */
-httpUtil.sendInfoPage = function(req, res, options){
+httpUtil.send404Page = function(req, res){
 
-  var isAuth = req.isAuthenticated();
-  var username = isAuth ? req.user.username : "";
+  res.status(404);
 
-  options.title = confParams.html.title;
-  options.service = confParams.html.service_name;
-  options.isAuth = isAuth;
-  options.name = username;
-
-	res.render("info", options);
+  httpUtil.sendInfoPage(req, res, {
+		infoText: "원하시는 페이지를 찾을 수 없습니다.",
+    subText: "Error Code: 404",
+		infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
+	});
 };
 
 /*
@@ -44,6 +42,30 @@ httpUtil.sendNoDataFromDBPage = function(req, res){
 		infoText: "요청하신 데이터가 없습니다.",
 		infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
 	});
+};
+
+/*
+Send Information Page to Client
+*/
+httpUtil.sendInfoPage = function(req, res, options){
+
+  var isAuth = req.isAuthenticated();
+  var username = isAuth ? req.user.username : "";
+
+  options.title = confParams.html.title;
+  options.service = confParams.html.service_name;
+  options.isAuth = isAuth;
+  options.name = username;
+
+  if(!options.subText){
+    options.subText = "";
+  }
+
+  if(!options.infoLink){
+    options.infoLink = "";
+  }
+
+	res.render("info", options);
 };
 
 module.exports = httpUtil;

@@ -9,6 +9,7 @@ var joinManager = require("./join");
 var mainManager = require("./main");
 var photographerManager = require("./photographer");
 var confManager = require("../conf/conf");
+var httpUtil = require("../util/http-util");
 var confParams = confManager.getParams();
 
 //Express Router Settings
@@ -67,5 +68,8 @@ router.post("/studio/:photographer/portfolio/update", photographerManager.update
 router.post("/studio/:photographer/portfolio/delete", photographerManager.deletePortfolio);
 // Get Portfolio Photo List
 router.get("/studio/:photographer/portfolio/:portfolio_id/photolist", photographerManager.getPortfolioPhotoList);
+
+// Not Found
+router.all("/*", httpUtil.send404Page);
 
 module.exports = router;

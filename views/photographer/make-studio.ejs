@@ -7,6 +7,13 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/javascripts/take-util.js"></script>
     <script type="text/javascript" src="/javascripts/take-login.js"></script>
+    <script>
+      (function(){
+        $(document).ready(function(){
+          CheckboxController.setCheckbox($(".take-checkbox input[type='checkbox']"));
+        });
+      }());
+    </script>
   </head>
 
   <body>
@@ -30,8 +37,32 @@
           <div class="take-input-box">
             <div class="editor-input-label font-grey">&nbsp;스튜디오 이름&nbsp;&nbsp;|</div>
             <input type="text" class="take-text-input font-darkgrey font-level-default border-solid-thin-lightgrey" name="studio_name"></input>
-            <div class="editor-input-label font-grey">&nbsp;지역&nbsp;&nbsp;|</div>
-            <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="region"></input>
+            <div class="editor-input-label font-grey">&nbsp;서비스&nbsp;&nbsp;|</div>
+            <div class="take-checkbox">
+              <input type="checkbox" id="category-1" class="take-checkbox" name="category" value="1"></input>
+              <label class="font-grey" for="category-1">
+                <div class="box"></div>
+                <span>&nbsp;&nbsp;웨딩</span>
+                <div class="float-clear"></div>
+              </label>
+            </div>
+            <div class="take-checkbox">
+              <input type="checkbox" id="category-2" class="take-checkbox" name="category" value="2"></input>
+              <label class="font-grey" for="category-2">
+                <div class="box"></div>
+                <span>&nbsp;&nbsp;돌/백일</span>
+                <div class="float-clear"></div>
+              </label>
+            </div>
+            <div class="take-checkbox">
+              <input type="checkbox" id="category-3" class="take-checkbox" name="category" value="3"></input>
+              <label class="font-grey" for="category-3">
+                <div class="box"></div>
+                <span>&nbsp;&nbsp;데이트</span>
+                <div class="float-clear"></div>
+              </label>
+            </div>
+            <div class="float-clear"></div>
             <div class="editor-input-label font-grey">&nbsp;연락처&nbsp;&nbsp;|</div>
             <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="tel_num"></input>
             <div class="editor-input-label font-grey">&nbsp;주소&nbsp;&nbsp;|</div>

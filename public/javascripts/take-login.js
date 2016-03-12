@@ -60,12 +60,7 @@ var LoginController = (function(){
     });
 
     $loginPopupCloseButton.click(function(){
-      if(redirectUrl == ""){
-        closeLoginPopup();
-      }
-      else{
-        history.go(-1);
-      }
+      closeLoginPopup();
     });
 
     $loginInputs.keydown(function(keyEvent){
@@ -117,13 +112,18 @@ var LoginController = (function(){
 
   function closeLoginPopup(){
     if(loginPopupEnabled == 1){
-      $("body").css({
-        "overflow": "auto"
-      });
+      if(redirectUrl == ""){
+        $("body").css({
+          "overflow": "auto"
+        });
 
-      $loginPopupBackground.fadeOut("fast");
-      $loginPopup.fadeOut("fast");
-      loginPopupEnabled = 0;
+        $loginPopupBackground.fadeOut("fast");
+        $loginPopup.fadeOut("fast");
+        loginPopupEnabled = 0;
+      }
+      else{
+        history.go(-1);
+      }
     }
   };
 
