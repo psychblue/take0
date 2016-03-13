@@ -13,9 +13,18 @@ var httpUtil = require("../util/http-util");
 var loginManager = {};
 
 /*
+Check Authentication
+*/
+loginManager.isAuthenticated = function(req, res, next){
+
+	req.__take_params.isAuth = req.isAuthenticated();
+	next();
+};
+
+/*
 Show Login Popup
 */
-loginManager.showLoginPopup = function(req, res, next){
+loginManager.showLoginPopup = function(req, res){
 
 	res.render("login/login-popup", {
     service: confParams.html.service_name
@@ -59,7 +68,7 @@ loginManager.loginAuth = function(req, res, next){
 /*
 Kakao Login Function
 */
-loginManager.loginByKakao = function(req, res, next){
+loginManager.loginByKakao = function(req, res){
   var redirectUrl = "https://kauth.kakao.com/oauth/authorize?client_id="
                     + confParams.kakao.kakao_client_id
                     + "&redirect_uri="
@@ -69,97 +78,13 @@ loginManager.loginByKakao = function(req, res, next){
 };
 
 /*
-Kakao Login Callback Function
+Getting Kakao Aceess Token
 */
-loginManager.loginByKakaoCallback = function(req, res, next){
+loginManager.getAccessToken = function(req, res, next){
 
-  logger.debug("code: %s", req.query.code);
+	logger.debug("code: %s", req.query.code);
 
-  var getKakaoUser = function(error, response, body){
-    //Token Success
-    if(!error && response.statusCode == 200){
-      var accessToken = JSON.parse(body).access_token;
-      logger.debug("access token: %s", accessToken);
-      //Getting Username
-      request.get({
-        url: "https://kapi.kakao.com/v1/user/me",
-        method: "GET",
-        headers: {
-          "Authorization": "Bearer " + accessToken,
-          "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
-        }
-      }, joinKakaoUser);
-    }
-    else if(error){
-      logger.error(error.toString());
-      //error handling for getting tokens
-    }
-    else{
-      logger.error(body);
-      //error handling for getting tokens
-    }
-  };
-
-  var joinKakaoUser = function(error, response, body){
-    if(!error && response.statusCode == 200){
-      var kakaoId = JSON.parse(body).id;
-      logger.debug("id: %s", kakaoId);
-
-      var query = "SELECT ?? FROM ?? WHERE ?? = ?";
-
-      var params = ["username", "takeUser", "username", kakaoId];
-
-      logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
-        params[0],
-        params[1],
-        params[2],
-        params[3]
-      );
-
-      var callbackForError = function(err){
-        httpUtil.sendDBErrorPage(req, res, err);
-      };
-
-      var callbackForNoResult = function(){
-        res.render("join/additional-info", {
-          title: confParams.html.title,
-          service: confParams.html.service_name,
-          username: kakaoId
-        });
-      };
-
-      var callbackForSuccess = function(rows, fields){
-        var user = {"username": kakaoId};
-
-        req.login(user, function(err){
-          if(err){
-            logger.error(err.toString());
-
-						httpUtil.sendInfoPage(req, res, {
-          		infoText: "죄송합니다. 서비스에 오류가 발생하였습니다.<br>" + err.toString(),
-          		infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
-          	});
-          }
-          else{
-            res.redirect("/");
-          }
-        });
-      };
-
-      mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
-    }
-    else if(error){
-      logger.error(error.toString());
-      //error handling for getting username
-    }
-    else{
-      logger.error(body);
-      //error handling for getting username
-    }
-  };
-
-  //Getting Tokens
-  request.post({
+	request.post({
     url: "https://kauth.kakao.com/oauth/token",
     method: "POST",
     qs: {
@@ -168,13 +93,114 @@ loginManager.loginByKakaoCallback = function(req, res, next){
       redirect_uri: confParams.kakao.kakao_redirect_uri,
       code: req.query.code
     }
-  }, getKakaoUser);
+  }, function(error, response, body){
+		req.__take_params.kakaoApiData = {
+			error: error,
+			response: response,
+			body: body
+		};
+		next();
+	});
+};
+
+/*
+Getting Kakao User Data
+*/
+loginManager.getKakaoUser = function(req, res, next){
+
+	if(!req.__take_params.kakaoApiData.error && req.__take_params.kakaoApiData.response.statusCode == 200){
+		var accessToken = JSON.parse(req.__take_params.kakaoApiData.body).access_token;
+		logger.debug("access token: %s", accessToken);
+		//Getting Username
+		request.get({
+			url: "https://kapi.kakao.com/v1/user/me",
+			method: "GET",
+			headers: {
+				"Authorization": "Bearer " + accessToken,
+				"Content-type": "application/x-www-form-urlencoded;charset=utf-8"
+			}
+		}, function(error, response, body){
+			req.__take_params.kakaoApiData.error = error;
+			req.__take_params.kakaoApiData.response = response;
+			req.__take_params.kakaoApiData.body = body;
+			next();
+		});
+	}
+	else if(req.__take_params.kakaoApiData.error){
+		logger.error(req.__take_params.kakaoApiData.error.toString());
+		//error handling for getting tokens
+	}
+	else{
+		logger.error(req.__take_params.kakaoApiData.body);
+		//error handling for getting tokens
+	}
+};
+
+/*
+Insert Kakao User to User Database
+*/
+loginManager.joinKakaoUser = function(req, res){
+	if(!req.__take_params.kakaoApiData.error && req.__take_params.kakaoApiData.response.statusCode == 200){
+		var kakaoId = JSON.parse(req.__take_params.kakaoApiData.body).id;
+		logger.debug("id: %s", kakaoId);
+
+		var callbackForError = function(err){
+			httpUtil.sendDBErrorPage(req, res, err);
+		};
+
+		var callbackForNoResult = function(){
+			res.render("join/additional-info", {
+				title: confParams.html.title,
+				service: confParams.html.service_name,
+				username: kakaoId
+			});
+		};
+
+		var callbackForSuccess = function(rows, fields){
+			var user = {"username": kakaoId};
+
+			req.login(user, function(err){
+				if(err){
+					logger.error(err.toString());
+
+					httpUtil.sendInfoPage(req, res, {
+						infoText: "죄송합니다. 서비스에 오류가 발생하였습니다.<br>" + err.toString(),
+						infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
+					});
+				}
+				else{
+					res.redirect("/");
+				}
+			});
+		};
+
+		var query = "SELECT ?? FROM ?? WHERE ?? = ?";
+
+		var params = ["username", "takeUser", "username", kakaoId];
+
+		logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
+			params[0],
+			params[1],
+			params[2],
+			params[3]
+		);
+
+		mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+	}
+	else if(req.__take_params.kakaoApiData.error){
+		logger.error(req.__take_params.kakaoApiData.error.toString());
+		//error handling for getting username
+	}
+	else{
+		logger.error(req.__take_params.kakaoApiData.body);
+		//error handling for getting username
+	}
 };
 
 /*
 Logout Function
 */
-loginManager.logout = function(req, res, next){
+loginManager.logout = function(req, res){
   //Session Logout
 	req.logout();
 	res.send({"result": "success"});

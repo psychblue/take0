@@ -22,9 +22,9 @@ var isAvailField = function(req, res){
 /*
 Show Join Page
 */
-joinManager.showJoinPage = function(req, res, next){
+joinManager.showJoinPage = function(req, res){
   // Check User Login
-	if(req.isAuthenticated()){
+	if(req.__take_params.isAuth){
 		httpUtil.sendInfoPage(req, res, {
 			infoText: "이미 가입하셨습니다.",
 			infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
@@ -49,7 +49,7 @@ joinManager.encryptPassword = function(seed){
 /*
 User Join Function
 */
-joinManager.joinUser = function(req, res, next){
+joinManager.joinUser = function(req, res){
   //Password Encryption
   var encryptedPassword;
 
@@ -61,23 +61,6 @@ joinManager.joinUser = function(req, res, next){
   }
   //Check Submitted Fields
   if(isAvailField(req, res)){
-
-		var query = "INSERT INTO ?? SET ?";
-
-  	var params = [
-			"takeUser",
-			{
-				username: req.body.username,
-				password: encryptedPassword,
-				email: req.body.email,
-        has_studio: 0
-			}
-		];
-
-    logger.debug("SQL Query [INSERT INTO %s SET %s]",
-			params[0],
-			JSON.stringify(params[1])
-		);
 
     var callbackForError = function(err){
       if(err.code == "ER_DUP_ENTRY"){
@@ -113,6 +96,23 @@ joinManager.joinUser = function(req, res, next){
       });
     };
 
+		var query = "INSERT INTO ?? SET ?";
+
+  	var params = [
+			"takeUser",
+			{
+				username: req.body.username,
+				password: encryptedPassword,
+				email: req.body.email,
+        has_studio: 0
+			}
+		];
+
+    logger.debug("SQL Query [INSERT INTO %s SET %s]",
+			params[0],
+			JSON.stringify(params[1])
+		);
+
     mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
   }
   //Fields Error
@@ -124,9 +124,9 @@ joinManager.joinUser = function(req, res, next){
 /*
 Show User Withdraw Page
 */
-joinManager.showWithdrawPage = function(req, res, next){
+joinManager.showWithdrawPage = function(req, res){
 
-	if(!req.isAuthenticated()){
+	if(!req.__take_params.isAuth){
 		res.redirect("/");
 
 		return;
@@ -139,39 +139,44 @@ joinManager.showWithdrawPage = function(req, res, next){
 };
 
 /*
-User Withdraw Function
+Delete User Files
 */
-joinManager.withdrawUser = function(req, res, next){
+joinManager.deleteUserFiles = function(req, res, next){
 
-	if(!req.isAuthenticated()){
+	if(!req.__take_params.isAuth){
 		res.redirect("/");
 
 		return;
 	}
 
-  var deleteUser = function(req, res){
-    var query = "DELETE FROM ?? WHERE ?? = ?";
+  var callbackForError = function(err){
+    httpUtil.sendDBErrorPage(req, res, err);
+  };
 
-  	var params = ["takeUser", "username", req.user.username];
+  var callbackForNoResult = function(){
+    next();
+  };
 
-    logger.debug("SQL Query [DELETE FROM %s WHERE %s=%s]",
-  		params[0],
-  		params[1],
-  		params[2]
-  	);
+  var callbackForSuccess = function(rows, fields){
+    var sliderPhotoList = JSON.parse(rows[0].slider_photo_list);
 
-    var callbackForError = function(err){
-      httpUtil.sendDBErrorPage(req, res, err);
+    for(var key in sliderPhotoList){
+      if(sliderPhotoList[key] != ""){
+        fileUtil.deleteImageFile(sliderPhotoList[key]);
+      }
     }
 
-    var callbackForSuccess = function(){
-      //Session Logout
-      req.logout();
-      //Redirecting to Success Page
-      res.redirect("/withdraw/success");
+    for(var rowsIndex = 0; rowsIndex < rows.length; rowsIndex++){
+      var photoList = rows[rowsIndex].photo_list.split(",");
+
+      for(var photoListIndex = 0; photoListIndex < photoList.length; photoListIndex++){
+        if(photoList[photoListIndex] != ""){
+          fileUtil.deleteImageFile(photoList[photoListIndex]);
+        }
+      }
     }
 
-    mysqlDb.doSQLDeleteQuery(query, params, callbackForSuccess, callbackForError);
+    next();
   };
 
   var query = "SELECT ?? FROM ?? INNER JOIN ?? WHERE ?? = ? AND ?? = ??";
@@ -200,43 +205,42 @@ joinManager.withdrawUser = function(req, res, next){
     params[6]
   );
 
+  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+};
+
+/*
+Delete User Database
+*/
+joinManager.deleteUser = function(req, res){
+
   var callbackForError = function(err){
     httpUtil.sendDBErrorPage(req, res, err);
   };
 
-  var callbackForNoResult = function(){
-    httpUtil.sendNoDataFromDBPage(req, res);
+  var callbackForSuccess = function(){
+    //Session Logout
+    req.logout();
+    //Redirecting to Success Page
+    res.redirect("/withdraw/success");
   };
 
-  var callbackForSuccess = function(rows, fields){
-    var sliderPhotoList = JSON.parse(rows[0].slider_photo_list);
+  var query = "DELETE FROM ?? WHERE ?? = ?";
 
-    for(var key in sliderPhotoList){
-      if(sliderPhotoList[key] != ""){
-        fileUtil.deleteImageFile(sliderPhotoList[key]);
-      }
-    }
+  var params = ["takeUser", "username", req.user.username];
 
-    for(var rowsIndex = 0; rowsIndex < rows.length; rowsIndex++){
-      var photoList = rows[rowsIndex].photo_list.split(",");
+  logger.debug("SQL Query [DELETE FROM %s WHERE %s=%s]",
+    params[0],
+    params[1],
+    params[2]
+  );
 
-      for(var photoListIndex = 0; photoListIndex < photoList.length; photoListIndex++){
-        if(photoList[photoListIndex] != ""){
-          fileUtil.deleteImageFile(photoList[photoListIndex]);
-        }
-      }
-    }
-
-    deleteUser(req, res);
-  };
-
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+  mysqlDb.doSQLDeleteQuery(query, params, callbackForSuccess, callbackForError);
 };
 
 /*
 Show User Withdraw Success Page
 */
-joinManager.showWithdrawSuccessPage = function(req, res, next){
+joinManager.showWithdrawSuccessPage = function(req, res){
 
 	httpUtil.sendInfoPage(req, res, {
 		infoText: "감사합니다.",

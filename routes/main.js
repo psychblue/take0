@@ -12,23 +12,34 @@ var mainManager = {};
 /*
 Show Main Page
 */
-mainManager.showMainPage = function(req, res, next){
-
-  //Login Checking
-  var isAuth = req.isAuthenticated();
+mainManager.showMainPage = function(req, res){
 
   res.render("index", {
     title: confParams.html.title,
     service: confParams.html.service_name,
-    isAuth: isAuth,
-    name: isAuth ? req.user.username : ""
+    isAuth: req.__take_params.isAuth,
+    name: req.__take_params.isAuth ? req.user.username : ""
   });
 };
 
 /*
 Show Phtographer List Function
 */
-mainManager.showTodayStudioList = function(req, res, next){
+mainManager.showTodayStudioList = function(req, res){
+
+  var callbackForError = function(err){
+    httpUtil.sendDBErrorPage(req, res, err);
+  };
+
+  var callbackForNoResult = function(){
+    httpUtil.sendNoDataFromDBPage(req, res);
+  };
+
+  var callbackForSuccess = function(rows, fields){
+    res.render("main/main-list", {
+      data: rows
+    });
+  };
 
   var query = "SELECT ?? FROM ?? INNER JOIN ?? WHERE ?? = ?? LIMIT ?,?";
 
@@ -57,20 +68,6 @@ mainManager.showTodayStudioList = function(req, res, next){
     params[5],
     params[6]
   );
-
-  var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
-
-  var callbackForNoResult = function(){
-    httpUtil.sendNoDataFromDBPage(req, res);
-  };
-
-  var callbackForSuccess = function(rows, fields){
-    res.render("main/main-list", {
-      data: rows
-    });
-  };
 
   mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
 };

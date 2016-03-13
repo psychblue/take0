@@ -20,7 +20,10 @@ Routing Logics
 */
 
 // "/" - Main Page
-router.get("/", mainManager.showMainPage);
+router.get("/",
+  loginManager.isAuthenticated,
+  mainManager.showMainPage
+);
 // Main Photographer List
 router.post("/todaystudiolist", mainManager.showTodayStudioList);
 
@@ -33,39 +36,114 @@ router.get("/logout", loginManager.logout);
 // "/login/kakao" - Kakao Login Redirect
 router.get("/login/kakao", loginManager.loginByKakao);
 // "/login/kakao/callback" - Kakao Login Callback
-router.get("/login/kakao/callback", loginManager.loginByKakaoCallback);
+router.get("/login/kakao/callback",
+  loginManager.getAccessToken,
+  loginManager.getKakaoUser,
+  loginManager.joinKakaoUser
+);
 
 // "/join" - User Join Page
-router.get("/join", joinManager.showJoinPage);
+router.get("/join",
+  loginManager.isAuthenticated,
+  joinManager.showJoinPage
+);
 // "/join" post
 router.post("/join", joinManager.joinUser);
 // "/withdraw" - User Withdraw
-router.get("/withdraw", joinManager.showWithdrawPage);
+router.get("/withdraw",
+  loginManager.isAuthenticated,
+  joinManager.showWithdrawPage
+);
 // "/withdraw/confirmed"
-router.get("/withdraw/confirmed", joinManager.withdrawUser);
+router.get("/withdraw/confirmed",
+  loginManager.isAuthenticated,
+  joinManager.deleteUserFiles,
+  joinManager.deleteUser
+);
 // "/withdraw/success"
 router.get("/withdraw/success", joinManager.showWithdrawSuccessPage);
 
 // Studio
-router.get("/studio/:photographer", photographerManager.showStudio);
+router.get("/studio/:photographer",
+  loginManager.isAuthenticated,
+  photographerManager.isOwner,
+  photographerManager.loadStudio,
+  photographerManager.loadProducts,
+  photographerManager.loadPortfolios
+);
 // Studio Makepage
-router.get("/makestudio", photographerManager.makeStudio);
+router.get("/makestudio",
+  loginManager.isAuthenticated,
+  photographerManager.checkLogin,
+  photographerManager.hasStudio,
+  photographerManager.showMakeStudioPage
+);
 // Studio Add
-router.post("/addstudio", photographerManager.addStudio);
+router.post("/addstudio",
+  loginManager.isAuthenticated,
+  photographerManager.checkLogin,
+  photographerManager.hasStudio,
+  photographerManager.insertStudio,
+  photographerManager.updateHasStudio,
+  photographerManager.addServiceCategory
+);
 // Studio Photo Slider Update
-router.post("/studio/:photographer/slider/update", photographerManager.updateSlider);
+router.post("/studio/:photographer/slider/update",
+  loginManager.isAuthenticated,
+  photographerManager.isOwner,
+  photographerManager.checkReqFromOwner,
+  photographerManager.saveNewSliderPhotoFiles,
+  photographerManager.loadSliderPhotoList,
+  photographerManager.updateSliderPhotoList
+);
 // Studio Introduction Update
-router.post("/studio/:photographer/intro/update", photographerManager.updateIntro);
+router.post("/studio/:photographer/intro/update",
+  loginManager.isAuthenticated,
+  photographerManager.isOwner,
+  photographerManager.checkReqFromOwner,
+  photographerManager.updateIntro
+);
 // Studio Product Add
-router.post("/studio/:photographer/product/add", photographerManager.addProduct);
+router.post("/studio/:photographer/product/add",
+  loginManager.isAuthenticated,
+  photographerManager.isOwner,
+  photographerManager.checkReqFromOwner,
+  photographerManager.insertProduct,
+  photographerManager.updateNumberOfProducts
+);
 // Studio Product Update
-router.post("/studio/:photographer/product/update", photographerManager.updateProduct);
+router.post("/studio/:photographer/product/update",
+  loginManager.isAuthenticated,
+  photographerManager.isOwner,
+  photographerManager.checkReqFromOwner,
+  photographerManager.updateProduct
+);
 // Studio Product Delete
-router.post("/studio/:photographer/product/delete", photographerManager.deleteProduct);
+router.post("/studio/:photographer/product/delete",
+  loginManager.isAuthenticated,
+  photographerManager.isOwner,
+  photographerManager.checkReqFromOwner,
+  photographerManager.deleteProduct,
+  photographerManager.updateNumberOfProducts
+);
 // Studio Portfolio Update
-router.post("/studio/:photographer/portfolio/update", photographerManager.updatePortfolio);
+router.post("/studio/:photographer/portfolio/update",
+  loginManager.isAuthenticated,
+  photographerManager.isOwner,
+  photographerManager.checkReqFromOwner,
+  photographerManager.saveNewPortfolioFiles,
+  photographerManager.updatePortfolio,
+  photographerManager.insertPortfolio,
+  photographerManager.updateNumberOfPortfolios
+);
 // Studio Portfolio Delete
-router.post("/studio/:photographer/portfolio/delete", photographerManager.deletePortfolio);
+router.post("/studio/:photographer/portfolio/delete",
+  loginManager.isAuthenticated,
+  photographerManager.isOwner,
+  photographerManager.checkReqFromOwner,
+  photographerManager.deletePortfolio,
+  photographerManager.updateNumberOfPortfolios
+);
 // Get Portfolio Photo List
 router.get("/studio/:photographer/portfolio/:portfolio_id/photolist", photographerManager.getPortfolioPhotoList);
 

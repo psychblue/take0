@@ -14,8 +14,8 @@ var fileUtil = {};
 Delete Image File
 */
 fileUtil.deleteImageFile = function(filepath){
-  fs.unlinkSync(imageFilePrefix + filepath);
-  logger.debug("%s is deleted", imageFilePrefix + filepath);
+  fs.unlinkSync(imageFilePathPrefix + filepath);
+  logger.debug("%s is deleted", imageFilePathPrefix + filepath);
 };
 
 module.exports = fileUtil;
