@@ -91,7 +91,11 @@ joinManager.joinUser = function(req, res){
         }
 				else{
           //Redirect to Main Page
-          res.send({"result": "success"});
+          //res.send({"result": "success"});
+          httpUtil.sendInfo2Page(req, res, {
+        		infoText: "환영합니다.",
+        		infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
+        	});
         }
       });
     };
@@ -107,6 +111,10 @@ joinManager.joinUser = function(req, res){
         has_studio: 0
 			}
 		];
+
+    if(req.body.kakao){
+      params[1].user_from = 1;
+    }
 
     logger.debug("SQL Query [INSERT INTO %s SET %s]",
 			params[0],
@@ -242,7 +250,7 @@ Show User Withdraw Success Page
 */
 joinManager.showWithdrawSuccessPage = function(req, res){
 
-	httpUtil.sendInfoPage(req, res, {
+	httpUtil.sendInfo2Page(req, res, {
 		infoText: "감사합니다.",
 		infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
 	});

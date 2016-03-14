@@ -141,7 +141,7 @@ Insert Kakao User to User Database
 */
 loginManager.joinKakaoUser = function(req, res){
 	if(!req.__take_params.kakaoApiData.error && req.__take_params.kakaoApiData.response.statusCode == 200){
-		var kakaoId = JSON.parse(req.__take_params.kakaoApiData.body).id;
+		var kakaoId = JSON.parse(req.__take_params.kakaoApiData.body).properties.nickname;
 		logger.debug("id: %s", kakaoId);
 
 		var callbackForError = function(err){

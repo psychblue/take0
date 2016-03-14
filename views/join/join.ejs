@@ -45,10 +45,13 @@
                 data: $("#join-form").serialize(),
                 success: function(data){
                   if(data.result == "success"){
-                    location.replace("/");
+                    //location.replace("/");
                   }
-                  else if(data.result == "fail"){
+                  if(data.result == "fail"){
                     $("#join-error").text(data.text).addClass("margin-bottom-30 font-red font-bold");
+                  }
+                  else{
+                    $(document.documentElement).html(data);
                   }
                 },
                 error: function(xhr, option, error){

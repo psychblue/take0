@@ -49,11 +49,14 @@
               data: $("#join-form").serialize(),
               success: function(data){
                 if(data.result == "success"){
-                  location.replace("/");
+                  //location.replace("/");
                 }
-                else if(data.result == "fail"){
+                if(data.result == "fail"){
                   $("#join-error").text(data.text);
                   $("#join-error").css({"color": "#bb2929", "font-weight": "bold", "margin-bottom": "30px"});
+                }
+                else{
+                  $(document.documentElement).html(data);
                 }
               },
               error: function(xhr, option, error){

@@ -68,4 +68,28 @@ httpUtil.sendInfoPage = function(req, res, options){
 	res.render("info", options);
 };
 
+/*
+Send Information Page to Client
+*/
+httpUtil.sendInfo2Page = function(req, res, options){
+
+  var isAuth = req.isAuthenticated();
+  var username = isAuth ? req.user.username : "";
+
+  options.title = confParams.html.title;
+  options.service = confParams.html.service_name;
+  options.isAuth = isAuth;
+  options.name = username;
+
+  if(!options.subText){
+    options.subText = "";
+  }
+
+  if(!options.infoLink){
+    options.infoLink = "";
+  }
+
+	res.render("info2", options);
+};
+
 module.exports = httpUtil;
