@@ -114,6 +114,7 @@ joinManager.joinUser = function(req, res){
 
     if(req.body.kakao){
       params[1].user_from = 1;
+      params[1].access_token = req.body.token;
     }
 
     logger.debug("SQL Query [INSERT INTO %s SET %s]",

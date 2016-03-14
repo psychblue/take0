@@ -25,6 +25,7 @@ var LoginController = (function(){
 
         loadElements();
         bindEvents();
+        Kakao.init("a481f23f90ba53b1b10d7e4fa6d7a067");
 
         if(redirectUrl != ""){
           viewLoginPopup();
@@ -97,7 +98,15 @@ var LoginController = (function(){
     $logoutButton.click(function(){
       $.get("/logout", function(data){
         if(data.result == "success"){
-          location.reload();
+          if(data.accessToken){
+            Kakao.Auth.setAccessToken(data.accessToken);
+            Kakao.Auth.logout(function(){
+              location.reload();
+            });
+          }
+          else{
+            location.reload();
+          }
         }
       });
     });

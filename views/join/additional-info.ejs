@@ -86,9 +86,10 @@
           <label for="join-email">이메일</label>
           <input type="text" id="join-email" name="email"/>
         </div>
-        <input type="hidden" name="username" value='<%=username%>'/>
-        <input type="hidden" name="password" value='kakao'/>
-        <input type="hidden" name="kakao" value='1'/>
+        <input type="hidden" name="username" value="<%= username %>"/>
+        <input type="hidden" name="password" value="kakao"/>
+        <input type="hidden" name="kakao" value="1"/>
+        <input type="hidden" name="token" value="<%= accessToken %>" />
       </form>
       <div>
         <button id="join-submit-button">입력</button>

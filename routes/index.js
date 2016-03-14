@@ -32,14 +32,19 @@ router.get("/loginpopup", loginManager.showLoginPopup);
 // "/login" post
 router.post("/login", loginManager.loginAuth);
 // "/logout"
-router.get("/logout", loginManager.logout);
+router.get("/logout",
+  loginManager.isAuthenticated,
+  loginManager.loadUserFrom,
+  loginManager.logout
+);
 // "/login/kakao" - Kakao Login Redirect
 router.get("/login/kakao", loginManager.loginByKakao);
 // "/login/kakao/callback" - Kakao Login Callback
 router.get("/login/kakao/callback",
   loginManager.getAccessToken,
   loginManager.getKakaoUser,
-  loginManager.joinKakaoUser
+  loginManager.joinKakaoUser,
+  loginManager.updateAccessToken
 );
 
 // "/join" - User Join Page
