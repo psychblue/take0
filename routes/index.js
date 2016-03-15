@@ -65,6 +65,10 @@ router.get("/login/kakao/callback",
 router.get("/join",
   joinManager.showJoinPage
 );
+// ID, Pasword Join
+router.get("/join/takeuser",
+  joinManager.showTakeJoinPage
+);
 // "/join" post
 router.post("/join",
   joinManager.joinUser

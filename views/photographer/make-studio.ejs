@@ -11,7 +11,9 @@
     <script>
       (function(){
         $(document).ready(function(){
+          InputController.setInputFocus($(".take-text-input").add($(".take-text-shortinput")).add($(".take-textarea")));
           CheckboxController.setCheckbox($(".take-checkbox input[type='checkbox']"));
+          ButtonController.setButton($(".editor-submit-button"));
         });
       }());
     </script>
@@ -73,7 +75,7 @@
           </div>
           <div class="editor-button-box">
             <button type="submit" class="editor-submit-button take-button-mint">
-              <img src="/images/studio/check.png"></img><span>&nbsp;저장하기</span>
+              <img src="/images/studio/check.png"></img><span>&nbsp;개설하기</span>
             </button>
           </div>
         </form>

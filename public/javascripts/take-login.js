@@ -168,7 +168,6 @@ var LoginController = (function(){
           Kakao.Auth.setAccessToken(data.accessToken);
           Kakao.Auth.logout(function(){
             if(url != ""){
-              alert(url);
               location.href = url;
             }
             else{

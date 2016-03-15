@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title><%=title%></title>
+    <link rel="stylesheet" href="/stylesheets/take-main-style.css"/>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script type="text/javascript" src="/javascripts/take-util.js"></script>
+    <script type="text/javascript" src="/javascripts/take-login.js"></script>
+    <script>
+      (function(){
+        $(document).ready(function(){
+          InputController.setInputFocus($(".take-text-shortinput"));
+          ButtonController.setButton($(".editor-submit-button"));
+
+          $(".editor-submit-button").click(function(){
+            var isFieldChecked = 1;
+
+            $(".take-text-shortinput").each(function(){
+              if($(this).val() == ""){
+                $(this).addClass("bg-color-pink");
+                isFieldChecked = 0;
+              }
+            });
+
+            if(isFieldChecked == 1){
+              $.ajax({
+                type: "POST",
+                url: "/join",
+                data: $("#join-form").serialize(),
+                success: function(data){
+                  if(data.result == "success"){
+                    location.href = "/join/welcome";
+                  }
+                  else if(data.result == "fail"){
+                    $("#join-error").text(data.text).addClass("margin-top-30 margin-bottom-30 font-red font-bold");
+                  }
+                },
+                error: function(xhr, option, error){
+                  alert(error);
+                }
+              });
+            }
+          });
+        });
+      }());
+    </script>
+  </head>
+
+  <body>
+
+    <div id="header" class="width-full font-white">
+
+      <div id="header-title" class="float-left"><a href="/"><%= service %></a></div>
+
+    </div>
+
+    <div class="take-main-window bg-color-lightergrey">
+
+      <div class="take-basic-window">
+        <h1>TAKE 가입하기</h1>
+        <span class="font-grey">회원님의 소중한 정보를 입력해 주세요.</span>
+        <form id="join-form">
+          <div class="take-shortinput-box">
+            <div class="editor-input-label font-grey">&nbsp;아이디&nbsp;&nbsp;|</div>
+            <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="username"></input>
+            <div class="editor-input-label font-grey">&nbsp;패스워드&nbsp;&nbsp;|</div>
+            <input type="password" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="password"></input>
+            <div class="editor-input-label font-grey">&nbsp;닉네임&nbsp;&nbsp;|</div>
+            <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="nickname"></input>
+            <div class="editor-input-label font-grey">&nbsp;이메일&nbsp;&nbsp;|</div>
+            <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="email"></input>
+          </div>
+          <div id="join-error">
+          </div>
+          <div class="editor-button-box">
+            <button type="button" class="editor-submit-button take-button-mint">
+              <img src="/images/studio/check.png"></img><span>&nbsp;가입하기</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+    <div id="footer" class="bg-color-darkgrey center-aligned">
+
+      <div id="footer-main">
+      </div>
+
+      <div id="footer-menu" class="font-grey font-level-small">
+        이용약관&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        개인정보취급방침&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        서비스운영정책&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        고객센터
+      </div>
+
+      <hr class="bg-color-grey">
+
+      <div class="font-grey">
+        &copy; <a href="/" class="font-grey"><%= service %></a>, Inc.
+      </div>
+
+    </div>
+
+  </body>
+
+</html>

@@ -6,10 +6,21 @@
     <link rel="stylesheet" href="/stylesheets/take-main-style.css"/>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/javascripts/take-util.js"></script>
-    <script>
+    <script type="text/javascript">
       (function(){
         $(document).ready(function(){
-          CheckboxController.setCheckbox($(".take-checkbox input[type='checkbox']"));
+          ButtonController.setButton($("#take-join-button").add($("#kakao-login-button")));
+          $(".take-fullsize-window").css({
+            "background-image": "url('/images/login/join_bg.jpg')",
+            "background-repeat": "no-repeat",
+            "background-position": "top",
+            "background-size": "cover",
+            "opacity": "0.8",
+            "filter": "alpha(opacity: '80%')"
+          });
+          $("#header").css({
+            "background-color": "transparent"
+          });
         });
       }());
     </script>
@@ -23,56 +34,20 @@
 
     </div>
 
-    <div class="take-main-window bg-color-lightergrey">
-
-      <div class="take-basic-window">
-        <h1><a href="/"><%=service%></a>&nbsp;가족이&nbsp;되어주세요.</h1>
-
-        <a href="/login/kakao">
-          <div id="kakao-login-button" class="margin-bottom-30 font-bold center-aligned cursor-pointer">카카오 아이디로 가입하기
-          </div>
-        </a>
-
-        <form>
-          <div class="take-input-box">
-            <div class="editor-input-label font-grey">&nbsp;아이디&nbsp;&nbsp;|</div>
-            <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="username"></input>
-            <div class="editor-input-label font-grey">&nbsp;패스워드&nbsp;&nbsp;|</div>
-            <input type="password" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="password"></input>
-            <div class="editor-input-label font-grey">&nbsp;닉네임&nbsp;&nbsp;|</div>
-            <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="nickname"></input>
-            <div class="editor-input-label font-grey">&nbsp;이메일&nbsp;&nbsp;|</div>
-            <input type="text" class="take-text-input font-darkgrey font-level-default border-solid-thin-lightgrey" name="email"></input>
-          </div>
-          <div class="editor-button-box">
-            <button type="submit" class="editor-submit-button take-button-mint">
-              <img src="/images/studio/check.png"></img><span>&nbsp;저장하기</span>
-            </button>
-          </div>
-        </form>
-      </div>
-
+    <div class="take-fullsize-window bg-color-black">
     </div>
 
-    <div id="footer" class="bg-color-darkgrey center-aligned">
-
-      <div id="footer-main">
-      </div>
-
-      <div id="footer-menu" class="font-grey font-level-small">
-        이용약관&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        개인정보취급방침&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        서비스운영정책&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        고객센터
-      </div>
-
-      <hr class="bg-color-grey">
-
-      <div class="font-grey">
-        &copy; <a href="/" class="font-grey"><%= service %></a>, Inc.
-      </div>
-
-    </div>
+    <div id="take-join-box">
+      <h1 class="font-darkgrey margin-bottom-30">TAKE와 함께하세요.</h1>
+      <a href="/join/takeuser">
+        <div id="take-join-button" class="font-white center-aligned cursor-pointer">아이디/패스워드로 가입하기
+        </div>
+      </a>
+      <a href="/login/kakao">
+        <div id="kakao-login-button" class="font-bold center-aligned cursor-pointer">카카오 아이디로 가입하기
+        </div>
+      </a>
+    <div>
 
   </body>
 

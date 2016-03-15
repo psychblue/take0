@@ -69,6 +69,10 @@ h1 a {
   margin-top: 190px;
 }
 
+.margin-top-30 {
+  margin-top: 30px;
+}
+
 .margin-bottom-30 {
   margin-bottom: 30px;
 }
@@ -196,11 +200,40 @@ h1 a {
   position: relative;
 }
 
+.take-fullsize-window {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
 .take-info-window {
   width: 100%;
   height: 400px;
   padding-top: 270px;
   text-align: center;
+}
+
+#take-join-box {
+  width: 342px;
+  height: 160px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -80px;
+  margin-left: -171px;
+  text-align: center;
+
+}
+
+#take-join-button {
+  width: 342px;
+  height: 42px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+  background-color: #3db7cc;
+  line-height: 42px;
 }
 
 .take-basic-paragraph {
@@ -260,6 +293,18 @@ h1 a {
   text-align: left;
 }
 
+.take-shortinput-box {
+  width: 342px;
+  padding-top: 30px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.take-profile-image-box {
+  width: 229px;
+  height: 300px;
+}
+
 .take-text-input {
   width: 500px;
   height: 40px;
@@ -277,7 +322,7 @@ h1 a {
 }
 
 .take-text-shortinput {
-  width: 250px;
+  width: 300px;
   height: 40px;
   padding-top: 0;
   padding-bottom: 0;
@@ -311,7 +356,8 @@ h1 a {
 
 .take-checkbox {
   width: 100px;
-  height: 20px;
+  height: 30px;
+  padding-top: 10px;
   position: relative;
   float: left;
 }
@@ -323,7 +369,7 @@ h1 a {
 
 .take-checkbox label {
   position: absolute;
-  top: 0;
+  top: 10px;
   left: 0;
   cursor: pointer;
 }
@@ -407,9 +453,9 @@ h1 a {
 
 .editor-input-label {
   width: 150px;
-  height: 42px;
+  height: 30px;
   margin-top: 10px;
-  line-height: 42px;
+  line-height: 30px;
   text-align: left;
 }
 
@@ -850,9 +896,12 @@ h1 a {
 
 #search-window {
   height: 600px;
+  background-color: #336699;
+  /*
   background-image: url("/images/main/top_bg.jpg");
   background-repeat: no-repeat;
   background-position: center;
+  */
 }
 
 #search-window .font-level-larger {

@@ -39,6 +39,25 @@ joinManager.showJoinPage = function(req, res){
 };
 
 /*
+Show Join Page
+*/
+joinManager.showTakeJoinPage = function(req, res){
+  // Check User Login
+	if(req.__take_params.isAuth){
+		httpUtil.sendInfoPage(req, res, {
+			infoText: "이미 가입하셨습니다.",
+			infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
+		});
+	}
+	else{
+		res.render("join/take-join", {
+			title: confParams.html.title,
+			service: confParams.html.service_name
+		});
+	}
+};
+
+/*
 Password Encrytion Function
 */
 joinManager.encryptPassword = function(seed){
@@ -133,7 +152,7 @@ joinManager.showWelcomePage = function(req, res){
 
   if(req.__take_params.isAuth){
     httpUtil.sendInfo2Page(req, res, {
-      infoText: "환영합니다.",
+      infoText: req.__take_params.nickname + " 님 환영합니다.",
       infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
     });
   }
