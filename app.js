@@ -20,6 +20,13 @@ var confParams = confManager.getParams();
 var loginManager = require("./routes/login");
 //User DB
 var mysqlDb = require("./database/mysqldb");
+mysqlDb.init({
+		host: confParams.mysql.host,
+		port: confParams.mysql.port,
+		user: confParams.mysql.user,
+		password: confParams.mysql.password,
+		database: confParams.mysql.database
+	});
 //Redis for HTTP Session DB
 var redis = require("redis").createClient(confParams.redis.port, confParams.redis.address);
 logger.info("Redis Session DB is connected...");
@@ -57,7 +64,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(loginManager.loadUserData);
 //Root Router
 app.use("/", routes);
 

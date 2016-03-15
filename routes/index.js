@@ -15,6 +15,9 @@ var confParams = confManager.getParams();
 //Express Router Settings
 var router = express.Router();
 
+//Routing Middleware
+router.use(loginManager.loadUserData);
+
 /*
 Routing Logics
 */
