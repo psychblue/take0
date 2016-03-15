@@ -49,13 +49,10 @@ Send Information Page to Client
 */
 httpUtil.sendInfoPage = function(req, res, options){
 
-  var isAuth = req.isAuthenticated();
-  var username = isAuth ? req.user.username : "";
-
   options.title = confParams.html.title;
   options.service = confParams.html.service_name;
-  options.isAuth = isAuth;
-  options.name = username;
+  options.isAuth = req.__take_params.isAuth;
+  options.name = req.__take_params.nickname;
 
   if(!options.subText){
     options.subText = "";
@@ -73,13 +70,10 @@ Send Information Page to Client
 */
 httpUtil.sendInfo2Page = function(req, res, options){
 
-  var isAuth = req.isAuthenticated();
-  var username = isAuth ? req.user.username : "";
-
   options.title = confParams.html.title;
   options.service = confParams.html.service_name;
-  options.isAuth = isAuth;
-  options.name = username;
+  options.isAuth = req.__take_params.isAuth;
+  options.name = req.__take_params.nickname;
 
   if(!options.subText){
     options.subText = "";

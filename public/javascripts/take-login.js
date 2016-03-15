@@ -160,6 +160,7 @@ var LoginController = (function(){
     redirectUrl = url;
   };
 
+  //Called when user withdrawed
   var logout = function(url){
     $.get("/accesstoken", function(data){
       if(data.result == "success"){

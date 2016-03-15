@@ -42,21 +42,18 @@ photographerManager.loadStudio = function(req, res, next){
 
   var callbackForSuccess = function(rows, fields){
 
-    var username = req.__take_params.isAuth ? req.user.username : "";
-
     if(rows[0].num_products == 0 && rows[0].num_portfolios == 0){
       res.render("photographer/studio", {
         title: confParams.html.title,
         service: confParams.html.service_name,
         isAuth: req.__take_params.isAuth,
         isOwner: req.__take_params.isOwner,
-        name: username,
+        name: req.__take_params.nickname,
         photographerName: req.params.photographer,
         studioData: rows[0]
       });
     }
     else{
-      req.__take_params.username = username;
       req.__take_params.studioData = rows[0];
       next();
     }
@@ -93,7 +90,7 @@ photographerManager.loadProducts = function(req, res, next){
         service: confParams.html.service_name,
         isAuth: req.__take_params.isAuth,
         isOwner: req.__take_params.isOwner,
-        name: req.__take_params.username,
+        name: req.__take_params.nickname,
         photographerName: req.params.photographer,
         studioData: req.__take_params.studioData,
         productsData: rows
@@ -139,7 +136,7 @@ photographerManager.loadPortfolios = function(req, res){
       service: confParams.html.service_name,
       isAuth: req.__take_params.isAuth,
       isOwner: req.__take_params.isOwner,
-      name: req.__take_params.username,
+      name: req.__take_params.nickname,
       photographerName: req.params.photographer,
       studioData: req.__take_params.studioData,
       productsData: req.__take_params.productsData,
@@ -214,7 +211,7 @@ photographerManager.showMakeStudioPage = function(req, res){
     res.render("photographer/make-studio", {
       title: confParams.html.title,
       service: confParams.html.service_name,
-      name: req.user.username
+      name: req.__take_params.nickname
     });
   }
 };

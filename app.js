@@ -17,6 +17,7 @@ var logger = require("./logger/logger")(__filename);
 //Configuration Manager
 var confManager = require("./conf/conf");
 var confParams = confManager.getParams();
+var loginManager = require("./routes/login");
 //User DB
 var mysqlDb = require("./database/mysqldb");
 //Redis for HTTP Session DB
@@ -56,10 +57,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(function(req, res, next){
-	req.__take_params = {};
-	next();
-});
+app.use(loginManager.loadUserData);
 //Root Router
 app.use("/", routes);
 

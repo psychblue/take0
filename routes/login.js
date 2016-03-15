@@ -13,12 +13,43 @@ var httpUtil = require("../util/http-util");
 var loginManager = {};
 
 /*
-Check Authentication
+Load user data
 */
-loginManager.isAuthenticated = function(req, res, next){
+loginManager.loadUserData = function(req, res, next){
+
+	req.__take_params = {};
 
 	req.__take_params.isAuth = req.isAuthenticated();
-	next();
+	req.__take_params.username = req.__take_params.isAuth ? req.user.username : "";
+
+	var callbackForError = function(err){
+		httpUtil.sendDBErrorPage(req, res, err);
+	};
+
+	var callbackForNoResult = function(){
+		req.__take_params.nickname = "";
+		next();
+	};
+
+	var callbackForSuccess = function(rows, fields){
+		req.__take_params.nickname = rows[0].nickname;
+		next();
+	};
+
+	var username = req.__take_params.username;
+
+	var query = "SELECT ?? FROM ?? WHERE ?? = ?";
+
+	var params = ["nickname", "takeUser", "username", username];
+
+	logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
+		params[0],
+		params[1],
+		params[2],
+		params[3]
+	);
+
+	mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
 };
 
 /*
@@ -250,7 +281,7 @@ loginManager.loadAccessToken = function(req, res, next){
 		next();
 	};
 
-	var username = req.__take_params.isAuth ? req.user.username : "";
+	var username = req.__take_params.username;
 
 	var query = "SELECT ?? FROM ?? WHERE ?? = ?";
 
