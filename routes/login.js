@@ -266,6 +266,7 @@ loginManager.loadAccessToken = function(req, res, next){
 
 	mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
 };
+
 /*
 Logout Function
 */
@@ -281,6 +282,31 @@ loginManager.logout = function(req, res){
 		res.send({
 			"result": "success",
 			"accessToken": req.__take_params.accessToken
+		});
+	}
+};
+
+/*
+Send Access Token
+*/
+loginManager.sendAccessToken = function(req, res){
+
+	if(req.__take_params.isAuth){
+		if(req.__take_params.userFrom == 0){
+			res.send({"result": "success"});
+		}
+		//Kakao user
+		else if(req.__take_params.userFrom == 1){
+			res.send({
+				"result": "success",
+				"accessToken": req.__take_params.accessToken
+			});
+		}
+	}
+	else{
+		res.send({
+			"result": "fail",
+			"text": "Unauthenticated User"
 		});
 	}
 };

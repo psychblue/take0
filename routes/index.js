@@ -37,6 +37,12 @@ router.get("/logout",
   loginManager.loadAccessToken,
   loginManager.logout
 );
+// Get Access Token
+router.get("/accesstoken",
+  loginManager.isAuthenticated,
+  loginManager.loadAccessToken,
+  loginManager.sendAccessToken
+);
 // "/login/kakao" - Kakao Login Redirect
 router.get("/login/kakao", loginManager.loginByKakao);
 // "/login/kakao/callback" - Kakao Login Callback

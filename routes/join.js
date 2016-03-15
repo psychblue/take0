@@ -153,9 +153,9 @@ joinManager.showWithdrawPage = function(req, res){
 		return;
 	}
 
-	httpUtil.sendInfoPage(req, res, {
+	httpUtil.sendInfo2Page(req, res, {
 		infoText: "<a href='/'>" + confParams.html.service_name + "</a>를 떠나시겠습니까?",
-		infoLink: "<a href='/withdraw/confirmed' class='font-darkgrey'>네</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href='/' class='font-darkgrey' onclick='history.back()'>아니오</a>"
+		infoLink: "<a href=# onclick=\"LoginController.logout('/withdraw/confirmed')\" class='font-darkgrey'>네</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href='/' class='font-darkgrey' onclick='history.back()'>아니오</a>"
 	});
 };
 
@@ -265,7 +265,7 @@ joinManager.showWithdrawSuccessPage = function(req, res){
 
 	httpUtil.sendInfo2Page(req, res, {
 		infoText: "감사합니다.",
-		infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
+		infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>",
 	});
 };
 

@@ -108,6 +108,9 @@ var LoginController = (function(){
             location.reload();
           }
         }
+        else{
+          alert(data.text);
+        }
       });
     });
   };
@@ -157,8 +160,39 @@ var LoginController = (function(){
     redirectUrl = url;
   };
 
+  var logout = function(url){
+    $.get("/accesstoken", function(data){
+      if(data.result == "success"){
+        if(data.accessToken){
+          Kakao.Auth.setAccessToken(data.accessToken);
+          Kakao.Auth.logout(function(){
+            if(url != ""){
+              alert(url);
+              location.href = url;
+            }
+            else{
+              location.reload();
+            }
+          });
+        }
+        else{
+          if(url){
+            location.href = url;
+          }
+          else{
+            location.reload();
+          }
+        }
+      }
+      else{
+        alert(data.text);
+      }
+    });
+  }
+
   return {
     viewLoginPopup,
-    setRedirectUrl
+    setRedirectUrl,
+    logout
   }
 }());
