@@ -141,7 +141,7 @@ Insert Kakao User to User Database
 */
 loginManager.joinKakaoUser = function(req, res, next){
 	if(!req.__take_params.kakaoApiData.error && req.__take_params.kakaoApiData.response.statusCode == 200){
-		var kakaoId = JSON.parse(req.__take_params.kakaoApiData.body).properties.nickname;
+		var kakaoId = "k" + JSON.parse(req.__take_params.kakaoApiData.body).id;
 		logger.debug("id: %s", kakaoId);
 
 		var callbackForError = function(err){
@@ -233,7 +233,7 @@ loginManager.updateAccessToken = function(req, res){
 /*
 Load user_from (Local, Kakao or Naver)
 */
-loginManager.loadUserFrom = function(req, res, next){
+loginManager.loadAccessToken = function(req, res, next){
 
 	var callbackForError = function(err){
 		httpUtil.sendDBErrorPage(req, res, err);

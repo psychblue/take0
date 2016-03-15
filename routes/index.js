@@ -34,7 +34,7 @@ router.post("/login", loginManager.loginAuth);
 // "/logout"
 router.get("/logout",
   loginManager.isAuthenticated,
-  loginManager.loadUserFrom,
+  loginManager.loadAccessToken,
   loginManager.logout
 );
 // "/login/kakao" - Kakao Login Redirect
