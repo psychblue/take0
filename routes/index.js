@@ -54,6 +54,11 @@ router.get("/join",
 );
 // "/join" post
 router.post("/join", joinManager.joinUser);
+// Welcome
+router.get("/join/welcome",
+loginManager.isAuthenticated,
+joinManager.showWelcomePage
+);
 // "/withdraw" - User Withdraw
 router.get("/withdraw",
   loginManager.isAuthenticated,

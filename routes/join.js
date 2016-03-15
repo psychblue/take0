@@ -90,12 +90,7 @@ joinManager.joinUser = function(req, res){
 					});
         }
 				else{
-          //Redirect to Main Page
-          //res.send({"result": "success"});
-          httpUtil.sendInfo2Page(req, res, {
-        		infoText: "환영합니다.",
-        		infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
-        	});
+          res.send({"result": "success"});
         }
       });
     };
@@ -106,6 +101,7 @@ joinManager.joinUser = function(req, res){
 			"takeUser",
 			{
 				username: req.body.username,
+        nickname: req.body.nickname,
 				password: encryptedPassword,
 				email: req.body.email,
         has_studio: 0
@@ -127,6 +123,22 @@ joinManager.joinUser = function(req, res){
   //Fields Error
   else{
     logger.error("[User Login] Submitted Field Error");
+  }
+};
+
+/*
+Send Welcome Page
+*/
+joinManager.showWelcomePage = function(req, res){
+
+  if(req.__take_params.isAuth){
+    httpUtil.sendInfo2Page(req, res, {
+      infoText: "환영합니다.",
+      infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
+    });
+  }
+  else{
+    res.redirect("/");
   }
 };
 

@@ -153,6 +153,7 @@ loginManager.joinKakaoUser = function(req, res, next){
 				title: confParams.html.title,
 				service: confParams.html.service_name,
 				username: kakaoId,
+				nickname: JSON.parse(req.__take_params.kakaoApiData.body).properties.nickname,
 				accessToken: req.__take_params.kakaoApiData.accessToken
 			});
 		};

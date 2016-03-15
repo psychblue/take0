@@ -45,13 +45,10 @@
                 data: $("#join-form").serialize(),
                 success: function(data){
                   if(data.result == "success"){
-                    //location.replace("/");
+                    location.href = "/join/welcome";
                   }
-                  if(data.result == "fail"){
+                  else if(data.result == "fail"){
                     $("#join-error").text(data.text).addClass("margin-bottom-30 font-red font-bold");
-                  }
-                  else{
-                    $(document.documentElement).html(data);
                   }
                 },
                 error: function(xhr, option, error){
@@ -116,6 +113,10 @@
           <input type="password" id="join-password" class="font-darkgrey font-level-default border-solid-thin-lightgrey" name="password"/>
         </div>
         <div class="login-input">
+          <label class="font-grey font-level-default cursor-text" for="join-nickname">닉네임</label>
+          <input type="text" id="join-nickname" class="font-darkgrey font-level-default border-solid-thin-lightgrey" name="nickname"/>
+        </div>
+        <div class="login-input">
           <label class="font-grey font-level-default cursor-text" for="join-email">이메일</label>
           <input type="text" id="join-email" class="font-darkgrey font-level-default border-solid-thin-lightgrey" name="email"/>
         </div>
@@ -131,6 +132,26 @@
       </a>
 
       <div id="join-error">
+      </div>
+
+    </div>
+
+    <div id="footer" class="bg-color-darkgrey center-aligned">
+
+      <div id="footer-main">
+      </div>
+
+      <div id="footer-menu" class="font-grey font-level-small">
+        이용약관&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        개인정보취급방침&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        서비스운영정책&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        고객센터
+      </div>
+
+      <hr class="bg-color-grey">
+
+      <div class="font-grey">
+        &copy; <a href="/" class="font-grey"><%= service %></a>, Inc.
       </div>
 
     </div>

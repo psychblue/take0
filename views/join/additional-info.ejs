@@ -2,101 +2,149 @@
 <html>
   <head>
     <title><%=title%></title>
-    <link rel="stylesheet" href="/stylesheets/header-style.css" />
-    <link rel="stylesheet" href="/stylesheets/join-style.css" />
+    <link rel="stylesheet" href="/stylesheets/take-main-style.css"/>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="/javascripts/header.js"></script>
+    <script type="text/javascript" src="/javascripts/take-util.js"></script>
+    <script type="text/javascript" src="/javascripts/take-search-box.js"></script>
     <script type="text/javascript">
-      $(document).ready(function(){
+      (function(){
 
-        if($('.joinInput input[type="text"]').val() != ""){
-          $('.joinInput input[type="text"]').siblings("label").hide();
-        }
+        var $joinInputs,
+        $joinSubmitButton;
 
-        $('.joinInput input[type="text"]').keydown(function(keyEvent){
-          $(this).siblings("label").hide();
-          if(keyEvent.which == 13){
-            $("#join-submit-button").focus();
-          }
-        });
+        (function(){
+          $(document).ready(function(){
+            initPage();
+            bindEvents();
+          });
+        }());
 
-        $('.joinInput input[type="text"]').focus(function(){
-          $(this).css({"border": "1px solid #999", "background-color": "#fff"});
-          $(this).siblings("label").css({"color": "#999", "font-weight": "normal"});
-        });
+        function bindEvents(){
+          $joinInputs.keydown(function(keyEvent){
+            InputController.onKeydown(keyEvent, $(this), $joinSubmitButton);
+          });
 
-        $('.joinInput input[type="text"]').focusout(function(){
-          if($(this).val() == ""){
-            $(this).siblings("label").show();
-          }
-          $(this).css({"border": "1px solid #ccc"});
-        });
+          InputController.setInputFocus($joinInputs);
 
-        $("#join-submit-button").click(function(){
-          var isFieldChecked = 1;
-          $(".joinInput input").each(function(index){
+          $joinSubmitButton.click(function(){
+            var isFieldChecked = 1;
+
+            $joinInputs.each(function(){
               if($(this).val() == ""){
-                $(this).css({"background-color": "#fde2e2"});
-                $(this).siblings("label").css({"color": "#bb292929", "font-weight": "bold"});
+                $(this).addClass("bg-color-pink").siblings("label").addClass("font-red font-bold");
                 isFieldChecked = 0;
               }
             });
-          if(isFieldChecked == 1){
-            $.ajax({
-              type: "POST",
-              url: "/join",
-              data: $("#join-form").serialize(),
-              success: function(data){
-                if(data.result == "success"){
-                  //location.replace("/");
-                }
-                if(data.result == "fail"){
-                  $("#join-error").text(data.text);
-                  $("#join-error").css({"color": "#bb2929", "font-weight": "bold", "margin-bottom": "30px"});
-                }
-                else{
-                  $(document.documentElement).html(data);
-                }
-              },
-              error: function(xhr, option, error){
-                alert(error);
-              }
-            });
-          }
-        });
 
-      });
+            if(isFieldChecked == 1){
+              $.ajax({
+                type: "POST",
+                url: "/join",
+                data: $("#join-form").serialize(),
+                success: function(data){
+                  if(data.result == "success"){
+                    location.href = "/join/welcome";
+                  }
+                  else if(data.result == "fail"){
+                    $("#join-error").text(data.text).addClass("margin-bottom-30 font-red font-bold");
+                  }
+                },
+                error: function(xhr, option, error){
+                  alert(error);
+                }
+              });
+            }
+          });
+        };
+
+        function initPage(){
+          $joinInputs = $(".login-input > input");
+          $joinSubmitButton = $("#join-submit-button");
+          $("body").addClass("bg-color-lightergrey");
+          $("#join-window").css({"width": "342", "margin": "0 auto"});
+
+          $joinInputs.each(function(){
+              if($(this).val() != ""){
+                $(this).siblings("label").hide();
+              }
+          });
+
+          var searchBoxOptions = {
+            boxWidth: 800,
+            boxHeight: 40,
+            borderStyle: "none",
+            boxPosition: {
+              positionType: "fixed",
+              boxTop: 0,
+              boxLeft: 100
+            }
+          }
+          SearchBoxController.setSearchBox(searchBoxOptions);
+        };
+      }());
     </script>
   </head>
   <body>
-    <div id="headerbar">
-      <div id="headerbar-title">
-        <a href="/"><%=service%></a>
-      </div>
+
+    <div id="header" class="width-full font-white">
+
+      <div id="header-title" class="float-left"><a href="/"><%= service %></a></div>
+
     </div>
 
-    <div id="join-title">
-      <h1><a href="/"><%=service%></a>&nbsp;&nbsp;시작하기</h1>
+    <div id="search-box"></div>
+
+    <div id="join-title" class="margin-top-190 margin-bottom-30 center-aligned">
+      <h1>추가정보를 입력하세요.</h1>
     </div>
 
-    <div id="join-window">
-      <form id="join-form" action="/join" method="post">
-        <div class="joinInput">
-          <label for="join-email">이메일</label>
-          <input type="text" id="join-email" name="email"/>
+    <div id="join-window" class="center-aligned">
+
+      <form id="join-form">
+        <div class="login-input">
+          <label class="font-grey font-level-default cursor-text" for="join-nickname">닉네임</label>
+          <input type="text" id="join-nickname" class="font-darkgrey font-level-default border-solid-thin-lightgrey" name="nickname" value="<%= nickname %>"/>
+        </div>
+        <div class="login-input">
+          <label class="font-grey font-level-default cursor-text" for="join-email">이메일</label>
+          <input type="text" id="join-email" class="font-darkgrey font-level-default border-solid-thin-lightgrey" name="email"/>
         </div>
         <input type="hidden" name="username" value="<%= username %>"/>
         <input type="hidden" name="password" value="kakao"/>
         <input type="hidden" name="kakao" value="1"/>
         <input type="hidden" name="token" value="<%= accessToken %>" />
       </form>
+
       <div>
-        <button id="join-submit-button">입력</button>
+        <button id="join-submit-button" class="bg-color-mint font-white font-level-default center-aligned border-none cursor-pointer">가입하기</button>
       </div>
+
       <div id="join-error">
       </div>
+
+    </div>
+
+    <div id="footer" class="bg-color-darkgrey center-aligned">
+
+      <div id="footer-main">
+      </div>
+
+      <div id="footer-menu" class="font-grey font-level-small">
+        이용약관&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        개인정보취급방침&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        서비스운영정책&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        고객센터
+      </div>
+
+      <hr class="bg-color-grey">
+
+      <div class="font-grey">
+        &copy; <a href="/" class="font-grey"><%= service %></a>, Inc.
+      </div>
+
     </div>
 
   </body>
+
 </html>
