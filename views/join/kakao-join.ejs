@@ -11,17 +11,18 @@
     <script>
       (function(){
         $(document).ready(function(){
-          InputController.setInputFocus($(".take-text-shortinput"));
-          $(".take-text-shortinput").keydown(function(keyEvent){
+          var $inputs = $(".take-shortinput-box .take-text-shortinput");
+          InputController.setInputFocus($inputs);
+          $inputs.keydown(function(keyEvent){
             InputController.onKeydown(keyEvent, $(this), $(".editor-submit-button"));
           });
-          
+
           ButtonController.setButton($(".editor-submit-button"));
 
           $(".editor-submit-button").click(function(){
             var isFieldChecked = 1;
 
-            $(".take-text-shortinput").each(function(){
+            $inputs.each(function(){
               if($(this).val() == ""){
                 $(this).addClass("bg-color-pink");
                 isFieldChecked = 0;
@@ -29,6 +30,7 @@
             });
 
             if(isFieldChecked == 1){
+              $("input[name='token']").val(Kakao.Auth.getAccessToken());
               $.ajax({
                 type: "POST",
                 url: "/join",
@@ -74,7 +76,7 @@
             <input type="hidden" name="username" value="<%= username %>"/>
             <input type="hidden" name="password" value="kakao"/>
             <input type="hidden" name="kakao" value="1"/>
-            <input type="hidden" name="token" value="<%= accessToken %>"/>
+            <input type="hidden" name="token" />
           </div>
           <div id="join-error">
           </div>

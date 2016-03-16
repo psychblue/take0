@@ -98,7 +98,7 @@ loginManager.loginAuth = function(req, res, next){
 
 /*
 Kakao Login Function
-*/
+*
 loginManager.loginByKakao = function(req, res){
   var redirectUrl = "https://kauth.kakao.com/oauth/authorize?client_id="
                     + confParams.kakao.kakao_client_id
@@ -107,10 +107,11 @@ loginManager.loginByKakao = function(req, res){
                     + "&response_type=code";
   res.redirect(redirectUrl);
 };
+*/
 
 /*
 Getting Kakao Aceess Token
-*/
+*
 loginManager.getAccessToken = function(req, res, next){
 
 	logger.debug("code: %s", req.query.code);
@@ -133,38 +134,29 @@ loginManager.getAccessToken = function(req, res, next){
 		next();
 	});
 };
+*/
 
 /*
 Getting Kakao User Data
 */
 loginManager.getKakaoUser = function(req, res, next){
 
-	if(!req.__take_params.kakaoApiData.error && req.__take_params.kakaoApiData.response.statusCode == 200){
-		req.__take_params.kakaoApiData.accessToken = JSON.parse(req.__take_params.kakaoApiData.body).access_token;
-		logger.debug("access token: %s", req.__take_params.kakaoApiData.accessToken);
-		//Getting Username
-		request.get({
-			url: "https://kapi.kakao.com/v1/user/me",
-			method: "GET",
-			headers: {
-				"Authorization": "Bearer " + req.__take_params.kakaoApiData.accessToken,
-				"Content-type": "application/x-www-form-urlencoded;charset=utf-8"
-			}
-		}, function(error, response, body){
-			req.__take_params.kakaoApiData.error = error;
-			req.__take_params.kakaoApiData.response = response;
-			req.__take_params.kakaoApiData.body = body;
-			next();
-		});
-	}
-	else if(req.__take_params.kakaoApiData.error){
-		logger.error(req.__take_params.kakaoApiData.error.toString());
-		//error handling for getting tokens
-	}
-	else{
-		logger.error(req.__take_params.kakaoApiData.body);
-		//error handling for getting tokens
-	}
+	req.__take_params.kakaoApiData = {accessToken: req.body.access_token};
+	logger.debug("access token: %s", req.__take_params.kakaoApiData.accessToken);
+	//Getting Username
+	request.get({
+		url: "https://kapi.kakao.com/v1/user/me",
+		method: "GET",
+		headers: {
+			"Authorization": "Bearer " + req.__take_params.kakaoApiData.accessToken,
+			"Content-type": "application/x-www-form-urlencoded;charset=utf-8"
+		}
+	}, function(error, response, body){
+		req.__take_params.kakaoApiData.error = error;
+		req.__take_params.kakaoApiData.response = response;
+		req.__take_params.kakaoApiData.body = body;
+		next();
+	});
 };
 
 /*
@@ -173,6 +165,7 @@ Insert Kakao User to User Database
 loginManager.joinKakaoUser = function(req, res, next){
 	if(!req.__take_params.kakaoApiData.error && req.__take_params.kakaoApiData.response.statusCode == 200){
 		var kakaoId = "k" + JSON.parse(req.__take_params.kakaoApiData.body).id;
+		var nickname = JSON.parse(req.__take_params.kakaoApiData.body).properties.nickname;
 		logger.debug("id: %s", kakaoId);
 
 		var callbackForError = function(err){
@@ -180,6 +173,17 @@ loginManager.joinKakaoUser = function(req, res, next){
 		};
 
 		var callbackForNoResult = function(){
+			var redirectUrl = "/join/kakaouser?username="
+									+ kakaoId
+									+ "&nickname="
+									+ nickname;
+
+			res.send({
+				"result": "redirect",
+				"url": redirectUrl
+			});
+
+			/*
 			res.render("join/additional-info", {
 				title: confParams.html.title,
 				service: confParams.html.service_name,
@@ -187,6 +191,7 @@ loginManager.joinKakaoUser = function(req, res, next){
 				nickname: JSON.parse(req.__take_params.kakaoApiData.body).properties.nickname,
 				accessToken: req.__take_params.kakaoApiData.accessToken
 			});
+			*/
 		};
 
 		var callbackForSuccess = function(rows, fields){
@@ -239,7 +244,7 @@ loginManager.updateAccessToken = function(req, res){
 				});
 			}
 			else{
-				res.redirect("/");
+				res.send({"result": "success"});
 			}
 		});
   };
@@ -265,7 +270,7 @@ loginManager.updateAccessToken = function(req, res){
 /*
 Load user_from (Local, Kakao or Naver)
 */
-loginManager.loadAccessToken = function(req, res, next){
+loginManager.loadUserFrom = function(req, res, next){
 
 	var callbackForError = function(err){
 		httpUtil.sendDBErrorPage(req, res, err);
@@ -277,7 +282,7 @@ loginManager.loadAccessToken = function(req, res, next){
 
 	var callbackForSuccess = function(rows, fields){
 		req.__take_params.userFrom = rows[0].user_from;
-		req.__take_params.accessToken = rows[0].access_token;
+		//req.__take_params.accessToken = rows[0].access_token;
 		next();
 	};
 
@@ -285,11 +290,10 @@ loginManager.loadAccessToken = function(req, res, next){
 
 	var query = "SELECT ?? FROM ?? WHERE ?? = ?";
 
-	var params = [["user_from", "access_token"], "takeUser", "username", username];
+	var params = ["user_from", "takeUser", "username", username];
 
 	logger.debug("SQL Query [SELECT %s, %s FROM %s WHERE %s=%s]",
-		params[0][0],
-		params[0][1],
+		params[0],
 		params[1],
 		params[2],
 		params[3]
@@ -303,36 +307,23 @@ Logout Function
 */
 loginManager.logout = function(req, res){
 
-	if(req.__take_params.userFrom == 0){
-		req.logout();
-		res.send({"result": "success"});
-	}
-	//Kakao user
-	else if(req.__take_params.userFrom == 1){
-		req.logout();
-		res.send({
-			"result": "success",
-			"accessToken": req.__take_params.accessToken
-		});
-	}
+	req.logout();
+	res.send({
+		"result": "success",
+		"userFrom": req.__take_params.userFrom
+	});
 };
 
 /*
 Send Access Token
 */
-loginManager.sendAccessToken = function(req, res){
+loginManager.sendUserFrom = function(req, res){
 
 	if(req.__take_params.isAuth){
-		if(req.__take_params.userFrom == 0){
-			res.send({"result": "success"});
-		}
-		//Kakao user
-		else if(req.__take_params.userFrom == 1){
-			res.send({
-				"result": "success",
-				"accessToken": req.__take_params.accessToken
-			});
-		}
+		res.send({
+			"result": "success",
+			"userFrom": req.__take_params.userFrom
+		});
 	}
 	else{
 		res.send({

@@ -17,7 +17,12 @@ var InputController = (function(){
     targetInput.siblings("label").hide();
 
     if(keyEvent.which == 13){
-      submitButton.focus();
+      if(submitButton.is("button")){
+        submitButton.focus();
+      }
+      else{
+        submitButton.click();
+      }
     }
   };
 

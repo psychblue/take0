@@ -15,6 +15,7 @@ var LoginController = (function(){
   $loginButton,
   $loginPopupCloseButton,
   $loginSubmitButton,
+  $kakaoLoginButton,
   $logoutButton;
 
   (function(){
@@ -35,13 +36,14 @@ var LoginController = (function(){
 
   function loadElements(){
     $loginPopup = $("#login-popup");
-    $loginError = $("#login-error");
-    $loginForm = $("#login-form");
+    $loginError = $loginPopup.find("#login-error");
+    $loginForm = $loginPopup.find("#login-form");
     $loginInputs = $loginPopup.find(".take-text-shortinput");
     $loginPopupBackground = $("#login-popup-background");
     $loginButton = $("#login-button");
-    $loginPopupCloseButton = $("#login-popup-close-button");
-    $loginSubmitButton = $("#login-submit-button");
+    $loginPopupCloseButton = $loginPopup.find("#login-popup-close-button");
+    $loginSubmitButton = $loginPopup.find("#login-submit-button");
+    $kakaoLoginButton = $("#kakao-login-button");
     $logoutButton = $("#logout-button");
   };
 
@@ -65,38 +67,13 @@ var LoginController = (function(){
 
     InputController.setInputFocus($loginInputs);
 
-    ButtonController.setButton($loginSubmitButton.add($loginPopup.find("#kakao-login-button")));
-
-    $loginSubmitButton.click(function(){
-      $.ajax({
-        type: "POST",
-        url: "/login",
-        data: $loginForm.serialize(),
-        success: function(data){
-          if(data.result == "success"){
-            if(redirectUrl == ""){
-              location.reload();
-            }
-            else{
-              location.href = redirectUrl;
-            }
-          }
-          else if(data.result == "fail"){
-            $loginError.text(data.text).addClass("font-red font-bold").css({"margin-bottom": "30px"});
-            $loginPopup.css({"height": "480"});
-          }
-        },
-        error: function(xhr, option, error){
-          alert(error);
-        }
-      });
-    });
+    ButtonController.setButton($loginSubmitButton, takeLogin);
+    ButtonController.setButton($kakaoLoginButton, kakaoLogin);
 
     $logoutButton.click(function(){
       $.get("/logout", function(data){
         if(data.result == "success"){
-          if(data.accessToken){
-            Kakao.Auth.setAccessToken(data.accessToken);
+          if(data.userFrom == 1){
             Kakao.Auth.logout(function(){
               location.reload();
             });
@@ -109,6 +86,31 @@ var LoginController = (function(){
           alert(data.text);
         }
       });
+    });
+  };
+
+  function takeLogin(){
+    $.ajax({
+      type: "POST",
+      url: "/login",
+      data: $loginForm.serialize(),
+      success: function(data){
+        if(data.result == "success"){
+          if(redirectUrl == ""){
+            location.reload();
+          }
+          else{
+            location.href = redirectUrl;
+          }
+        }
+        else if(data.result == "fail"){
+          $loginError.text(data.text).addClass("font-red font-bold").css({"margin-bottom": "30px"});
+          $loginPopup.css({"height": "480"});
+        }
+      },
+      error: function(xhr, option, error){
+        alert(error);
+      }
     });
   };
 
@@ -150,10 +152,9 @@ var LoginController = (function(){
 
   //Called when user withdrawed
   var logout = function(url){
-    $.get("/accesstoken", function(data){
+    $.get("/userfrom", function(data){
       if(data.result == "success"){
-        if(data.accessToken){
-          Kakao.Auth.setAccessToken(data.accessToken);
+        if(data.userfrom == 1){
           Kakao.Auth.logout(function(){
             if(url != ""){
               location.href = url;
@@ -176,11 +177,48 @@ var LoginController = (function(){
         alert(data.text);
       }
     });
-  }
+  };
+
+  var kakaoLogin = function(){
+    Kakao.Auth.login({
+      success: function(authObj){
+        $.ajax({
+          type: "POST",
+          url: "/login/kakao/callback",
+          data: {
+            access_token: authObj.access_token
+          },
+          success: function(data){
+            if(data.result == "success"){
+              if(redirectUrl == ""){
+                location.reload();
+              }
+              else{
+                location.href = redirectUrl;
+              }
+            }
+            else if(data.result == "fail"){
+              alert(data.text);
+            }
+            else if(data.result == "redirect"){
+              location.href = data.url;
+            }
+          },
+          error: function(xhr, option, error){
+            alert(error);
+          }
+        });
+      },
+      fail: function(err){
+        alert(JSON.stringify(err));
+      }
+    });
+  };
 
   return {
     viewLoginPopup,
     setRedirectUrl,
+    kakaoLogin,
     logout
   }
 }());

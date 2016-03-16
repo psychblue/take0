@@ -41,21 +41,23 @@ router.post("/login",
 );
 // "/logout"
 router.get("/logout",
-  loginManager.loadAccessToken,
+  loginManager.loadUserFrom,
   loginManager.logout
 );
 // Get Access Token
-router.get("/accesstoken",
-  loginManager.loadAccessToken,
-  loginManager.sendAccessToken
+router.get("/userfrom",
+  loginManager.loadUserFrom,
+  loginManager.sendUserFrom
 );
 // "/login/kakao" - Kakao Login Redirect
+/*
 router.get("/login/kakao",
   loginManager.loginByKakao
 );
+*/
 // "/login/kakao/callback" - Kakao Login Callback
-router.get("/login/kakao/callback",
-  loginManager.getAccessToken,
+router.post("/login/kakao/callback",
+  //loginManager.getAccessToken,
   loginManager.getKakaoUser,
   loginManager.joinKakaoUser,
   loginManager.updateAccessToken
@@ -68,6 +70,10 @@ router.get("/join",
 // ID, Pasword Join
 router.get("/join/takeuser",
   joinManager.showTakeJoinPage
+);
+// Kakao User Join
+router.get("/join/kakaouser",
+  joinManager.showKakaoJoinPage
 );
 // "/join" post
 router.post("/join",

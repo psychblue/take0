@@ -58,6 +58,27 @@ joinManager.showTakeJoinPage = function(req, res){
 };
 
 /*
+Show Kakao Join Page
+*/
+joinManager.showKakaoJoinPage = function(req, res){
+
+  if(req.__take_params.isAuth){
+    httpUtil.sendInfoPage(req, res, {
+			infoText: "이미 가입하셨습니다.",
+			infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
+		});
+  }
+  else{
+    res.render("join/kakao-join", {
+			title: confParams.html.title,
+			service: confParams.html.service_name,
+			username: req.query.username,
+      nickname: req.query.nickname,
+    });
+  }
+};
+
+/*
 Password Encrytion Function
 */
 joinManager.encryptPassword = function(seed){
