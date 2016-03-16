@@ -4,18 +4,14 @@
 <div id="login-popup" class="bg-color-white rounded-box center-aligned">
 
   <form id="login-form">
-    <div class="login-input">
-      <label class="font-grey font-level-default cursor-text" for="login-username">아이디</label>
-      <input type="text" id="login-username" class="font-darkgrey font-level-default border-solid-thin-lightgrey" name="username"/>
-    </div>
-    <div class="login-input">
-      <label class="font-grey font-level-default cursor-text" for="login-password">패스워드</label>
-      <input type="password" id="login-password" class="font-darkgrey font-level-default border-solid-thin-lightgrey" name="password"/>
-    </div>
+    <div class="editor-input-label font-grey">&nbsp;아이디&nbsp;&nbsp;|</div>
+    <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="username"></input>
+    <div class="editor-input-label font-grey">&nbsp;패스워드&nbsp;&nbsp;|</div>
+    <input type="password" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="password"></input>
   </form>
 
   <div>
-    <button id="login-submit-button" class="bg-color-mint font-white font-level-default center-aligned border-none cursor-pointer">로그인</button>
+    <button type="button" id="login-submit-button" class="margin-top-30 bg-color-mint font-white font-level-default center-aligned border-none cursor-pointer">로그인</button>
   </div>
 
   <a href="/login/kakao">
@@ -26,7 +22,7 @@
   <div id="login-error">
   </div>
 
-  <div id="login-join" class="font-darkgrey margin-bottom-30"><%=service%> 아이디가 없으세요?&nbsp;&nbsp;<a href="/join" class="font-red font-bold">회원가입</a>
+  <div id="login-join" class="font-darkgrey margin-bottom-30"><%=service%> 아이디가 없으세요?&nbsp;&nbsp;<a href="/join" class="font-darkgrey font-bold">회원가입</a>
   </div>
 
   <span id="login-popup-close-button" class="font-darkgrey cursor-pointer">- 닫 기 -</span>

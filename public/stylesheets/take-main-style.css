@@ -224,16 +224,16 @@ h1 a {
   margin-top: -80px;
   margin-left: -171px;
   text-align: center;
-
 }
 
-#take-join-button {
+#take-join-button, #login-submit-button {
   width: 342px;
   height: 42px;
   margin-bottom: 10px;
   border-radius: 3px;
   background-color: #3db7cc;
   line-height: 42px;
+  font-family: inherit;
 }
 
 .take-basic-paragraph {
@@ -837,11 +837,15 @@ h1 a {
 #login-popup {
   display: none;
   width: 342px;
-  height: 330px;
+  height: 400px;
   padding-top: 40px;
   padding-left: 20px;
   padding-right: 20px;
-  position: fixed;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -235px;
+  margin-left: -191px;
   z-index: 120;
 }
 
@@ -869,20 +873,6 @@ h1 a {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-}
-
-#login-submit-button, #join-submit-button {
-  width: 342px;
-  height: 42px;
-  margin-bottom: 10px;
-  border-radius: 3px;
-  font-family: inherit;
-  line-height: 42px;
-  outline: 0;
-}
-
-#login-submit-button:hover, #join-submit-button:hover {
-  color: #008299;
 }
 
 #kakao-login-button {

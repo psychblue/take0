@@ -12,6 +12,10 @@
       (function(){
         $(document).ready(function(){
           InputController.setInputFocus($(".take-text-shortinput"));
+          $(".take-text-shortinput").keydown(function(keyEvent){
+            InputController.onKeydown(keyEvent, $(this), $(".editor-submit-button"));
+          });
+
           ButtonController.setButton($(".editor-submit-button"));
 
           $(".editor-submit-button").click(function(){

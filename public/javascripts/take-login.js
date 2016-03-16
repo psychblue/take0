@@ -11,7 +11,6 @@ var LoginController = (function(){
   $loginError,
   $loginForm,
   $loginInputs,
-  $loginInputLabels,
   $loginPopupBackground,
   $loginButton,
   $loginPopupCloseButton,
@@ -38,8 +37,7 @@ var LoginController = (function(){
     $loginPopup = $("#login-popup");
     $loginError = $("#login-error");
     $loginForm = $("#login-form");
-    $loginInputs = $(".login-input > input");
-    $loginInputLabels = $(".login-input > label");
+    $loginInputs = $loginPopup.find(".take-text-shortinput");
     $loginPopupBackground = $("#login-popup-background");
     $loginButton = $("#login-button");
     $loginPopupCloseButton = $("#login-popup-close-button");
@@ -48,9 +46,6 @@ var LoginController = (function(){
   };
 
   function bindEvents(){
-    $(window).resize(function(){
-      setLoginPopupPosition();
-    });
 
     $loginPopupBackground.click(function(){
       closeLoginPopup();
@@ -70,6 +65,8 @@ var LoginController = (function(){
 
     InputController.setInputFocus($loginInputs);
 
+    ButtonController.setButton($loginSubmitButton.add($loginPopup.find("#kakao-login-button")));
+
     $loginSubmitButton.click(function(){
       $.ajax({
         type: "POST",
@@ -86,7 +83,7 @@ var LoginController = (function(){
           }
           else if(data.result == "fail"){
             $loginError.text(data.text).addClass("font-red font-bold").css({"margin-bottom": "30px"});
-            $loginPopup.css({"height": "380"});
+            $loginPopup.css({"height": "480"});
           }
         },
         error: function(xhr, option, error){
@@ -115,13 +112,6 @@ var LoginController = (function(){
     });
   };
 
-  function setLoginPopupPosition(){
-    $loginPopup.css({
-      "top": $(window).height() / 2 - $loginPopup.height() / 2,
-      "left": $(window).width() / 2 - $loginPopup.width() / 2 - 20
-    });
-  };
-
   function closeLoginPopup(){
     if(loginPopupEnabled == 1){
       if(redirectUrl == ""){
@@ -144,10 +134,8 @@ var LoginController = (function(){
 
       $loginError.empty();
       $loginForm[0].reset();
-      $loginInputLabels.show();
-      setLoginPopupPosition();
       $loginPopupBackground.fadeIn("fast");
-      $loginPopup.css({"height": "330"}).fadeIn("fast");
+      $loginPopup.css({"height": "430"}).fadeIn("fast");
       loginPopupEnabled = 1;
 
       $("body").css({
