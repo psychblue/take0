@@ -165,6 +165,10 @@ h1 a {
   text-align: center;
 }
 
+.vertical-middle-aligned {
+  vertical-align: -6px;
+}
+
 .float-left {
   float: left;
 }
@@ -264,7 +268,29 @@ h1 a {
   vertical-align: -6px;
 }
 
-.take-button-white {
+.take-button-whiteborder {
+  width: 130px;
+  height: 40px;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 1em;
+  color: #fff;
+  vertical-align: middle;
+  outline: 0;
+  border: 1px solid #fff;
+  cursor: pointer;
+  text-align: center;
+  background-color: transparent;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.take-button-whiteborder img {
+  vertical-align: -6px;
+}
+
+.take-button-mintborder {
   width: 130px;
   height: 40px;
   border-radius: 3px;
@@ -282,7 +308,7 @@ h1 a {
   appearance: none;
 }
 
-.take-button-white img {
+.take-button-mintborder img {
   vertical-align: -6px;
 }
 
@@ -298,11 +324,6 @@ h1 a {
   padding-top: 30px;
   margin: 0 auto;
   text-align: left;
-}
-
-.take-profile-image-box {
-  width: 229px;
-  height: 300px;
 }
 
 .take-text-input {
@@ -798,7 +819,7 @@ h1 a {
 }
 
 #header {
-  height: 20px;
+  height: 40px;
   padding: 10px;
   /*
   position: fixed;
@@ -815,12 +836,16 @@ h1 a {
 }
 
 #header-title {
+  height: 40px;
+  padding-left: 10px;
   font-size: 20px;
-  line-height: 20px;
+  line-height: 40px;
 }
 
 #header-login {
-  margin-right: 20px;
+  height: 40px;
+  padding-right: 30px;
+  line-height: 40px;
 }
 
 #login-popup-background {
@@ -887,14 +912,66 @@ h1 a {
   line-height: 42px;
 }
 
+#header .user-menu-box {
+  width: 200px;
+  height: 270px;
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 30px;
+}
+
+#header .user-menu-arrow {
+  width: 0;
+  height: 0;
+  position: absolute;
+  right: 20px;
+  border-top: 10px solid transparent;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #fff;
+}
+
+#header .user-menu {
+  width: 180px;
+  height: 230px;
+  padding-top: 20px;
+  padding-left: 10px;
+  padding-bottom: 20px;
+  padding-right: 10px;
+  background-color: #fff;
+  position: absolute;
+  top: 20px;
+  line-height: 2em;
+}
+
+#header .user-menu a {
+  color: #404040;
+}
+
+#header .user-menu-item {
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+#header .user-menu-item:hover {
+  background-color: #3db7cc;
+  color: #fff;
+}
+
+#header hr {
+  width: 180px;
+  height: 1px;
+  border: none;
+  background-color: #ccc;
+}
+
 #search-window {
   height: 600px;
-  background-color: #336699;
-  /*
+  background-color: #404040;
   background-image: url("/images/main/top_bg.jpg");
   background-repeat: no-repeat;
   background-position: center;
-  */
 }
 
 #search-window .font-level-larger {

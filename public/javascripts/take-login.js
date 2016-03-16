@@ -180,11 +180,17 @@ var LoginController = (function(){
   };
 
   var kakaoLogin = function(){
+    $("body").css({
+      "overflow": "auto"
+    });
+    $loginPopupBackground.hide();
+    $loginPopup.hide();
+
     Kakao.Auth.login({
       success: function(authObj){
         $.ajax({
           type: "POST",
-          url: "/login/kakao/callback",
+          url: "/login/kakao",
           data: {
             access_token: authObj.access_token
           },

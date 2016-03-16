@@ -16,19 +16,43 @@
 
       <div id="header-title" class="float-left"><a href="/"><%= service %></a></div>
       <div id="header-login" class="float-right">
+        <a href="/makestudio">
+          <span>스튜디오 만들기</span>
+        </a>
         <%
         if(!isAuth){
         %>
-        <span id="login-button" class="cursor-pointer">로그인</span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/join">회원가입</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span id="login-button" class="cursor-pointer">
+          <img class="vertical-middle-aligned" src="/images/common/login.png"></img>&nbsp;&nbsp;로그인
+        </span>
         <%
         }else{
         %>
-        <%= name %> 님&nbsp;&nbsp;|&nbsp;&nbsp;<span id="logout-button" class="cursor-pointer">로그아웃</span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/withdraw">탈퇴</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span id="user-button" class="cursor-pointer">
+          <img class="vertical-middle-aligned" src="/images/common/username.png"></img>&nbsp;&nbsp;<%= name %>
+        </span>
         <%
         }
         %>
       </div>
       <div class="float-clear"></div>
+
+      <%
+      if(isAuth){
+      %>
+      <div class="user-menu-box font-darkgrey">
+        <div class="user-menu-arrow"></div>
+        <div class="user-menu">
+          <div class="user-menu-item">&nbsp;&nbsp;마이페이지</div><hr>
+          <div id="logout-button" class="user-menu-item">&nbsp;&nbsp;로그아웃</div>
+          <a href="/withdraw"><div class="user-menu-item">&nbsp;&nbsp;<%= service %> 탈퇴</div></a>
+        </div>
+      </div>
+      <%
+      }
+      %>
 
     </div>
 

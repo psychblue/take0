@@ -132,3 +132,44 @@ var BackgroundController = (function(){
     onMouseleave
   }
 }());
+
+var HeaderController = (function(){
+
+  var $headerLogin,
+  $userButton,
+  $userMenuBox;
+
+
+  (function(){
+    $(document).ready(function(){
+      loadElements();
+      bindEvents();
+    });
+  }());
+
+  function loadElements(){
+    $header = $("#header");
+    $userButton = $header.find("#user-button");
+    $userMenuBox = $header.find(".user-menu-box");
+  };
+
+  function bindEvents(){
+    $userButton.hover(function(){
+      $userMenuBox.fadeIn(100);
+      $userMenuBox.unbind().mouseleave(function(){
+        $userMenuBox.fadeOut(100);
+      });
+    },
+    function(e){
+      var pointerX = $(window).width() - e.pageX;
+      var pointerY = e.pageY;
+      var offsetX = $(window).width() - $(this).offset().left;
+      var offsetY = $(this).offset().top;
+
+      if(pointerX > offsetX || pointerX < 30 || pointerY < offsetY){
+        $userMenuBox.fadeOut(100);
+      }
+    });
+  };
+
+}());

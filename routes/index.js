@@ -56,7 +56,7 @@ router.get("/login/kakao",
 );
 */
 // "/login/kakao/callback" - Kakao Login Callback
-router.post("/login/kakao/callback",
+router.post("/login/kakao",
   //loginManager.getAccessToken,
   loginManager.getKakaoUser,
   loginManager.joinKakaoUser,
