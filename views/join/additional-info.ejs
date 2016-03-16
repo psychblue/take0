@@ -1,38 +1,25 @@
 <!DOCTYPE html>
 <html>
+
   <head>
     <title><%=title%></title>
     <link rel="stylesheet" href="/stylesheets/take-main-style.css"/>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
     <script type="text/javascript" src="/javascripts/take-util.js"></script>
-    <script type="text/javascript" src="/javascripts/take-search-box.js"></script>
-    <script type="text/javascript">
+    <script type="text/javascript" src="/javascripts/take-login.js"></script>
+    <script>
       (function(){
+        $(document).ready(function(){
+          InputController.setInputFocus($(".take-text-shortinput"));
+          ButtonController.setButton($(".editor-submit-button"));
 
-        var $joinInputs,
-        $joinSubmitButton;
-
-        (function(){
-          $(document).ready(function(){
-            initPage();
-            bindEvents();
-          });
-        }());
-
-        function bindEvents(){
-          $joinInputs.keydown(function(keyEvent){
-            InputController.onKeydown(keyEvent, $(this), $joinSubmitButton);
-          });
-
-          InputController.setInputFocus($joinInputs);
-
-          $joinSubmitButton.click(function(){
+          $(".editor-submit-button").click(function(){
             var isFieldChecked = 1;
 
-            $joinInputs.each(function(){
+            $(".take-text-shortinput").each(function(){
               if($(this).val() == ""){
-                $(this).addClass("bg-color-pink").siblings("label").addClass("font-red font-bold");
+                $(this).addClass("bg-color-pink");
                 isFieldChecked = 0;
               }
             });
@@ -47,7 +34,7 @@
                     location.href = "/join/welcome";
                   }
                   else if(data.result == "fail"){
-                    $("#join-error").text(data.text).addClass("margin-bottom-30 font-red font-bold");
+                    $("#join-error").text(data.text).addClass("margin-top-30 margin-bottom-30 font-red font-bold");
                   }
                 },
                 error: function(xhr, option, error){
@@ -56,35 +43,11 @@
               });
             }
           });
-        };
-
-        function initPage(){
-          $joinInputs = $(".login-input > input");
-          $joinSubmitButton = $("#join-submit-button");
-          $("body").addClass("bg-color-lightergrey");
-          $("#join-window").css({"width": "342", "margin": "0 auto"});
-
-          $joinInputs.each(function(){
-              if($(this).val() != ""){
-                $(this).siblings("label").hide();
-              }
-          });
-
-          var searchBoxOptions = {
-            boxWidth: 800,
-            boxHeight: 40,
-            borderStyle: "none",
-            boxPosition: {
-              positionType: "fixed",
-              boxTop: 0,
-              boxLeft: 100
-            }
-          }
-          SearchBoxController.setSearchBox(searchBoxOptions);
-        };
+        });
       }());
     </script>
   </head>
+
   <body>
 
     <div id="header" class="width-full font-white">
@@ -93,34 +56,30 @@
 
     </div>
 
-    <div id="search-box"></div>
+    <div class="take-main-window bg-color-lightergrey">
 
-    <div id="join-title" class="margin-top-190 margin-bottom-30 center-aligned">
-      <h1>추가정보를 입력하세요.</h1>
-    </div>
-
-    <div id="join-window" class="center-aligned">
-
-      <form id="join-form">
-        <div class="login-input">
-          <label class="font-grey font-level-default cursor-text" for="join-nickname">닉네임</label>
-          <input type="text" id="join-nickname" class="font-darkgrey font-level-default border-solid-thin-lightgrey" name="nickname" value="<%= nickname %>"/>
-        </div>
-        <div class="login-input">
-          <label class="font-grey font-level-default cursor-text" for="join-email">이메일</label>
-          <input type="text" id="join-email" class="font-darkgrey font-level-default border-solid-thin-lightgrey" name="email"/>
-        </div>
-        <input type="hidden" name="username" value="<%= username %>"/>
-        <input type="hidden" name="password" value="kakao"/>
-        <input type="hidden" name="kakao" value="1"/>
-        <input type="hidden" name="token" value="<%= accessToken %>" />
-      </form>
-
-      <div>
-        <button id="join-submit-button" class="bg-color-mint font-white font-level-default center-aligned border-none cursor-pointer">가입하기</button>
-      </div>
-
-      <div id="join-error">
+      <div class="take-basic-window">
+        <h1>TAKE 가입하기</h1>
+        <span class="font-grey">회원님의 소중한 정보를 입력해 주세요.</span>
+        <form id="join-form">
+          <div class="take-shortinput-box">
+            <div class="editor-input-label font-grey">&nbsp;닉네임&nbsp;&nbsp;|</div>
+            <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="nickname" value="<%= nickname %>"></input>
+            <div class="editor-input-label font-grey">&nbsp;이메일&nbsp;&nbsp;|</div>
+            <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="email"></input>
+            <input type="hidden" name="username" value="<%= username %>"/>
+            <input type="hidden" name="password" value="kakao"/>
+            <input type="hidden" name="kakao" value="1"/>
+            <input type="hidden" name="token" value="<%= accessToken %>"/>
+          </div>
+          <div id="join-error">
+          </div>
+          <div class="editor-button-box">
+            <button type="button" class="editor-submit-button take-button-mint">
+              <img src="/images/studio/check.png"></img><span>&nbsp;가입하기</span>
+            </button>
+          </div>
+        </form>
       </div>
 
     </div>
