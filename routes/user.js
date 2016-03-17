@@ -19,11 +19,12 @@ userManager.loadDefaultTakeParams = function(req, res, next){
 
 	logger.debug("User request is on [ %s ]", req.path);
 
-	if(!commonUtil.checkPathWhiteList(req.path)){
-		req.__take_params = {};
+	req.__take_params = {};
 
-		req.__take_params.isAuth = req.isAuthenticated();
-		req.__take_params.username = req.__take_params.isAuth ? req.user.username : "";
+	req.__take_params.isAuth = req.isAuthenticated();
+	req.__take_params.username = req.__take_params.isAuth ? req.user.username : "";
+
+	if(!commonUtil.checkPathWhiteList(req.path)){
 
 		var callbackForError = function(err){
 			httpUtil.sendDBErrorPage(req, res, err);

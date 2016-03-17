@@ -177,7 +177,8 @@ photographerManager.checkLogin = function(req, res, next){
 };
 
 photographerManager.showMakeStudioPage = function(req, res){
-  if(req.__take_params.has_studio == 1){
+
+  if(req.__take_params.hasStudio == 1){
     httpUtil.sendInfoPage(req, res, {
       infoText: "이미 개설된 스튜디오가 있습니다.",
       infoLink: "<a href='/studio/" + req.user.username + "' class='font-darkgrey'>스튜디오 바로가기</a>"
@@ -194,7 +195,7 @@ photographerManager.showMakeStudioPage = function(req, res){
 
 photographerManager.insertStudio = function(req, res, next){
 
-  if(req.__take_params.has_studio == 1){
+  if(req.__take_params.hasStudio == 1){
     httpUtil.sendInfoPage(req, res, {
       infoText: "이미 개설된 스튜디오가 있습니다.",
       infoLink: "<a href='/studio/" + req.user.username + "' class='font-darkgrey'>스튜디오 바로가기</a>"
