@@ -11,17 +11,20 @@
     <script>
       (function(){
         $(document).ready(function(){
+          var $inputs = $(".take-shortinput-box .take-text-shortinput");
+
           InputController.setInputFocus($(".take-text-shortinput"));
           $(".take-text-shortinput").keydown(function(keyEvent){
             InputController.onKeydown(keyEvent, $(this), $(".editor-submit-button"));
           });
 
           ButtonController.setButton($(".editor-submit-button"));
+          CheckboxController.setCheckbox($("input[type='checkbox']"));
 
           $(".editor-submit-button").click(function(){
             var isFieldChecked = 1;
 
-            $(".take-text-shortinput").each(function(){
+            $inputs.each(function(){
               if($(this).val() == ""){
                 $(this).addClass("bg-color-pink");
                 isFieldChecked = 0;
@@ -98,9 +101,9 @@
       <div class="user-menu-box font-darkgrey">
         <div class="user-menu-arrow"></div>
         <div class="user-menu">
-          <a href="/user/userinfo"><div class="user-menu-item">&nbsp;&nbsp;마이페이지</div><hr>
+          <a href="/user/userinfo"><div class="user-menu-item">&nbsp;&nbsp;마이페이지</div></a>
+          <hr>
           <div id="logout-button" class="user-menu-item">&nbsp;&nbsp;로그아웃</div>
-          <a href="/withdraw"><div class="user-menu-item">&nbsp;&nbsp;<%= service %> 탈퇴</div></a>
         </div>
       </div>
       <%
@@ -118,12 +121,21 @@
           <div class="take-shortinput-box">
             <div class="editor-input-label font-grey">&nbsp;아이디&nbsp;&nbsp;|</div>
             <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="username"></input>
-            <div class="editor-input-label font-grey">&nbsp;패스워드&nbsp;&nbsp;|</div>
+            <div class="editor-input-label font-grey">&nbsp;비밀번호&nbsp;&nbsp;|</div>
             <input type="password" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="password"></input>
             <div class="editor-input-label font-grey">&nbsp;닉네임&nbsp;&nbsp;|</div>
             <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="nickname"></input>
             <div class="editor-input-label font-grey">&nbsp;이메일&nbsp;&nbsp;|</div>
             <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="email"></input>
+            <div class="checkbox-long take-checkbox">
+              <input type="checkbox" id="email-agree" class="take-checkbox" name="email_agree" value="1"></input>
+              <label class="font-grey" for="email-agree">
+                <div class="box"></div>
+                <span class="font-level-small">&nbsp;&nbsp;<%= service %>의 홍보/알림 메일 수신에 동의합니다.</span>
+                <div class="float-clear"></div>
+              </label>
+            </div>
+            <div class="float-clear"></div>
           </div>
           <div id="join-error">
           </div>

@@ -12,13 +12,14 @@
       (function(){
         $(document).ready(function(){
           var $inputs = $(".take-shortinput-box .take-text-shortinput");
-  
+
           InputController.setInputFocus($inputs);
           $inputs.keydown(function(keyEvent){
             InputController.onKeydown(keyEvent, $(this), $(".editor-submit-button"));
           });
 
           ButtonController.setButton($(".editor-submit-button"));
+          CheckboxController.setCheckbox($("input[type='checkbox']"));
 
           $(".editor-submit-button").click(function(){
             var isFieldChecked = 1;
@@ -101,9 +102,9 @@
       <div class="user-menu-box font-darkgrey">
         <div class="user-menu-arrow"></div>
         <div class="user-menu">
-          <a href="/user/userinfo"><div class="user-menu-item">&nbsp;&nbsp;마이페이지</div><hr>
+          <a href="/user/userinfo"><div class="user-menu-item">&nbsp;&nbsp;마이페이지</div></a>
+          <hr>
           <div id="logout-button" class="user-menu-item">&nbsp;&nbsp;로그아웃</div>
-          <a href="/withdraw"><div class="user-menu-item">&nbsp;&nbsp;<%= service %> 탈퇴</div></a>
         </div>
       </div>
       <%
@@ -123,6 +124,15 @@
             <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="nickname" value="<%= nickname %>"></input>
             <div class="editor-input-label font-grey">&nbsp;이메일&nbsp;&nbsp;|</div>
             <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="email"></input>
+            <div class="checkbox-long take-checkbox">
+              <input type="checkbox" id="email-agree" class="take-checkbox" name="email_agree" value="1"></input>
+              <label class="font-grey" for="email-agree">
+                <div class="box"></div>
+                <span class="font-level-small">&nbsp;&nbsp;<%= service %>의 홍보/알림 메일 수신에 동의합니다.</span>
+                <div class="float-clear"></div>
+              </label>
+            </div>
+            <div class="float-clear"></div>
             <input type="hidden" name="username" value="<%= username %>"/>
             <input type="hidden" name="password" value="kakao"/>
             <input type="hidden" name="kakao" value="1"/>

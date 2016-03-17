@@ -25,7 +25,8 @@ mysqlDb.init({
 		port: confParams.mysql.port,
 		user: confParams.mysql.user,
 		password: confParams.mysql.password,
-		database: confParams.mysql.database
+		database: confParams.mysql.database,
+		dateStrings: confParams.mysql.dateStrings
 	});
 //Redis for HTTP Session DB
 var redis = require("redis").createClient(confParams.redis.port, confParams.redis.address);

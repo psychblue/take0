@@ -35,7 +35,7 @@ loginManager.loginAuth = function(req, res, next){
     if(!user){
       res.send({
         "result": "fail",
-        "text": "아이디 또는 패스워드를 확인하세요."
+        "text": "아이디 또는 비밀번호를 확인하세요."
       });
     }
     else{

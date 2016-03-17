@@ -140,6 +140,14 @@ joinManager.joinUser = function(req, res){
       });
     };
 
+    var emailAgree;
+    if(req.body.email_agree == 1){
+  		emailAgree = 1;
+  	}
+  	else{
+  		emailAgree = 0;
+  	}
+
 		var query = "INSERT INTO ?? SET ?";
 
   	var params = [
@@ -149,6 +157,7 @@ joinManager.joinUser = function(req, res){
         nickname: req.body.nickname,
 				password: encryptedPassword,
 				email: req.body.email,
+        email_agree: emailAgree,
         has_studio: 0
 			}
 		];

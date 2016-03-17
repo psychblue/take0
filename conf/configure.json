@@ -11,7 +11,8 @@
     "port": "3306",
     "user": "psychblue",
     "password": "8219kjs",
-    "database": "take0"
+    "database": "take0",
+    "dateStrings": "true"
   },
   "express_session": {
     "name": "TAKE0",

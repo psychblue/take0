@@ -25,6 +25,15 @@ h1 a {
   color: #404040;
 }
 
+hr {
+  width: 800px;
+  height: 1px;
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: none;
+}
+
 .bg-color-darkergrey {
   background-color: #303030;
 }
@@ -71,6 +80,10 @@ h1 a {
 
 .margin-top-190 {
   margin-top: 190px;
+}
+
+.margin-top-15 {
+  margin-top: 15px;
 }
 
 .margin-top-30 {
@@ -208,6 +221,14 @@ h1 a {
   position: relative;
 }
 
+.take-basic-window2 {
+  width: 100%;
+  padding-top: 230px;
+  padding-bottom: 50px;
+  text-align: center;
+  position: relative;
+}
+
 .take-fullsize-window {
   width: 100%;
   height: 100%;
@@ -257,6 +278,7 @@ h1 a {
   position: absolute;
   top: 60px;
   text-align: center;
+  z-index: 90;
 }
 
 .take-navigation ul {
@@ -387,6 +409,10 @@ h1 a {
   appearance: none;
 }
 
+.take-text-input:read-only {
+  background-color: #ddd;
+}
+
 .take-text-shortinput {
   width: 300px;
   height: 40px;
@@ -401,6 +427,11 @@ h1 a {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+}
+
+.take-text-shortinput:disabled {
+  background-color: #ddd;
+  color: #999;
 }
 
 .take-textarea {
@@ -426,6 +457,10 @@ h1 a {
   padding-top: 10px;
   position: relative;
   float: left;
+}
+
+.checkbox-long {
+  width: 100%;
 }
 
 .take-checkbox input[type="checkbox"] {
@@ -1169,7 +1204,7 @@ h1 a {
 }
 
 #footer hr {
-  width: 60%;
+  width: 800px;
   height: 1px;
   margin: 0 auto;
   margin-bottom: 5px;

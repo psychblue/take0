@@ -17,7 +17,7 @@ var confParams = confManager.getParams();
 var router = express.Router();
 
 //Routing Middleware
-router.use(userManager.loadUserData);
+router.use(userManager.loadDefaultTakeParams);
 
 /*
 Routing Logics
@@ -98,10 +98,27 @@ router.get("/withdraw/success",
   joinManager.showWithdrawSuccessPage
 );
 
-// User
+// User Info
 router.get("/user/userinfo",
   userManager.checkLogin,
+  userManager.loadUserInfo,
   userManager.showUserInfoPage
+);
+// User Info Update
+router.post("/user/userinfo/update",
+  userManager.checkLogin,
+  userManager.updateUserInfo
+);
+// Password
+router.get("/user/password",
+  userManager.checkLogin,
+  userManager.showPasswordPage
+);
+// Password Update
+router.post("/user/password/update",
+  userManager.checkLogin,
+  userManager.matchPassword,
+  userManager.updatePassword
 );
 
 // Studio

@@ -12,17 +12,6 @@ var logger = require("../logger/logger")(__filename);
 //Passport Local Strategy Setting
 passport.use(new LocalStrategy(function(username, password, done){
 
-  var query = "SELECT ?? FROM ?? WHERE ?? = ?";
-
-  var params = ["password", "takeUser", "username", username];
-
-  logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
-    params[0],
-    params[1],
-    params[2],
-    params[3]
-  );
-
   var callbackForError = function(err){
     return done(null, false);
   }
@@ -39,6 +28,17 @@ passport.use(new LocalStrategy(function(username, password, done){
       return done(null, false);
     }
   }
+  
+  var query = "SELECT ?? FROM ?? WHERE ?? = ?";
+
+  var params = ["password", "takeUser", "username", username];
+
+  logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
+    params[0],
+    params[1],
+    params[2],
+    params[3]
+  );
 
   mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
 }));
