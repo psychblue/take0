@@ -12,6 +12,7 @@
       (function(){
         $(document).ready(function(){
           var $inputs = $(".take-shortinput-box .take-text-shortinput");
+          HeaderController.setBgColor("#000");
           InputController.setInputFocus($inputs);
           $inputs.keydown(function(keyEvent){
             InputController.onKeydown(keyEvent, $(this), $(".editor-submit-button"));
@@ -100,7 +101,7 @@
       <div class="user-menu-box font-darkgrey">
         <div class="user-menu-arrow"></div>
         <div class="user-menu">
-          <div class="user-menu-item">&nbsp;&nbsp;마이페이지</div><hr>
+          <a href="/user/userinfo"><div class="user-menu-item">&nbsp;&nbsp;마이페이지</div><hr>
           <div id="logout-button" class="user-menu-item">&nbsp;&nbsp;로그아웃</div>
           <a href="/withdraw"><div class="user-menu-item">&nbsp;&nbsp;<%= service %> 탈퇴</div></a>
         </div>

@@ -11,6 +11,7 @@
     <script>
       (function(){
         $(document).ready(function(){
+          HeaderController.setBgColor("#000");
           InputController.setInputFocus($(".take-text-input").add($(".take-text-shortinput")).add($(".take-textarea")));
           CheckboxController.setCheckbox($(".take-checkbox input[type='checkbox']"));
           ButtonController.setButton($(".editor-submit-button"));
@@ -38,7 +39,7 @@
       <div class="user-menu-box font-darkgrey">
         <div class="user-menu-arrow"></div>
         <div class="user-menu">
-          <div class="user-menu-item">&nbsp;&nbsp;마이페이지</div><hr>
+          <a href="/user/userinfo"><div class="user-menu-item">&nbsp;&nbsp;마이페이지</div><hr>
           <div id="logout-button" class="user-menu-item">&nbsp;&nbsp;로그아웃</div>
           <a href="/withdraw"><div class="user-menu-item">&nbsp;&nbsp;<%= service %> 탈퇴</div></a>
         </div>

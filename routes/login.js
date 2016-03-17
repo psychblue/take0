@@ -13,48 +13,6 @@ var httpUtil = require("../util/http-util");
 var loginManager = {};
 
 /*
-Load user data
-*/
-loginManager.loadUserData = function(req, res, next){
-
-	req.__take_params = {};
-
-	req.__take_params.isAuth = req.isAuthenticated();
-	req.__take_params.username = req.__take_params.isAuth ? req.user.username : "";
-
-	var callbackForError = function(err){
-		httpUtil.sendDBErrorPage(req, res, err);
-	};
-
-	var callbackForNoResult = function(){
-		req.__take_params.nickname = "";
-		next();
-	};
-
-	var callbackForSuccess = function(rows, fields){
-		req.__take_params.nickname = rows[0].nickname;
-		req.__take_params.hasStudio = rows[0].has_studio;
-		next();
-	};
-
-	var username = req.__take_params.username;
-
-	var query = "SELECT ?? FROM ?? WHERE ?? = ?";
-
-	var params = [["nickname", "has_studio"], "takeUser", "username", username];
-
-	logger.debug("SQL Query [SELECT %s %s FROM %s WHERE %s=%s]",
-		params[0][0],
-		params[0][1],
-		params[1],
-		params[2],
-		params[3]
-	);
-
-	mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
-};
-
-/*
 Show Login Popup
 */
 loginManager.showLoginPopup = function(req, res){

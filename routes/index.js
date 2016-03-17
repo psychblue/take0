@@ -7,6 +7,7 @@ var express = require("express");
 var loginManager = require("./login");
 var joinManager = require("./join");
 var mainManager = require("./main");
+var userManager = require("./user");
 var photographerManager = require("./photographer");
 var confManager = require("../conf/conf");
 var httpUtil = require("../util/http-util");
@@ -16,7 +17,7 @@ var confParams = confManager.getParams();
 var router = express.Router();
 
 //Routing Middleware
-router.use(loginManager.loadUserData);
+router.use(userManager.loadUserData);
 
 /*
 Routing Logics
@@ -95,6 +96,11 @@ router.get("/withdraw/confirmed",
 // "/withdraw/success"
 router.get("/withdraw/success",
   joinManager.showWithdrawSuccessPage
+);
+
+// User
+router.get("/user/userinfo",
+  userManager.showUserInfoPage
 );
 
 // Studio

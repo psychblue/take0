@@ -135,7 +135,7 @@ var BackgroundController = (function(){
 
 var HeaderController = (function(){
 
-  var $headerLogin,
+  var $header,
   $userButton,
   $userMenuBox;
 
@@ -172,4 +172,13 @@ var HeaderController = (function(){
     });
   };
 
+  var setBgColor = function(color){
+    $header.css({
+      "background-color": color
+    });
+  };
+
+  return {
+    setBgColor
+  }
 }());
