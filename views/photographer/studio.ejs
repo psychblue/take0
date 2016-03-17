@@ -315,6 +315,9 @@
             %>
             <div class="portfolio-item bg-color-lightergrey" for="<%= i %>">
               <div class="take-item-img"></div>
+              <div class="portfolio-subject font-darkgrey font-level-large">
+                <span class="font-darkgrey"><%= portfoliosData[i].portfolio_subject %><span>
+              </div>
               <%
               if(isOwner){
               %>
@@ -370,13 +373,17 @@
         </div>
 
         <div class="portfolio-editor-box bg-color-white font-darkgrey">
-          <div class="editor-title-box font-level-large">포트폴리오를 수정하세요.</div>
+          <div class="editor-title-box font-level-large"></div>
           <form action="/studio/<%= studioData.username %>/portfolio/update" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="portfolio_id"></input>
             <input type="hidden" name="studio_id" value=<%= studioData.studio_id %>></input>
             <input type="hidden" name="photo_list"></input>
             <input type="hidden" name="num_portfolios"></input>
             <input type="hidden" name="del_photo_list"></input>
+            <div class="editor-subject-box">
+              <div class="editor-input-label font-grey">&nbsp;포트폴리오 제목&nbsp;&nbsp;|</div>
+              <input type="text" class="take-text-input font-darkgrey font-level-default border-solid-thin-lightgrey" name="portfolio_subject"></input>
+            </div>
             <div class="editor-main-box">
             </div>
             <div class="editor-button-box">

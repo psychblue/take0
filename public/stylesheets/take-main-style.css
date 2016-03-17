@@ -686,14 +686,26 @@ h1 a {
   position: relative;
 }
 
+#studio-portfolio-window .portfolio-subject {
+  width: 280px;
+  height: 280px;
+  line-height: 280px;
+  text-align: center;
+  position: absolute;
+  display: none;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
 #studio-portfolio-window .portfolio-add-button {
-  width: 299px;
-  height: 299px;
+  width: 298px;
+  height: 298px;
   margin: 10px;
   border: 1px dashed #999;
   float: left;
   font-size: 3em;
-  line-height: 299px;
+  line-height: 298px;
   cursor: pointer;
 }
 
@@ -709,6 +721,11 @@ h1 a {
 	top: 0;
 	left: 0;
 	display: none;
+}
+
+#studio-portfolio-window .editor-subject-box {
+  width: 542px;
+  margin: 0 auto;
 }
 
 #studio-portfolio-window .editor-main-box {

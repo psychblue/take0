@@ -741,7 +741,7 @@ photographerManager.updatePortfolio = function(req, res, next){
 
     var params = [
       "studioPortfolios",
-      {photo_list: newPhotoList.toString(), num_photos: numPhoto},
+      {portfolio_subject: req.body.portfolio_subject, photo_list: newPhotoList.toString(), num_photos: numPhoto},
       "portfolio_id",
       req.body.portfolio_id
     ];
@@ -775,6 +775,7 @@ photographerManager.insertPortfolio = function(req, res, next){
     "studioPortfolios",
     {
       studio_id: req.body.studio_id,
+      portfolio_subject: req.body.portfolio_subject,
       photo_list: req.__take_params.photoList,
       num_photos: req.__take_params.numPhoto
     }

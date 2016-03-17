@@ -694,6 +694,7 @@ var StudioPortfolioController = (function(){
     photoBoxWidth;
 
     var $portfolioEditorBox,
+    $editorTitleBox,
     $editorMainBox,
     $editorPhotoBoxes,
     $delButtons,
@@ -701,6 +702,7 @@ var StudioPortfolioController = (function(){
     $deleteButton,
     $cancelButton,
     $portfolioIdInput,
+    $portfolioSubjectInput,
     $photoListInput,
     $numPortfoliosInput,
     $delPhotoListInput;
@@ -721,11 +723,13 @@ var StudioPortfolioController = (function(){
 
     function loadElements(){
       $portfolioEditorBox = $portfolioBox.siblings(".portfolio-editor-box");
+      $editorTitleBox = $portfolioEditorBox.find(".editor-title-box");
       $editorMainBox = $portfolioEditorBox.find(".editor-main-box");
       $submitButton = $portfolioEditorBox.find(".editor-submit-button");
       $deleteButton = $portfolioEditorBox.find(".editor-delete-button");
       $cancelButton = $portfolioEditorBox.find(".editor-cancel-button");
       $portfolioIdInput = $portfolioEditorBox.find("input[name='portfolio_id']");
+      $portfolioSubjectInput = $portfolioEditorBox.find("input[name='portfolio_subject']");
       $photoListInput = $portfolioEditorBox.find("input[name='photo_list']");
       $numPortfoliosInput = $portfolioEditorBox.find("input[name='num_portfolios']");
       $delPhotoListInput = $portfolioEditorBox.find("input[name='del_photo_list']");
@@ -940,6 +944,13 @@ var StudioPortfolioController = (function(){
     function setEditor(){
       $editorMainBox.empty();
 
+      if(portfolioData.portfolio_id){
+        $editorTitleBox.text("포트폴리오를 수정하세요.");
+      }
+      else{
+        $editorTitleBox.text("포트폴리오를 추가하세요.");
+      }
+
       for(var i = 0; i < photoList.length; i++){
         var editorPhotoBox = $("<div></div>")
         .addClass("editor-photo-box")
@@ -959,6 +970,7 @@ var StudioPortfolioController = (function(){
 
       if(portfolioData.portfolio_id){
         $portfolioIdInput.val(portfolioData.portfolio_id);
+        $portfolioSubjectInput.val(portfolioData.portfolio_subject);
       }
       else{
         $portfolioIdInput.val("new");
@@ -1182,7 +1194,7 @@ var StudioPortfolioController = (function(){
          "left": offset
        }, 200);
 
-       $viewerCounter.text(( viewerThumbIndex + 1 ) + " / " + photoList.length);
+       setCounter();
      };
 
      function getPhotoList(){
@@ -1240,10 +1252,10 @@ var StudioPortfolioController = (function(){
 
      function setCounter(){
        if(photoList.length > 0){
-         $viewerCounter.text(( viewerThumbIndex + 1 ) + " / " + photoList.length);
+         $viewerCounter.text(portfolioData.portfolio_subject + " : " + ( viewerThumbIndex + 1 ) + " / " + photoList.length);
        }
        else{
-         $viewerCounter.text("0 / " + photoList.length);
+         $viewerCounter.text(portfolioData.portfolio_subject + " : " + "0 / " + photoList.length);
        }
      };
 
@@ -1344,9 +1356,11 @@ var StudioPortfolioController = (function(){
   function bindEvents(){
     $portfolioItems.hover(function(){
       BackgroundController.onMouseenter($(this).children(".take-item-img"));
+      $(this).children(".portfolio-subject").fadeIn("fast");
     },
     function(){
       BackgroundController.onMouseleave($(this).children(".take-item-img"));
+      $(this).children(".portfolio-subject").fadeOut("fast");
     });
 
     $portfolioItems.click(function(){
