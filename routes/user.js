@@ -51,6 +51,20 @@ userManager.loadUserData = function(req, res, next){
 	mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
 };
 
+userManager.checkLogin = function(req, res, next){
+
+  if(req.__take_params.isAuth){
+    next();
+  }
+  else {
+    res.render("login/login-page", {
+      title: confParams.html.title,
+      service: confParams.html.service_name,
+      redirectUrl: "/user/userinfo"
+    });
+  }
+};
+
 userManager.showUserInfoPage = function(req, res){
   res.render("user/userinfo", {
     title: confParams.html.title,

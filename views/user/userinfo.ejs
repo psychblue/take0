@@ -9,8 +9,13 @@
     <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
     <script type="text/javascript" src="/javascripts/take-util.js"></script>
     <script type="text/javascript" src="/javascripts/take-login.js"></script>
-    <script type="text/javascript" src="/javascripts/take-search-box.js"></script>
-    <script type="text/javascript" src="/javascripts/take-list-slider.js"></script>
+    <script type="text/javascript">
+      (function(){
+        $(document).ready(function(){
+
+        });
+      }());
+    </script>
   </head>
 
   <body>
@@ -70,8 +75,37 @@
 
     </div>
 
-    <div class="take-main-window">
+      <nav class="take-navigation bg-color-darkgrey font-lightgrey">
+        <ul>
+          <li class="nav-item">
+            <a href="/user/userinfo">
+              <img src="/images/user/userinfo.png"></img><span class="selected">회원정보 조회/수정</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/user/userinfo">
+              <img src="/images/user/cart.png"></img><span>예약정보</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/user/userinfo">
+              <img src="/images/user/likes.png"></img><span>찜 리스트</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/user/userinfo">
+              <img src="/images/user/gallery.png"></img><span>갤러리</span>
+            </a>
+          </li>
+      </ul>
+      </nav>
 
+
+    <div class="take-main-window bg-color-lightergrey">
+
+      <div class="take-basic-window">
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+      </div>
 
     </div>
 

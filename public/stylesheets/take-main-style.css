@@ -250,6 +250,47 @@ h1 a {
   line-height: 1.5em;
 }
 
+.take-navigation {
+  width: 100%;
+  height: 100px;
+  line-height: 100px;
+  position: absolute;
+  top: 60px;
+  text-align: center;
+}
+
+.take-navigation ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+.take-navigation li {
+  margin-left: 25px;
+  margin-right: 25px;
+  display: inline;
+}
+
+.take-navigation li img {
+  vertical-align: -6px;
+}
+
+.take-navigation li a {
+  color: #ccc;
+}
+
+.take-navigation span {
+  margin-left: 7px;
+  padding-left: 3px;
+  padding-right: 3px;
+  padding-bottom: 3px;
+}
+
+.take-navigation .selected {
+  font-size: 1.1em;
+  border-bottom: 2px solid #3db7cc;
+}
+
 .take-button-mint {
   width: 130px;
   height: 40px;

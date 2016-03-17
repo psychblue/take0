@@ -100,6 +100,7 @@ router.get("/withdraw/success",
 
 // User
 router.get("/user/userinfo",
+  userManager.checkLogin,
   userManager.showUserInfoPage
 );
 
