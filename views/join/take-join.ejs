@@ -11,7 +11,6 @@
     <script>
       (function(){
         $(document).ready(function(){
-          HeaderController.setBgColor("#000");
           InputController.setInputFocus($(".take-text-shortinput"));
           $(".take-text-shortinput").keydown(function(keyEvent){
             InputController.onKeydown(keyEvent, $(this), $(".editor-submit-button"));
