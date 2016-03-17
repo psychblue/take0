@@ -156,8 +156,15 @@ var HeaderController = (function(){
   function bindEvents(){
     $userButton.hover(function(){
       $userMenuBox.fadeIn(100);
-      $userMenuBox.unbind().mouseleave(function(){
-        $userMenuBox.fadeOut(100);
+      $userMenuBox.unbind().mouseleave(function(e){
+        var pointerX = $(window).width() - e.pageX;
+        var pointerY = e.pageY;
+        var offsetX = $(window).width() - $userButton.offset().left;
+        var offsetY = $(this).offset().top;
+
+        if(pointerY > offsetY || (pointerY <= offsetY && (pointerX > offsetX || pointerX < 30))){
+          $userMenuBox.fadeOut(100);
+        }
       });
     },
     function(e){
