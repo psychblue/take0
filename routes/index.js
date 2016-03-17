@@ -107,13 +107,11 @@ router.get("/studio/:photographer",
 // Studio Makepage
 router.get("/makestudio",
   photographerManager.checkLogin,
-  photographerManager.hasStudio,
   photographerManager.showMakeStudioPage
 );
 // Studio Add
 router.post("/addstudio",
   photographerManager.checkLogin,
-  photographerManager.hasStudio,
   photographerManager.insertStudio,
   photographerManager.updateHasStudio,
   photographerManager.addServiceCategory

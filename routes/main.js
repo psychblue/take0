@@ -18,7 +18,9 @@ mainManager.showMainPage = function(req, res){
     title: confParams.html.title,
     service: confParams.html.service_name,
     isAuth: req.__take_params.isAuth,
-    name: req.__take_params.nickname
+    hasStudio: req.__take_params.hasStudio,
+    username: req.__take_params.username,
+    nickname: req.__take_params.nickname
   });
 };
 

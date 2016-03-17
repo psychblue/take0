@@ -33,6 +33,7 @@ loginManager.loadUserData = function(req, res, next){
 
 	var callbackForSuccess = function(rows, fields){
 		req.__take_params.nickname = rows[0].nickname;
+		req.__take_params.hasStudio = rows[0].has_studio;
 		next();
 	};
 
@@ -40,10 +41,11 @@ loginManager.loadUserData = function(req, res, next){
 
 	var query = "SELECT ?? FROM ?? WHERE ?? = ?";
 
-	var params = ["nickname", "takeUser", "username", username];
+	var params = [["nickname", "has_studio"], "takeUser", "username", username];
 
-	logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
-		params[0],
+	logger.debug("SQL Query [SELECT %s %s FROM %s WHERE %s=%s]",
+		params[0][0],
+		params[0][1],
 		params[1],
 		params[2],
 		params[3]

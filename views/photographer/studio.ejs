@@ -20,10 +20,21 @@
 
       <div id="header-title" class="float-left"><a href="/"><%= service %></a></div>
       <div id="header-login" class="float-right">
+        <%
+        if(!hasStudio){
+        %>
         <a href="/makestudio">
           <span>스튜디오 만들기</span>
         </a>
         <%
+        }
+        else{
+        %>
+        <a href="/studio/<%= username %>">
+          <span>스튜디오 바로가기</span>
+        </a>
+        <%
+        }
         if(!isAuth){
         %>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -35,7 +46,7 @@
         %>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <span id="user-button" class="cursor-pointer">
-          <img class="vertical-middle-aligned" src="/images/common/username.png"></img>&nbsp;&nbsp;<%= name %>
+          <img class="vertical-middle-aligned" src="/images/common/username.png"></img>&nbsp;&nbsp;<%= nickname %>
         </span>
         <%
         }

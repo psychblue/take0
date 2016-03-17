@@ -52,7 +52,8 @@ httpUtil.sendInfoPage = function(req, res, options){
   options.title = confParams.html.title;
   options.service = confParams.html.service_name;
   options.isAuth = req.__take_params.isAuth;
-  options.name = req.__take_params.nickname;
+  options.hasStudio = req.__take_params.hasStudio;
+  options.nickname = req.__take_params.nickname;
 
   if(!options.subText){
     options.subText = "";
@@ -73,7 +74,8 @@ httpUtil.sendInfo2Page = function(req, res, options){
   options.title = confParams.html.title;
   options.service = confParams.html.service_name;
   options.isAuth = req.__take_params.isAuth;
-  options.name = req.__take_params.nickname;
+  options.hasStudio = req.__take_params.hasStudio;
+  options.nickname = req.__take_params.nickname;
 
   if(!options.subText){
     options.subText = "";

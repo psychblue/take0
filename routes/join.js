@@ -53,7 +53,9 @@ joinManager.showTakeJoinPage = function(req, res){
 		res.render("join/take-join", {
 			title: confParams.html.title,
 			service: confParams.html.service_name,
-      isAuth: req.__take_params.isAuth
+      isAuth: req.__take_params.isAuth,
+      hasStudio: req.__take_params.hasStudio,
+      username: req.__take_params.username
 		});
 	}
 };
@@ -74,6 +76,7 @@ joinManager.showKakaoJoinPage = function(req, res){
 			title: confParams.html.title,
 			service: confParams.html.service_name,
       isAuth: req.__take_params.isAuth,
+      hasStudio: req.__take_params.hasStudio,
 			username: req.query.username,
       nickname: req.query.nickname,
     });
