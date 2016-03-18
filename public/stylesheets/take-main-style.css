@@ -1075,7 +1075,6 @@ hr {
 
 #header .user-menu-box {
   width: 200px;
-  height: 270px;
   display: none;
   position: absolute;
   top: 40px;
@@ -1095,7 +1094,6 @@ hr {
 
 #header .user-menu {
   width: 180px;
-  height: 230px;
   padding-top: 20px;
   padding-left: 10px;
   padding-bottom: 20px;
