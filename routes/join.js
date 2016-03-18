@@ -148,6 +148,14 @@ joinManager.joinUser = function(req, res){
   		emailAgree = 0;
   	}
 
+    var privateAgree;
+    if(req.body.private_agree == 1){
+  		privateAgree = 1;
+  	}
+  	else{
+  		privateAgree = 0;
+  	}
+
 		var query = "INSERT INTO ?? SET ?";
 
   	var params = [
@@ -158,6 +166,7 @@ joinManager.joinUser = function(req, res){
 				password: encryptedPassword,
 				email: req.body.email,
         email_agree: emailAgree,
+        private_agree: privateAgree,
         has_studio: 0
 			}
 		];

@@ -148,8 +148,13 @@
             if(userInfo.user_from == 0){
             %>
             <a href="/user/password">
-              <div class="font-level-small font-grey float-right margin-top-15">
-                <img src="/images/user/password.png"></img> 비밀번호변경
+              <div class="font-level-small font-grey float-right margin-top-20">
+                <img class="vertical-smallmiddle-aligned" src="/images/user/password.png"></img> 비밀번호변경
+              </div>
+            </a>
+            <a href="/withdraw">
+              <div class="font-level-small font-grey float-right margin-top-20">
+                <img class="vertical-smallmiddle-aligned" src="/images/user/withdraw.png"></img> 회원탈퇴&nbsp;&nbsp;
               </div>
             </a>
             <div class="float-clear"></div>
@@ -158,6 +163,11 @@
             }
             else if(userInfo.user_from == 1){
             %>
+            <a href="/withdraw">
+              <div class="font-level-small font-grey float-right margin-top-20">
+                <img class="vertical-smallmiddle-aligned" src="/images/user/withdraw.png"></img> 회원탈퇴
+              </div>
+            </a>
             <div class="float-clear"></div>
             <input disabled="disabled" type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" value="카카오 아이디로 가입하셨습니다."></input>
             <%
@@ -186,7 +196,7 @@
               <%
               }
               %>
-                <span class="font-level-small">&nbsp;&nbsp;<%= service %>의 홍보/알림 메일 수신에 동의합니다.</span>
+                <span class="font-level-small">&nbsp;&nbsp;<%= service %>의 홍보/알림 메일 수신에 동의합니다. (선택)</span>
                 <div class="float-clear"></div>
               </label>
             </div>

@@ -31,6 +31,11 @@
               }
             });
 
+            if(!$("input[name='private_agree']").is(":checked")){
+              isFieldChecked = 0;
+              $("#join-error").text("개인정보 수집/이용에 동의해주세요.").addClass("margin-top-30 margin-bottom-30 font-red font-bold");
+            }
+
             if(isFieldChecked == 1){
               $("input[name='token']").val(Kakao.Auth.getAccessToken());
               $.ajax({
@@ -118,6 +123,7 @@
       <div class="take-basic-window">
         <h1>TAKE 가입하기</h1>
         <span class="font-grey">회원님의 소중한 정보를 입력해 주세요.</span>
+        <hr class="bg-color-lightgrey">
         <form id="join-form">
           <div class="take-shortinput-box">
             <div class="editor-input-label font-grey">&nbsp;닉네임&nbsp;&nbsp;|</div>
@@ -128,7 +134,25 @@
               <input type="checkbox" id="email-agree" class="take-checkbox" name="email_agree" value="1"></input>
               <label class="font-grey" for="email-agree">
                 <div class="box"></div>
-                <span class="font-level-small">&nbsp;&nbsp;<%= service %>의 홍보/알림 메일 수신에 동의합니다.</span>
+                <span class="font-level-small">&nbsp;&nbsp;<%= service %>의 홍보/알림 메일 수신에 동의합니다. (선택)</span>
+                <div class="float-clear"></div>
+              </label>
+            </div>
+            <div class="float-clear"></div>
+            <div class="editor-input-label font-grey">&nbsp;개인정보 수집/이용 약관&nbsp;&nbsp;|</div>
+            <div class="take-shorttextbox font-grey border-solid-thin-lightgrey">
+              <span class="font-bold">개인정보 수집목적 및 이용목적:</span><br>
+              이용자 관심 등에 기반한 맞춤형 서비스 제공<br><br>
+              <span class="font-bold">수집하는 개인정보 항목:</span><br>
+              광고ID, 이용자 단말기 내 설치된 어플리케이션 정보(앱 설치·실행시각 포함)<br><br>
+              <span class="font-bold">개인정보 보관기간 및 이용기간:</span><br>
+              수집일로부터 2년
+            </div>
+            <div class="checkbox-long take-checkbox">
+              <input type="checkbox" id="private-agree" class="take-checkbox" name="private_agree" value="1"></input>
+              <label class="font-grey" for="private-agree">
+                <div class="box"></div>
+                <span class="font-level-small">&nbsp;&nbsp;개인정보 수집/이용에 동의합니다. (필수)</span>
                 <div class="float-clear"></div>
               </label>
             </div>
