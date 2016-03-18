@@ -252,4 +252,194 @@ userManager.updatePassword = function(req, res, next){
 	}
 };
 
+userManager.loadLikesProductIds = function(req, res, next){
+
+	var callbackForError = function(err){
+    httpUtil.sendDBErrorPage(req, res, err);
+  }
+
+  var callbackForNoResult = function(){
+    req.__take_params.likeProductsData = [];
+		next();
+  }
+
+  var callbackForSuccess = function(rows, fields){
+    req.__take_params.likeProductsData = rows;
+		next();
+  }
+
+  var query = "SELECT ?? FROM ?? WHERE ?? = ?";
+
+  var params = ["product_id", "takeUserLikeProducts", "username", req.__take_params.username];
+
+  logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
+    params[0],
+    params[1],
+    params[2],
+    params[3]
+  );
+
+  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+};
+
+userManager.loadProductData = function(req, res, next){
+
+	var maxIterator = req.__take_params.likeProductsData.length;
+
+	var loadProductData = function(iterator){
+
+		var callbackForError = function(err){
+	    httpUtil.sendDBErrorPage(req, res, err);
+	  }
+
+	  var callbackForNoResult = function(){
+	    httpUtil.sendNoDataFromDBPage(req, res);
+	  }
+
+	  var callbackForSuccess = function(rows, fields){
+	    req.__take_params.likeProductsData[iterator] = rows[0];
+			if(iterator < maxIterator - 1){
+				loadProductData(iterator + 1);
+			}
+			else{
+				next();
+			}
+	  }
+
+		var query = "SELECT ?? FROM ?? INNER JOIN ?? WHERE ?? = ? AND ?? = ??"
+
+		var params = [
+			[
+				"studioProducts.product_name",
+				"studioProducts.product_price",
+				"studioProducts.product_desc",
+				"studio.studio_name",
+				"studio.username"
+			],
+			"studioProducts",
+			"studio",
+			"studioProducts.product_id",
+			req.__take_params.likeProductsData[iterator].product_id,
+			"studioProducts.studio_id",
+			"studio.studio_id"
+		];
+
+	  logger.debug("SQL Query [SELECT %s %s %s %s %s FROM %s INNER JOIN %s WHERE %s=%s AND %s=%s]",
+	    params[0][0],
+			params[0][1],
+			params[0][2],
+			params[0][3],
+			params[0][4],
+	    params[1],
+	    params[2],
+			params[3],
+			params[4],
+			params[5],
+			params[6]
+	  );
+
+	  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+	};
+
+	if(maxIterator > 0){
+			loadProductData(0);
+	}
+};
+
+userManager.showLikesListPage = function(req, res){
+
+  res.render("user/likeslist", {
+    title: confParams.html.title,
+    service: confParams.html.service_name,
+    isAuth: req.__take_params.isAuth,
+    hasStudio: req.__take_params.hasStudio,
+    username: req.__take_params.username,
+    nickname: req.__take_params.nickname,
+		likeProductsData: req.__take_params.likeProductsData
+  });
+};
+
+userManager.checkDupLikes = function(req, res, next){
+
+	if(!req.__take_params.isAuth){
+    res.send({
+			"result": "fail",
+			"text": "로그인이 필요합니다."
+		});
+
+		return;
+  }
+
+	var callbackForError = function(err){
+    httpUtil.sendDBErrorPage(req, res, err);
+  }
+
+  var callbackForNoResult = function(){
+    next();
+  }
+
+  var callbackForSuccess = function(rows, fields){
+    for(var productIndex = 0; productIndex < rows.length; productIndex++){
+			if(rows[productIndex].product_id == req.body.product_id){
+				res.send({
+					"result": "fail",
+					"text": "이미 찜하신 상품입니다."
+				});
+
+				return;
+			}
+		}
+		next();
+  }
+
+	var query = "SELECT ?? FROM ?? WHERE ?? = ?"
+
+	var params = [
+		"product_id",
+		"takeUserLikeProducts",
+		"username",
+		req.__take_params.username
+	];
+
+	logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
+    params[0],
+    params[1],
+    params[2],
+    params[3]
+  );
+
+	mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+};
+
+userManager.insertLikesList = function(req, res){
+
+	var callbackForError = function(err){
+		res.send({
+			"result": "fail",
+			"text": err
+		});
+	};
+
+	var callbackForSuccess = function(result){
+		res.send({"result": "success"});
+	};
+
+	var query = "INSERT INTO ?? SET ?";
+
+	var params = [
+		"takeUserLikeProducts",
+		{
+			username: req.__take_params.username,
+			product_id: req.body.product_id
+		}
+	];
+
+	logger.debug("SQL Query [INSERT INTO %s SET %s]",
+		params[0],
+		JSON.stringify(params[1])
+	);
+
+	mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
+};
+
 module.exports = userManager;

@@ -120,6 +120,18 @@ router.post("/user/password/update",
   userManager.matchPassword,
   userManager.updatePassword
 );
+// Likes List Update
+router.get("/user/likeslist",
+  userManager.checkLogin,
+  userManager.loadLikesProductIds,
+  userManager.loadProductData,
+  userManager.showLikesListPage
+);
+// Likes List Update
+router.post("/user/likeslist/add",
+  userManager.checkDupLikes,
+  userManager.insertLikesList
+);
 
 // Studio
 router.get("/studio/:photographer",

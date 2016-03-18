@@ -12,49 +12,7 @@
     <script type="text/javascript">
       (function(){
         $(document).ready(function(){
-          var $inputs = $(".take-shortinput-box input[type='password']");
-
-          InputController.setInputFocus($("input[type='password']"));
-          ButtonController.setButton($(".editor-submit-button"));
-
-          $(".editor-submit-button").click(function(){
-            var isFieldChecked = 1;
-
-            $inputs.each(function(){
-              if($(this).val() == ""){
-                $(this).addClass("bg-color-pink");
-                isFieldChecked = 0;
-              }
-            });
-
-            if($("input[name='password_new']").val() != $("input[name='password_new_again']").val()){
-              $("#userinfo-error").text("비밀번호가 일치하지 않습니다.")
-              .addClass("margin-top-30 margin-bottom-30 font-red font-bold");
-              isFieldChecked = 0;
-            }
-
-            if(isFieldChecked == 1){
-              $.ajax({
-                type: "POST",
-                url: "/user/password/update",
-                data: $("#userinfo-form").serialize(),
-                success: function(data){
-                  if(data.result == "success"){
-                    $("#userinfo-error").text("비밀번호가 변경되었습니다.")
-                    .removeClass("font-red")
-                    .addClass("margin-top-30 margin-bottom-30 font-darkgrey font-bold");
-                    $inputs.val("");
-                  }
-                  else if(data.result == "fail"){
-                    $("#userinfo-error").text(data.text).addClass("margin-top-30 margin-bottom-30 font-red font-bold");
-                  }
-                },
-                error: function(xhr, option, error){
-                  alert(error);
-                }
-              });
-            }
-          });
+          ButtonController.setButton($(".product-reserve-button"));
         });
       }());
     </script>
@@ -121,7 +79,7 @@
         <ul>
           <li class="nav-item">
             <a href="/user/userinfo">
-              <img src="/images/user/userinfo.png"></img><span class="selected">회원정보 조회/수정</span>
+              <img src="/images/user/userinfo.png"></img><span>회원정보 조회/수정</span>
             </a>
           </li>
           <li class="nav-item">
@@ -131,7 +89,7 @@
           </li>
           <li class="nav-item">
             <a href="/user/likeslist">
-              <img src="/images/user/likes.png"></img><span>찜 리스트</span>
+              <img src="/images/user/likes.png"></img><span class="selected">찜 리스트</span>
             </a>
           </li>
           <li class="nav-item">
@@ -146,25 +104,46 @@
     <div class="take-main-window bg-color-lightergrey">
 
       <div class="take-basic-window2">
-        <span class="font-grey">새로운 비밀번호를 입력해주세요.</span>
-        <hr class="bg-color-lightgrey">
-        <form id="userinfo-form">
-          <div class="take-shortinput-box">
-            <div class="editor-input-label font-grey">&nbsp;기존 비밀번호&nbsp;&nbsp;|</div>
-            <input type="password" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="password_old"></input>
-            <div class="editor-input-label font-grey">&nbsp;새로운 비밀번호&nbsp;&nbsp;|</div>
-            <input type="password" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="password_new"></input>
-            <div class="editor-input-label font-grey">&nbsp;비밀번호 확인&nbsp;&nbsp;|</div>
-            <input type="password" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="password_new_again"></input>
+        <h1>찜한 스튜디오들</h1>
+        <br><br>
+        <div class="take-likes-box">
+        </div>
+
+        <h1>찜한 상품들</h1>
+        <br><br>
+        <div class="take-likes-box">
+          <%
+          for(var i = 0; i < likeProductsData.length; i++){
+          %>
+          <div class="take-likes-item font-grey">
+            <div class="likes-col name">
+              <span class="font-darkgrey font-level-large">
+                <%= likeProductsData[i].product_name %>
+              </span>
+              <br>
+              <a href="/studio/<%= likeProductsData[i].username %>">
+                <span class="font-grey font-level-default">
+                  <%= likeProductsData[i].studio_name %>
+                </span>
+              </a>
+            </div>
+            <div class="likes-col price font-grey font-level-default">
+              \<%= likeProductsData[i].product_price.toString().split(/(?=(?:\d{3})+(?:\.|$))/g).join(',') %>
+            </div>
+            <div class="likes-col desc">
+              <%- likeProductsData[i].product_desc %>
+            </div>
+            <div class="likes-col button">
+              <button type="button" class="product-reserve-button take-button-mint">
+                <img src="/images/studio/reserve.png"></img><span>&nbsp;&nbsp;예약하기</span>
+              </button>
+            </div>
+            <div class="float-clear"></div>
           </div>
-          <div id="userinfo-error">
-          </div>
-          <div class="editor-button-box">
-            <button type="button" class="editor-submit-button take-button-mint">
-              <img src="/images/studio/check.png"></img><span>&nbsp;수정하기</span>
-            </button>
-          </div>
-        </form>
+          <%
+          }
+          %>
+        </div>
       </div>
 
     </div>

@@ -275,6 +275,41 @@ hr {
   line-height: 1.5em;
 }
 
+.take-likes-box {
+  padding-bottom: 100px;
+}
+
+.take-likes-item {
+  width: 1000px;
+  margin: 0 auto;
+  border-top: 1px solid #ccc;
+}
+
+.take-likes-item .likes-col {
+  padding: 20px;
+  text-align: left;
+  float: left;
+}
+
+.take-likes-item .name {
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.take-likes-item .price {
+  width: 130px;
+}
+
+.take-likes-item .desc {
+  width: 380px;
+}
+
+.take-likes-item .button {
+  width: 130px;
+}
+
 .take-navigation {
   width: 100%;
   height: 100px;
@@ -413,7 +448,7 @@ hr {
   appearance: none;
 }
 
-.take-text-input:read-only {
+.take-text-input:disabled {
   background-color: #ddd;
 }
 
@@ -556,6 +591,9 @@ hr {
   bottom: 10px;
   left: 10px;
   text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   background-color: rgba(255, 255, 255, 0.7);
 }
 
@@ -571,6 +609,14 @@ hr {
   line-height: 100px}
 
 .editor-input-label {
+  width: 150px;
+  height: 30px;
+  margin-top: 10px;
+  line-height: 30px;
+  text-align: left;
+}
+
+.editor-input-longlabel {
   width: 200px;
   height: 30px;
   margin-top: 10px;

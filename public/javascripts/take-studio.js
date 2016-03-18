@@ -400,7 +400,8 @@ var StudioProductController = (function(){
   var numProducts = 0;
 
   var $studioProductWindow,
-  $productReserveButtons;
+  $productReserveButtons,
+  $productLikeButtons;
 
   /***************************************************
    * Product Editor
@@ -635,11 +636,39 @@ var StudioProductController = (function(){
   function loadElements(){
     $studioProductWindow = $("#studio-product-window");
     $productReserveButtons = $studioProductWindow.find(".product-reserve-button");
+    $productLikeButtons = $studioProductWindow.find(".product-like-button");
   };
 
   function bindEvents(){
     $productReserveButtons.each(function(){
       ButtonController.setButton($(this));
+    });
+
+    $productLikeButtons.each(function(){
+      ButtonController.setButton($(this), addToLikesList, $(this));
+    });
+  };
+
+  function addToLikesList(targetButton){
+    var productId = Number(targetButton.attr("for"));
+
+    $.ajax({
+      type: "POST",
+      url: "/user/likeslist/add",
+      data: {
+        product_id: productId
+      },
+      success: function(data){
+        if(data.result == "success"){
+          alert("선택하신 상품이 회원님의 찜 리스트에 추가되었습니다.");
+        }
+        else if(data.result == "fail"){
+          alert(data.text);
+        }
+      },
+      error: function(xhr, option, error){
+        alert(error);
+      }
     });
   };
 
