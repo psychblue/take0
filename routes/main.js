@@ -43,23 +43,27 @@ mainManager.showTodayStudioList = function(req, res){
     });
   };
 
-  var query = "SELECT ?? FROM ?? INNER JOIN ?? WHERE ?? = ?? LIMIT ?,?";
+  var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ?? INNER JOIN ?? ON ?? = ?? LIMIT ?,?";
 
   var params = [
     [
       "studio.username",
       "studio.studio_name",
-      "studio.slider_photo_list"
+      "studio.slider_photo_list",
+      "takeUser.nickname"
     ],
     "studio",
     "todayStudioList",
     "studio.username",
     "todayStudioList.username",
+    "takeUser",
+    "studio.username",
+    "takeUser.username",
     Number(req.body.start),
     Number(req.body.end)
   ];
 
-  logger.debug("SQL Query [SELECT %s, %s, %s FROM %s INNER JOIN %s WHERE %s=%s LIMIT %d,%d]",
+  logger.debug("SQL Query [SELECT %s, %s, %s FROM %s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s LIMIT %d,%d]",
     params[0][0],
     params[0][1],
     params[0][2],

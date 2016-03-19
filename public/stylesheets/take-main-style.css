@@ -282,6 +282,8 @@ hr {
 .take-likes-box .box {
   width: 1000px;
   margin: 0 auto;
+  padding-top: 10px;
+  border-top: 1px solid #ccc;
 }
 
 .take-likes-box .box .likes-studio {

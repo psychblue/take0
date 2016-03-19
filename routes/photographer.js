@@ -51,7 +51,6 @@ photographerManager.loadStudio = function(req, res, next){
         isOwner: req.__take_params.isOwner,
         username: req.__take_params.username,
         nickname: req.__take_params.nickname,
-        photographerName: req.params.photographer,
         studioData: rows[0]
       });
     }
@@ -61,14 +60,24 @@ photographerManager.loadStudio = function(req, res, next){
     }
   };
 
-  var query = "SELECT * FROM ?? WHERE ?? = ?";
+  var query = "SELECT * FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ?";
 
-  var params = ["studio", "username", req.params.photographer];
+  var params = [
+    "studio",
+    "takeUser",
+    "studio.username",
+    req.params.photographer,
+    "takeUser.username",
+    req.params.photographer
+  ];
 
-  logger.debug("SQL Query [SELECT * FROM %s WHERE %s=%s]",
+  logger.debug("SQL Query [SELECT * FROM %s INNER JOIN %s ON %s=%s AND %s=%s]",
     params[0],
     params[1],
-    params[2]
+    params[2],
+    params[3],
+    params[4],
+    params[5]
   );
 
   mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
@@ -95,7 +104,6 @@ photographerManager.loadProducts = function(req, res, next){
         isOwner: req.__take_params.isOwner,
         username: req.__take_params.username,
         nickname: req.__take_params.nickname,
-        photographerName: req.params.photographer,
         studioData: req.__take_params.studioData,
         productsData: rows
       });
@@ -142,7 +150,6 @@ photographerManager.loadPortfolios = function(req, res){
       isOwner: req.__take_params.isOwner,
       username: req.__take_params.username,
       nickname: req.__take_params.nickname,
-      photographerName: req.params.photographer,
       studioData: req.__take_params.studioData,
       productsData: req.__take_params.productsData,
       portfoliosData: rows

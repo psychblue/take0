@@ -327,7 +327,7 @@ userManager.loadStudioData = function(req, res, next){
 	  };
 
 	  var callbackForSuccess = function(rows, fields){
-			rows[0].slider_photo_list = JSON.parse(rows[0].slider_photo_list)["1"]; 
+			rows[0].slider_photo_list = JSON.parse(rows[0].slider_photo_list)["1"];
 	    req.__take_params.likeStudiosData[iterator] = rows[0];
 
 			if(iterator < maxIterator - 1){
@@ -338,26 +338,34 @@ userManager.loadStudioData = function(req, res, next){
 			}
 	  };
 
-		var query = "SELECT ?? FROM ?? WHERE ?? = ?";
+		var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ??";
 
 		var params = [
 			[
 				"studio.studio_name",
 				"studio.username",
-				"studio.slider_photo_list"
+				"studio.slider_photo_list",
+				"takeUser.nickname"
 			],
 			"studio",
-			"studio_id",
-			req.__take_params.likeStudiosData[iterator].studio_id
+			"takeUser",
+			"studio.studio_id",
+			req.__take_params.likeStudiosData[iterator].studio_id,
+			"studio.username",
+			"takeUser.username"
 		];
 
-	  logger.debug("SQL Query [SELECT %s %s %s FROM %s WHERE %s=%s]",
+	  logger.debug("SQL Query [SELECT %s %s %s %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s]",
 	    params[0][0],
 			params[0][1],
 			params[0][2],
+			params[0][3],
 	    params[1],
 	    params[2],
-			params[3]
+			params[3],
+			params[4],
+			params[5],
+			params[6]
 	  );
 
 	  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
@@ -392,7 +400,7 @@ userManager.loadProductData = function(req, res, next){
 			}
 	  }
 
-		var query = "SELECT ?? FROM ?? INNER JOIN ?? WHERE ?? = ? AND ?? = ??"
+		var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ??"
 
 		var params = [
 			[
@@ -410,7 +418,7 @@ userManager.loadProductData = function(req, res, next){
 			"studio.studio_id"
 		];
 
-	  logger.debug("SQL Query [SELECT %s %s %s %s %s FROM %s INNER JOIN %s WHERE %s=%s AND %s=%s]",
+	  logger.debug("SQL Query [SELECT %s %s %s %s %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s]",
 	    params[0][0],
 			params[0][1],
 			params[0][2],

@@ -263,7 +263,7 @@ joinManager.deleteUserFiles = function(req, res, next){
     next();
   };
 
-  var query = "SELECT ?? FROM ?? INNER JOIN ?? WHERE ?? = ? AND ?? = ??";
+  var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ??";
 
   var params = [
     [
@@ -278,7 +278,7 @@ joinManager.deleteUserFiles = function(req, res, next){
     "studioPortfolios.studio_id"
   ];
 
-  logger.debug("SQL Query [SELECT %s, %s FROM %s INNER JOIN %s WHERE %s=%s AND %s=%s]",
+  logger.debug("SQL Query [SELECT %s, %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s]",
     params[0][0],
     params[0][1],
     params[1],
