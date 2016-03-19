@@ -108,6 +108,26 @@
         <h1>찜한 스튜디오들</h1>
         <br><br>
         <div class="take-likes-box">
+          <div class="box">
+            <%
+            for(var i = 0; i < likeStudiosData.length; i++){
+            %>
+            <a href="/studio/<%= likeStudiosData[i].username %>">
+              <div class="likes-studio font-grey">
+                <div class="image bg-color-lightgrey" style="background-image: url('<%= likeStudiosData[i].slider_photo_list %>')">
+                </div>
+                <div class="desc bg-color-white">
+                  <span class="font-darkgrey font-level-large"><%= likeStudiosData[i].studio_name %></span>
+                  <br>
+                  <span class="font-grey"><%= likeStudiosData[i].username %></span>
+                </div>
+              </div>
+            </a>
+            <%
+            }
+            %>
+            <div class="float-clear"></div>
+          </div>
         </div>
 
         <h1>찜한 상품들</h1>
@@ -116,7 +136,7 @@
           <%
           for(var i = 0; i < likeProductsData.length; i++){
           %>
-          <div class="take-likes-item font-grey">
+          <div class="likes-product font-grey">
             <div class="likes-col name">
               <span class="font-darkgrey font-level-large">
                 <%= likeProductsData[i].product_name %>

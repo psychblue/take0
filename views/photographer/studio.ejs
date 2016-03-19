@@ -205,6 +205,15 @@
           }
           %>
         </div>
+        <%
+        if(!isOwner){
+        %>
+        <button class="studio-like-button take-button-mintborder" for="<%= studioData.studio_id %>">
+          <img src="/images/studio/like.png"></img><span>&nbsp;&nbsp;찜하기</span>
+        </button>
+        <%
+        }
+        %>
         <hr class="bg-color-lightgrey">
         <p class="take-basic-paragraph"><%- studioData.introduction %></p>
         <div class="left-aligned-box border-solid-thin-grey">

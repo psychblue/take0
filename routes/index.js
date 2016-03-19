@@ -120,14 +120,16 @@ router.post("/user/password/update",
   userManager.matchPassword,
   userManager.updatePassword
 );
-// Likes List Update
+// Likes List
 router.get("/user/likeslist",
   userManager.checkLogin,
+  userManager.loadLikesStudioIds,
+  userManager.loadStudioData,
   userManager.loadLikesProductIds,
   userManager.loadProductData,
   userManager.showLikesListPage
 );
-// Likes List Update
+// Likes List Studio Update
 router.post("/user/likeslist/add",
   userManager.checkDupLikes,
   userManager.insertLikesList

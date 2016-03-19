@@ -289,6 +289,7 @@ var StudioIntrodunctionController = (function(){
   var isVisible = 0;
 
   var $studioIntroWindow,
+  $studioLikeButton,
   $introEditButton,
   $introEditorInputs,
   $introEditorBox,
@@ -313,6 +314,7 @@ var StudioIntrodunctionController = (function(){
 
   function loadElements(){
     $studioIntroWindow = $("#studio-introduction-window");
+    $studioLikeButtion = $studioIntroWindow.find(".studio-like-button");
     $introEditButton = $studioIntroWindow.find(".intro-edit-button");
     $introEditorBox = $studioIntroWindow.find(".intro-editor-box");
     $introEditorInputs = $introEditorBox.find("input").add($introEditorBox.find("textarea"));
@@ -321,6 +323,8 @@ var StudioIntrodunctionController = (function(){
   };
 
   function bindEvents(){
+    ButtonController.setButton($studioLikeButtion, addToLikesList, $studioLikeButtion);
+
     ButtonController.setButton($introEditButton, showEditor);
 
     ButtonController.setButton($submitButton, submit);
@@ -356,6 +360,29 @@ var StudioIntrodunctionController = (function(){
     $introEditorInputs.filter("[name='tel_num']").val(inputValues.telNum);
     $introEditorInputs.filter("[name='address']").val(inputValues.address);
     $introEditorInputs.filter("[name='introduction']").html(inputValues.introduction);
+  };
+
+  function addToLikesList(targetButton){
+    var studioId = Number(targetButton.attr("for"));
+
+    $.ajax({
+      type: "POST",
+      url: "/user/likeslist/add",
+      data: {
+        studio_id: studioId
+      },
+      success: function(data){
+        if(data.result == "success"){
+          alert("스튜디오가 회원님의 찜 리스트에 추가되었습니다.");
+        }
+        else if(data.result == "fail"){
+          alert(data.text);
+        }
+      },
+      error: function(xhr, option, error){
+        alert(error);
+      }
+    });
   };
 
   function submit(){

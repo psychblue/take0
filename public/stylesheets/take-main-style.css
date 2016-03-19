@@ -279,34 +279,62 @@ hr {
   padding-bottom: 100px;
 }
 
-.take-likes-item {
+.take-likes-box .box {
+  width: 1000px;
+  margin: 0 auto;
+}
+
+.take-likes-box .box .likes-studio {
+  width: 230px;
+  height: 330px;
+  margin: 10px;
+  float: left;
+  overflow: hidden;
+}
+
+.take-likes-box .box .likes-studio .image {
+  width: 100%;
+  height: 200px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.take-likes-box .box .likes-studio .desc {
+  width: 190px;
+  height: 90px;
+  padding: 20px;
+  text-align: left;
+}
+
+.take-likes-box .likes-product {
   width: 1000px;
   margin: 0 auto;
   border-top: 1px solid #ccc;
 }
 
-.take-likes-item .likes-col {
+.take-likes-box .likes-product .likes-col {
   padding: 20px;
   text-align: left;
   float: left;
 }
 
-.take-likes-item .name {
+.take-likes-box .likes-product .name {
   width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.take-likes-item .price {
+.take-likes-box .likes-product .price {
   width: 130px;
 }
 
-.take-likes-item .desc {
+.take-likes-box .likes-product .desc {
   width: 380px;
 }
 
-.take-likes-item .button {
+.take-likes-box .likes-product .button {
   width: 130px;
 }
 
