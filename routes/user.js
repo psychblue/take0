@@ -71,6 +71,20 @@ userManager.checkLogin = function(req, res, next){
   }
 };
 
+userManager.checkLoginOnAjax = function(req, res, next){
+
+  if(req.__take_params.isAuth){
+    next();
+  }
+  else {
+    res.send({
+			"result":"fail",
+			"code": "401",
+			"text": "로그인 후 이용해주세요."
+		});
+  }
+};
+
 userManager.loadUserInfo = function(req, res, next){
 
 	var callbackForError = function(err){
@@ -457,15 +471,6 @@ userManager.showLikesListPage = function(req, res){
 };
 
 userManager.checkDupLikes = function(req, res, next){
-
-	if(!req.__take_params.isAuth){
-    res.send({
-			"result": "fail",
-			"text": "로그인이 필요합니다."
-		});
-
-		return;
-  }
 
 	var callbackForError = function(err){
     httpUtil.sendDBErrorPage(req, res, err);

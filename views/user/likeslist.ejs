@@ -61,6 +61,9 @@
                 }
                 else if(data.result == "fail"){
                   alert(data.text);
+                  if(data.code == "401"){
+                    location.href = "/login?redirect=/user/likeslist";
+                  }
                 }
               },
               error: function(xhr, option, error){

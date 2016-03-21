@@ -38,6 +38,10 @@ router.get("/loginpopup",
   loginManager.showLoginPopup
 );
 */
+// login page
+router.get("/login",
+  loginManager.showLoginPage
+);
 // "/login" post
 router.post("/login",
   loginManager.loginAuth
@@ -106,9 +110,9 @@ router.get("/user/userinfo",
   userManager.loadUserInfo,
   userManager.showUserInfoPage
 );
-// User Info Update
+// User Info Update (AJAX)
 router.post("/user/userinfo/update",
-  userManager.checkLogin,
+  userManager.checkLoginOnAjax,
   userManager.updateUserInfo
 );
 // Password
@@ -116,9 +120,9 @@ router.get("/user/password",
   userManager.checkLogin,
   userManager.showPasswordPage
 );
-// Password Update
+// Password Update (AJAX)
 router.post("/user/password/update",
-  userManager.checkLogin,
+  userManager.checkLoginOnAjax,
   userManager.matchPassword,
   userManager.updatePassword
 );
@@ -131,14 +135,15 @@ router.get("/user/likeslist",
   userManager.loadProductData,
   userManager.showLikesListPage
 );
-// Likes List Update
+// Likes List Update (AJAX)
 router.post("/user/likeslist/add",
+  userManager.checkLoginOnAjax,
   userManager.checkDupLikes,
   userManager.insertLikesList
 );
 // Likes List Delete
 router.post("/user/likeslist/delete",
-  userManager.checkLogin,
+  userManager.checkLoginOnAjax,
   userManager.deleteLikesList
 );
 

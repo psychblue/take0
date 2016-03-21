@@ -24,6 +24,14 @@ loginManager.showLoginPopup = function(req, res){
 };
 */
 
+loginManager.showLoginPage = function(req, res){
+  res.render("login/login-page", {
+    title: confParams.html.title,
+    service: confParams.html.service_name,
+    redirectUrl: req.query.redirect
+  });
+};
+
 /*
 User Local Login Post Function
 */

@@ -691,6 +691,9 @@ var StudioProductController = (function(){
         }
         else if(data.result == "fail"){
           alert(data.text);
+          if(data.code == "401"){
+            location.href = "/login?redirect=" + location.href;
+          }
         }
       },
       error: function(xhr, option, error){

@@ -38,7 +38,13 @@
                     location.reload();
                   }
                   else if(data.result == "fail"){
-                    $("#userinfo-error").text(data.text).addClass("margin-top-30 margin-bottom-30 font-red font-bold");
+                    if(data.code == "401"){
+                      alert(data.text);
+                      location.href = "/login?redirect=/user/userinfo";
+                    }
+                    else{
+                      $("#userinfo-error").text(data.text).addClass("margin-top-30 margin-bottom-30 font-red font-bold");
+                    }
                   }
                 },
                 error: function(xhr, option, error){
