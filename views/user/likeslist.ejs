@@ -114,62 +114,54 @@
         <h1>찜한 스튜디오들</h1>
         <div class="take-likes-box">
           <div class="box">
-            <%
-            for(var i = 0; i < likeStudiosData.length; i++){
-            %>
-            <a href="/studio/<%= likeStudiosData[i].username %>">
-              <div class="likes-studio font-grey">
-                <div class="image bg-color-lightgrey" style="background-image: url('<%= likeStudiosData[i].slider_photo_list %>')">
+            <% for(var i = 0; i < likeStudiosData.length; i++){ %>
+              <a href="/studio/<%= likeStudiosData[i].username %>">
+                <div class="likes-studio font-grey">
+                  <div class="image bg-color-lightgrey" style="background-image: url('<%= likeStudiosData[i].slider_photo_list %>')">
+                  </div>
+                  <div class="desc bg-color-white">
+                    <span class="font-darkgrey font-level-large"><%= likeStudiosData[i].studio_name %></span>
+                    <br>
+                    <span class="font-grey">by <%= likeStudiosData[i].nickname %></span>
+                    <div class="delete" for="<%= likeStudiosData[i].studio_id %>">X 삭제</div>
+                  </div>
                 </div>
-                <div class="desc bg-color-white">
-                  <span class="font-darkgrey font-level-large"><%= likeStudiosData[i].studio_name %></span>
-                  <br>
-                  <span class="font-grey">by <%= likeStudiosData[i].nickname %></span>
-                  <div class="delete" for="<%= likeStudiosData[i].studio_id %>">X 삭제</div>
-                </div>
-              </div>
-            </a>
-            <%
-            }
-            %>
+              </a>
+            <% } %>
             <div class="float-clear"></div>
           </div>
         </div>
 
         <h1>찜한 상품들</h1>
         <div class="take-likes-box">
-          <%
-          for(var i = 0; i < likeProductsData.length; i++){
-          %>
-          <div class="likes-product font-grey">
-            <div class="likes-col name">
-              <span class="font-darkgrey font-level-large">
-                <%= likeProductsData[i].product_name %>
-              </span>
-              <br>
-              <a href="/studio/<%= likeProductsData[i].username %>">
-                <span class="font-grey font-level-default">
-                  <%= likeProductsData[i].studio_name %>
+          <% for(var i = 0; i < likeProductsData.length; i++){ %>
+            <div class="likes-product font-grey">
+              <div class="likes-col name">
+                <span class="font-darkgrey font-level-large">
+                  <%= likeProductsData[i].product_name %>
                 </span>
-              </a>
-              <div class="delete" for="<%= likeProductsData[i].product_id %>">X 삭제</div>
+                <br>
+                <a href="/studio/<%= likeProductsData[i].username %>">
+                  <span class="font-grey font-level-default">
+                    <%= likeProductsData[i].studio_name %>
+                  </span>
+                </a>
+                <div class="delete" for="<%= likeProductsData[i].product_id %>">X 삭제</div>
+              </div>
+              <div class="likes-col price font-grey font-level-default">
+                \<%= likeProductsData[i].product_price.toString().split(/(?=(?:\d{3})+(?:\.|$))/g).join(',') %>
+              </div>
+              <div class="likes-col desc">
+                <%- likeProductsData[i].product_desc %>
+              </div>
+              <div class="likes-col button">
+                <button type="button" class="product-reserve-button take-button-mint">
+                  <img src="/images/studio/reserve.png"></img><span>&nbsp;&nbsp;예약하기</span>
+                </button>
+              </div>
+              <div class="float-clear"></div>
             </div>
-            <div class="likes-col price font-grey font-level-default">
-              \<%= likeProductsData[i].product_price.toString().split(/(?=(?:\d{3})+(?:\.|$))/g).join(',') %>
-            </div>
-            <div class="likes-col desc">
-              <%- likeProductsData[i].product_desc %>
-            </div>
-            <div class="likes-col button">
-              <button type="button" class="product-reserve-button take-button-mint">
-                <img src="/images/studio/reserve.png"></img><span>&nbsp;&nbsp;예약하기</span>
-              </button>
-            </div>
-            <div class="float-clear"></div>
-          </div>
-          <%
-          }
-          %>
+          <% } %>
         </div>
       </div>
 

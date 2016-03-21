@@ -2,7 +2,7 @@
 <html>
 
   <head>
-    <title><%=title%></title>
+    <title><%= title %></title>
     <link rel="stylesheet" href="/stylesheets/take-main-style.css"/>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
@@ -16,20 +16,14 @@
 
     <div class="take-info-window bg-color-lightergrey">
       <h1><%- infoText %></h1>
-      <%
-      if(subText){
-      %>
-      <br>
-      <div class="font-darkgrey">[&nbsp;&nbsp;<%- subText %>&nbsp;&nbsp;]</div>
-      <%
-      }
-      if(infoLink){
-      %>
-      <br><br>
-      <span><%- infoLink %></span>
-      <%
-      }
-      %>
+      <% if(subText){ %>
+        <br>
+        <div class="font-darkgrey">[&nbsp;&nbsp;<%- subText %>&nbsp;&nbsp;]</div>
+      <% } %>
+      <% if(infoLink){ %>
+        <br><br>
+        <span><%- infoLink %></span>
+      <% } %>
     </div>
 
     <% include footer %>

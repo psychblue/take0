@@ -2,7 +2,7 @@
 <html>
 
   <head>
-    <title><%=title%></title>
+    <title><%= title %></title>
     <link rel="stylesheet" href="/stylesheets/take-main-style.css"/>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
@@ -97,35 +97,28 @@
           <div class="take-shortinput-box">
             <input type="hidden" name="username" value="<%= username %>"></input>
             <div class="editor-input-label font-grey float-left">&nbsp;아이디&nbsp;&nbsp;|</div>
-            <%
-            if(userInfo.user_from == 0){
-            %>
-            <a href="/withdraw">
-              <div class="font-level-small font-grey margin-top-20 float-right">
-                <img class="vertical-smallmiddle-aligned" src="/images/user/withdraw.png"></img> 회원탈퇴
-              </div>
-            </a>
-            <a href="/user/password">
-              <div class="font-level-small font-grey margin-top-20 float-right">
-                <img class="vertical-smallmiddle-aligned" src="/images/user/password.png"></img> 비밀번호변경&nbsp;&nbsp;
-              </div>
-            </a>
-            <div class="float-clear"></div>
-            <input disabled="disabled" type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" value="<%= username %>"></input>
-            <%
-            }
-            else if(userInfo.user_from == 1){
-            %>
-            <a href="/withdraw">
-              <div class="font-level-small font-grey float-right margin-top-20">
-                <img class="vertical-smallmiddle-aligned" src="/images/user/withdraw.png"></img> 회원탈퇴
-              </div>
-            </a>
-            <div class="float-clear"></div>
-            <input disabled="disabled" type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" value="카카오 아이디로 가입하셨습니다."></input>
-            <%
-            }
-            %>
+            <% if(userInfo.user_from == 0){ %>
+              <a href="/withdraw">
+                <div class="font-level-small font-grey margin-top-20 float-right">
+                  <img class="vertical-smallmiddle-aligned" src="/images/user/withdraw.png"></img> 회원탈퇴
+                </div>
+              </a>
+              <a href="/user/password">
+                <div class="font-level-small font-grey margin-top-20 float-right">
+                  <img class="vertical-smallmiddle-aligned" src="/images/user/password.png"></img> 비밀번호변경&nbsp;&nbsp;
+                </div>
+              </a>
+              <div class="float-clear"></div>
+              <input disabled="disabled" type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" value="<%= username %>"></input>
+            <% }else if(userInfo.user_from == 1){ %>
+              <a href="/withdraw">
+                <div class="font-level-small font-grey float-right margin-top-20">
+                  <img class="vertical-smallmiddle-aligned" src="/images/user/withdraw.png"></img> 회원탈퇴
+                </div>
+              </a>
+              <div class="float-clear"></div>
+              <input disabled="disabled" type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" value="카카오 아이디로 가입하셨습니다."></input>
+            <% } %>
             <div class="editor-input-label font-grey">&nbsp;닉네임&nbsp;&nbsp;|</div>
             <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="nickname" value="<%= nickname %>"></input>
             <div class="editor-input-label font-grey">&nbsp;가입일자&nbsp;&nbsp;|</div>
@@ -133,22 +126,15 @@
             <div class="editor-input-label font-grey">&nbsp;이메일&nbsp;&nbsp;|</div>
             <input type="text" class="take-text-shortinput font-darkgrey font-level-default border-solid-thin-lightgrey" name="email" value="<%= userInfo.email %>"></input>
             <div class="checkbox-long take-checkbox">
-              <%
-              if(userInfo.email_agree){
-              %>
-              <input checked="checked" type="checkbox" id="email-agree" class="take-checkbox" name="email_agree" value="1"></input>
-              <label class="font-grey" for="email-agree">
-                <div class="box checked"></div>
-              <%
-              }
-              else{
-              %>
-              <input type="checkbox" id="email-agree" class="take-checkbox" name="email_agree" value="1"></input>
-              <label class="font-grey" for="email-agree">
-                <div class="box"></div>
-              <%
-              }
-              %>
+              <% if(userInfo.email_agree){ %>
+                <input checked="checked" type="checkbox" id="email-agree" class="take-checkbox" name="email_agree" value="1"></input>
+                <label class="font-grey" for="email-agree">
+                  <div class="box checked"></div>
+              <% }else{ %>
+                <input type="checkbox" id="email-agree" class="take-checkbox" name="email_agree" value="1"></input>
+                <label class="font-grey" for="email-agree">
+                  <div class="box"></div>
+              <% } %>
                 <span class="font-level-small">&nbsp;&nbsp;<%= service %>의 홍보/알림 메일 수신에 동의합니다. (선택)</span>
                 <div class="float-clear"></div>
               </label>
