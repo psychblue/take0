@@ -195,6 +195,8 @@ photographerManager.showMakeStudioPage = function(req, res){
     res.render("photographer/make-studio", {
       title: confParams.html.title,
       service: confParams.html.service_name,
+      isAuth: req.__take_params.isAuth,
+      hasStudio: req.__take_params.hasStudio,
       nickname: req.__take_params.nickname
     });
   }

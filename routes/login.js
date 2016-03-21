@@ -15,12 +15,14 @@ var loginManager = {};
 /*
 Show Login Popup
 */
+/*
 loginManager.showLoginPopup = function(req, res){
 
 	res.render("login/login-popup", {
     service: confParams.html.service_name
   });
 };
+*/
 
 /*
 User Local Login Post Function

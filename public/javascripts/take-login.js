@@ -20,8 +20,8 @@ var LoginController = (function(){
 
   (function(){
     $(document).ready(function(){
-      $.get("/loginpopup", function(data){
-        $("body").append(data);
+      //$.get("/loginpopup", function(data){
+        //$("body").append(data);
 
         loadElements();
         bindEvents();
@@ -30,7 +30,7 @@ var LoginController = (function(){
         if(redirectUrl != ""){
           viewLoginPopup();
         }
-      });
+      //});
     });
   }());
 

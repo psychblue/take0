@@ -33,9 +33,11 @@ router.post("/todaystudiolist",
 );
 
 // Login Popup
+/*
 router.get("/loginpopup",
   loginManager.showLoginPopup
 );
+*/
 // "/login" post
 router.post("/login",
   loginManager.loginAuth

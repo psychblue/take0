@@ -63,61 +63,7 @@
 
   <body>
 
-    <div id="header" class="width-full font-white">
-
-      <div id="header-title" class="float-left"><a href="/"><%= service %></a></div>
-      <div id="header-login" class="float-right">
-        <%
-        if(!hasStudio){
-        %>
-        <a href="/makestudio">
-          <span>스튜디오 만들기</span>
-        </a>
-        <%
-        }
-        else{
-        %>
-        <a href="/studio/<%= username %>">
-          <span>스튜디오 바로가기</span>
-        </a>
-        <%
-        }
-        if(!isAuth){
-        %>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span id="login-button" class="cursor-pointer">
-          <img class="vertical-middle-aligned" src="/images/common/login.png"></img>&nbsp;&nbsp;로그인
-        </span>
-        <%
-        }else{
-        %>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span id="user-button" class="cursor-pointer">
-          <img class="vertical-middle-aligned" src="/images/common/username.png"></img>&nbsp;&nbsp;<%= name %>
-        </span>
-        <%
-        }
-        %>
-      </div>
-      <div class="float-clear"></div>
-
-      <%
-      if(isAuth){
-      %>
-      <div class="user-menu-box font-darkgrey">
-        <div class="user-menu-arrow"></div>
-        <div class="user-menu">
-          <a href="/user/userinfo"><div class="user-menu-item">&nbsp;&nbsp;회원정보 관리</div></a>
-          <a href="/user/likeslist"><div class="user-menu-item">&nbsp;&nbsp;찜 리스트</div></a>
-          <hr>
-          <div id="logout-button" class="user-menu-item">&nbsp;&nbsp;로그아웃</div>
-        </div>
-      </div>
-      <%
-      }
-      %>
-
-    </div>
+    <% include ../header %>
 
     <div class="take-main-window bg-color-lightergrey">
 
@@ -175,25 +121,9 @@
 
     </div>
 
-    <div id="footer" class="bg-color-darkgrey center-aligned">
+    <% include ../footer %>
 
-      <div id="footer-main">
-      </div>
-
-      <div id="footer-menu" class="font-grey font-level-small">
-        이용약관&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        개인정보취급방침&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        서비스운영정책&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        고객센터
-      </div>
-
-      <hr class="bg-color-grey">
-
-      <div class="font-grey">
-        &copy; <a href="/" class="font-grey"><%= service %></a>, Inc.
-      </div>
-
-    </div>
+    <% include ../login/login-popup %>
 
   </body>
 
