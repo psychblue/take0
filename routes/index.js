@@ -131,10 +131,15 @@ router.get("/user/likeslist",
   userManager.loadProductData,
   userManager.showLikesListPage
 );
-// Likes List Studio Update
+// Likes List Update
 router.post("/user/likeslist/add",
   userManager.checkDupLikes,
   userManager.insertLikesList
+);
+// Likes List Delete
+router.post("/user/likeslist/delete",
+  userManager.checkLogin,
+  userManager.deleteLikesList
 );
 
 // Studio

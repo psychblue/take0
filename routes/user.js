@@ -342,6 +342,7 @@ userManager.loadStudioData = function(req, res, next){
 
 		var params = [
 			[
+				"studio.studio_id",
 				"studio.studio_name",
 				"studio.username",
 				"studio.slider_photo_list",
@@ -404,6 +405,7 @@ userManager.loadProductData = function(req, res, next){
 
 		var params = [
 			[
+				"studioProducts.product_id",
 				"studioProducts.product_name",
 				"studioProducts.product_price",
 				"studioProducts.product_desc",
@@ -568,6 +570,51 @@ userManager.insertLikesList = function(req, res){
 	);
 
 	mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
+};
+
+userManager.deleteLikesList = function(req, res){
+
+	var callbackForError = function(err){
+    res.send({
+			"result": "fail",
+			"text": err
+		});
+  };
+
+  var callbackForSuccess = function(){
+    res.send({"result": "success"});
+  };
+
+  var query = "DELETE FROM ?? WHERE ?? = ? AND ?? = ?";
+
+	if(req.body.studio_id){
+	  var params = [
+			"takeUserLikeStudios",
+			"username",
+			req.__take_params.username,
+			"studio_id",
+			req.body.studio_id
+		];
+	}
+	else if(req.body.product_id){
+		var params = [
+			"takeUserLikeProducts",
+			"username",
+			req.__take_params.username,
+			"product_id",
+			req.body.product_id
+		];
+	}
+
+  logger.debug("SQL Query [DELETE FROM %s WHERE %s=%s AND %s=%s]",
+    params[0],
+    params[1],
+    params[2],
+		params[3],
+		params[4]
+  );
+
+  mysqlDb.doSQLDeleteQuery(query, params, callbackForSuccess, callbackForError);
 };
 
 module.exports = userManager;

@@ -15,7 +15,9 @@ commonUtil.checkPathWhiteList = function(path){
 
   var whiteList = [
     "/loginpopup",
-    "/todaystudiolist"
+    "/todaystudiolist",
+    "/user/likeslist/add",
+    "/user/likeslist/delete"
   ];
 
   for(var i = 0; i < whiteList.length; i++){
