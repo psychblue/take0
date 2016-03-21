@@ -389,6 +389,9 @@ userManager.loadStudioData = function(req, res, next){
 	if(maxIterator > 0){
 			load(0);
 	}
+	else{
+		next();
+	}
 };
 
 userManager.loadProductData = function(req, res, next){
@@ -453,6 +456,9 @@ userManager.loadProductData = function(req, res, next){
 
 	if(maxIterator > 0){
 			load(0);
+	}
+	else{
+		next();
 	}
 };
 
