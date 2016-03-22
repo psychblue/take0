@@ -169,7 +169,18 @@ router.post("/addstudio",
 // Show Product Reservation Page
 router.get("/reserve",
   photographerManager.loadProduct,
+  photographerManager.loadReservations,
   photographerManager.showReservPage
+);
+// Request Product Reservation (AJAX)
+router.post("/reserve",
+  photographerManager.checkLogin,
+  photographerManager.insertReservation
+);
+//Get Reservation Data (AJAX)
+router.get("/rsvdata",
+  photographerManager.loadReservations,
+  photographerManager.sendReservationsData
 );
 // Studio Photo Slider Update
 router.post("/studio/:photographer/slider/update",

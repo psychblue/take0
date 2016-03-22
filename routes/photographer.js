@@ -177,11 +177,20 @@ photographerManager.checkLogin = function(req, res, next){
     next();
   }
   else {
-    res.render("login/login-page", {
-      title: confParams.html.title,
-      service: confParams.html.service_name,
-      redirectUrl: "/makestudio"
-    });
+    if(req.path == "/makestudio"){
+      res.render("login/login-page", {
+        title: confParams.html.title,
+        service: confParams.html.service_name,
+        redirectUrl: "/makestudio"
+      });
+    }
+    else{
+      res.send({
+  			"result":"fail",
+  			"code": "401",
+  			"text": "로그인 후 이용해주세요."
+  		});
+    }
   }
 };
 
@@ -536,6 +545,7 @@ photographerManager.insertProduct = function(req, res, next){
       studio_id: req.body.studio_id,
       product_name: req.body.product_name,
       product_price: req.body.product_price,
+      product_duration: req.body.product_duration,
       product_desc: productDesc
     }
   ];
@@ -604,6 +614,7 @@ photographerManager.updateProduct = function(req, res){
     {
       product_name: req.body.product_name,
       product_price: req.body.product_price,
+      product_duration: req.body.product_duration,
       product_desc: productDesc
     },
     "product_id",
@@ -940,6 +951,7 @@ photographerManager.loadProduct = function(req, res, next){
     [
       "studioProducts.product_id",
       "studioProducts.product_name",
+      "studioProducts.product_duration",
       "studio.studio_name",
       "studio.username"
     ],
@@ -967,6 +979,55 @@ photographerManager.loadProduct = function(req, res, next){
   mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
 };
 
+photographerManager.loadReservations = function(req, res, next){
+
+  var callbackForError = function(err){
+    httpUtil.sendDBErrorPage(req, res, err);
+  };
+
+  var callbackForNoResult = function(){
+    req.__take_params.reservationsData = [];
+    next();
+  };
+
+  var callbackForSuccess = function(rows, fields){
+    req.__take_params.reservationsData = rows;
+    next();
+  };
+
+  var date = "";
+
+  if(req.query.date){
+    date = req.query.date;
+  }
+  else{
+    var today = new Date();
+    var month = today.getMonth() + 1 < 10 ? "0" + (today.getMonth() + 1) : today.getMonth() + 1;
+    var dateNum = today.getDate() < 10 ? "0" + today.getDate() : today.getDate();
+    date = date + today.getFullYear() + month + dateNum;
+  }
+
+  var query = "SELECT * FROM ?? WHERE ?? = ? AND ?? = ?"
+
+  var params = [
+    "studioReservations",
+    "product_id",
+    req.query.product_id,
+    "rsv_date",
+    date
+  ];
+
+  logger.debug("SQL Query [SELECT * FROM %s WHERE %s=%s AND %s=%s]",
+    params[0],
+    params[1],
+    params[2],
+    params[3],
+    params[4]
+  );
+
+  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+};
+
 photographerManager.showReservPage = function(req, res){
 
   res.render("photographer/reservation", {
@@ -976,8 +1037,51 @@ photographerManager.showReservPage = function(req, res){
     hasStudio: req.__take_params.hasStudio,
     username: req.__take_params.username,
     nickname: req.__take_params.nickname,
-    productData: req.__take_params.productData
+    productData: req.__take_params.productData,
+    reservationsData: req.__take_params.reservationsData
   });
+};
+
+photographerManager.sendReservationsData = function(req, res){
+
+  res.send({
+    "result": "success",
+    "data": req.__take_params.reservationsData
+  });
+};
+
+photographerManager.insertReservation = function(req, res, next){
+
+  var callbackForError = function(err){
+		res.send({
+			"result": "fail",
+			"text": err
+		});
+	};
+
+	var callbackForSuccess = function(result){
+		res.send({"result": "success"});
+	};
+
+	var query = "INSERT INTO ?? SET ?";
+
+	var params = [
+		"studioReservations",
+		{
+			product_id: req.query.product_id,
+      request_user: req.__take_params.username,
+      rsv_date: req.body.rsv_date,
+      rsv_start_time: req.body.rsv_start_time,
+      rsv_end_time: Number(req.body.rsv_start_time) + 100 * Number(req.body.product_duration)
+		}
+	];
+
+	logger.debug("SQL Query [INSERT INTO %s SET %s]",
+		params[0],
+		JSON.stringify(params[1])
+	);
+
+	mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
 };
 
 module.exports = photographerManager;

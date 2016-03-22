@@ -439,16 +439,8 @@ hr {
   overflow: scroll;
 }
 
-.take-likes-box .time-box hr {
-  width: 258px;
-  height: 1px;
-  margin-top: 2px;
-  margin-bottom: 2px;
-  border: none;
-}
-
 .take-likes-box .time-item {
-  height: 30px;
+  height: 25px;
   line-height: 30px;
   color: #999;
   padding: 10px;

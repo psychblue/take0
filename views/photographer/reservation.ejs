@@ -12,31 +12,60 @@
       (function(){
         var $timeItems;
 
-        $(document).ready(function(){
-          $timeItems = $(".time-item");
+        (function(){
+          $(document).ready(function(){
+            loadElements();
+            bindEvents();
 
-          $(".take-datepicker").datepicker({
-            inline: true,
-            showOtherMonths: false,
-            showMonthAfterYear: true,
-            monthNames: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
-            dayNamesMin: ["일", "월", "화", "수", "목", "금", "토"],
-            nextText: ">",
-            prevText: "<",
-            yearSuffix: "년",
-            dateFormat: "yy'년' m'월' d'일'",
-            onSelect: function(date){
-              $("#time").removeClass("border-solid-thin-mint bg-color-lightmint")
-              .addClass("border-solid-thin-lightgrey")
-              .empty();
-              $("#date").removeClass("border-solid-thin-lightgrey")
-              .addClass("border-solid-thin-mint bg-color-lightmint")
-              .text(date);
-              loadSchedule(date);
-            }
+            $(".take-datepicker").datepicker({
+              inline: true,
+              showOtherMonths: false,
+              showMonthAfterYear: true,
+              monthNames: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+              dayNamesMin: ["일", "월", "화", "수", "목", "금", "토"],
+              nextText: ">",
+              prevText: "<",
+              yearSuffix: "년",
+              dateFormat: "yymmdd",
+              onSelect: function(date){
+                $("#time").removeClass("border-solid-thin-mint bg-color-lightmint")
+                .addClass("border-solid-thin-lightgrey")
+                .empty();
+
+                var year = date.slice(0, 4);
+                var month = date.slice(4, 6);
+                if(month[0] == "0"){
+                  month = month.slice(1, 2);
+                }
+                var dateNum = date.slice(6, 8);
+                if(dateNum[0] == "0"){
+                  dateNum = dateNum.slice(1, 2);
+                }
+
+                if(Number(date) < Number($("input[name='rsv_date']").val())){
+                  alert("지난 날짜는 선택하실 수 없습니다.");
+                  $(".take-datepicker").datepicker("setDate", new Date());
+
+                  return;
+                }
+
+                $("#date").text(year + "년 " + month + "월 " + dateNum + "일");
+                $("input[name='rsv_date']").val(date);
+
+                loadSchedule(<%= productData.product_id %>, date);
+              }
+            });
+
+            setSchedule(<%- JSON.stringify(reservationsData) %>);
           });
+        }());
 
-          ButtonController.setButton($(".editor-submit-button"));
+        function loadElements(){
+          $timeItems = $(".time-item");
+        };
+
+        function bindEvents(){
+          ButtonController.setButton($(".editor-submit-button"), requestRsv);
 
           $timeItems.click(function(){
             $timeItems.each(function(){
@@ -47,12 +76,60 @@
             $("#time").removeClass("border-solid-thin-lightgrey")
             .addClass("border-solid-thin-mint bg-color-lightmint")
             .text($(this).text());
-          });
-        });
 
-        function loadSchedule(date){
-          
+            $("input[name='rsv_start_time']").val($(this).children("span").attr("for"));
+          });
         };
+
+        function loadSchedule(id, date){
+          $.get("/rsvdata/?product_id=" + id + "&date=" + date, function(data){
+            if(data.result == "success"){
+              $timeItems.show();
+              setSchedule(data.data);
+            }
+          });
+        };
+
+        function setSchedule(data){
+          for(var rsvIndex = 0; rsvIndex < data.length; rsvIndex++){
+            $timeItems.each(function(){
+              var time = Number($(this).children("span").attr("for"));
+
+              if(time > data[rsvIndex].rsv_start_time - 100 * <%= productData.product_duration %> && time < data[rsvIndex].rsv_end_time){
+                $(this).hide();
+              }
+            });
+          }
+        };
+
+        function requestRsv(){
+          if($("input[name='rsv_start_time']").val() == ""){
+            alert("시간을 선택해주세요.");
+
+            return;
+          }
+          $.ajax({
+            type: "POST",
+            url: "/reserve?product_id=" + <%= productData.product_id %>,
+            data: $("#rsv-form").serialize(),
+            success: function(data){
+              if(data.result == "success"){
+                alert("예약 요청이 완료되었습니다.");
+                location.href = "/studio/<%= productData.username %>"
+              }
+              else if(data.result == "fail"){
+                alert(data.text);
+                if(data.code == "401"){
+                  location.href = "/login?redirect=" + location.href;
+                }
+              }
+            },
+            error: function(xhr, option, error){
+              alert(error);
+            }
+          });
+        };
+
       }());
     </script>
   </head>
@@ -80,8 +157,18 @@
                   </span>
                 </a>
                 <hr class="bg-color-lightgrey">
+                <% var today = new Date() %>
+                <% var month = today.getMonth() + 1 < 10 ? "0" + (today.getMonth() + 1) : today.getMonth() + 1 %>
+                <% var dateNum = today.getDate() < 10 ? "0" + today.getDate() : today.getDate() %>
+                <form id="rsv-form">
+                  <input type="hidden" name="rsv_date" value="<%= '' + today.getFullYear() + month + dateNum %>"></input>
+                  <input type="hidden" name="rsv_start_time"></input>
+                  <input type="hidden" name="product_duration" value="<%= productData.product_duration %>"></input>
+                </form>
                 <div class="editor-input-label font-grey">&nbsp;날짜&nbsp;&nbsp;|</div>
-                <div id="date" class="input-box font-darkgrey border-solid-thin-lightgrey center-aligned"></div>
+                <div id="date" class="input-box font-darkgrey bg-color-lightmint border-solid-thin-mint center-aligned">
+                <%= today.getFullYear() %>년 <%= today.getMonth() + 1 %>월 <%= today.getDate() %>일
+                </div>
                 <div class="editor-input-label font-grey">&nbsp;시간&nbsp;&nbsp;|</div>
                 <div id="time" class="input-box font-darkgrey border-solid-thin-lightgrey center-aligned"></div>
                 <div class="editor-button-box right-aligned">
@@ -99,22 +186,19 @@
                 <% for(var i = 14; i < 39; i++){ %>
                   <div class="time-item">
                     <% if(i < 24){ %>
-                      <span>오전</span>
                         <% if(i % 2 == 0){ %>
-                          <span>&nbsp;&nbsp;<%= i/2 + 1 %>:00</span>
+                          <span for="<%= i/2 + 1 %>00">오전&nbsp;&nbsp;<%= i/2 + 1 %>:00</span>
                         <% }else{ %>
-                          <span>&nbsp;&nbsp;<%= Math.round(i/2) %>:30</span>
+                          <span for="<%= Math.round(i/2) %>30">오전&nbsp;&nbsp;<%= Math.round(i/2) %>:30</span>
                         <% } %>
                     <% }else{ %>
-                      <span>오후</span>
                       <% if(i % 2 == 0){ %>
-                        <span>&nbsp;&nbsp;<%= (i - 24)/2 + 1 %>:00</span>
+                        <span for="<%= i/2 + 1 %>00">오후&nbsp;&nbsp;<%= (i - 24)/2 + 1 %>:00</span>
                       <% }else{ %>
-                        <span>&nbsp;&nbsp;<%= Math.round((i - 24)/2) %>:30</span>
+                        <span for="<%= Math.round(i/2) %>30">오후&nbsp;&nbsp;<%= Math.round((i - 24)/2) %>:30</span>
                       <% } %>
                     <% } %>
                   </div>
-                  <hr class="bg-color-lightgrey">
                 <% } %>
               </div>
             </div>

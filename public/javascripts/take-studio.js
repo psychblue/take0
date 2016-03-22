@@ -526,8 +526,8 @@ var StudioProductController = (function(){
         $productDescBox.css({"visibility": "hidden"});
       }
 
-      $productBox.animate({"height": "650px"}, 200);
-      $productEditorBox.css({"height": "650px"});
+      $productBox.animate({"height": "700px"}, 200);
+      $productEditorBox.css({"height": "700px"});
       $productEditorBox.fadeIn("fast");
 
       isVisible = 1;
@@ -549,6 +549,7 @@ var StudioProductController = (function(){
       inputValues.productId = $productForm.find("[name='product_id']").val();
       inputValues.productName = $productBox.find("h1").text();
       inputValues.productPrice = $productBox.find(".product-price").text().split("\\")[1].split(",").join("");
+      inputValues.productDuration = $productForm.find("[name='product_duration']").val();
       inputValues.productDesc = $productDescBox.find("ul").html()
       .trim()
       .replace(/<\/li><li>/gi, "\r\n").replace(/<li>/gi, "").replace(/<\/li>/gi, "");
@@ -557,6 +558,7 @@ var StudioProductController = (function(){
     function resetInputValues(){
       $productEditorInputs.filter("[name='product_name']").val(inputValues.productName);
       $productEditorInputs.filter("[name='product_price']").val(inputValues.productPrice);
+      $productEditorInputs.filter("[name='product_duration']").val(inputValues.productDuration);
       $productEditorInputs.filter("[name='product_desc']").val(inputValues.productDesc);
     };
 
