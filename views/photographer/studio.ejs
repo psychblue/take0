@@ -185,9 +185,11 @@
                     <img src="/images/studio/like.png"></img><span>&nbsp;&nbsp;찜하기</span>
                   </button>
                 <% } %>
-                <button type="button" class="product-reserve-button take-button-mint">
-                  <img src="/images/studio/reserve.png"></img><span>&nbsp;&nbsp;예약하기</span>
-                </button>
+                <a href="/reserve?product_id=<%= productsData[i].product_id %>">
+                  <button type="button" class="product-reserve-button take-button-mint">
+                    <img src="/images/studio/reserve.png"></img><span>&nbsp;&nbsp;예약하기</span>
+                  </button>
+                </a>
               </div>
               <div class="float-clear">
               </div>

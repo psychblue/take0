@@ -166,6 +166,11 @@ router.post("/addstudio",
   photographerManager.updateHasStudio,
   photographerManager.addServiceCategory
 );
+// Show Product Reservation Page
+router.get("/reserve",
+  photographerManager.loadProduct,
+  photographerManager.showReservPage
+);
 // Studio Photo Slider Update
 router.post("/studio/:photographer/slider/update",
   photographerManager.isOwner,

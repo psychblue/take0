@@ -182,6 +182,10 @@ hr {
   text-align: center;
 }
 
+.right-aligned {
+  text-align: right;
+}
+
 .vertical-middle-aligned {
   vertical-align: -6px;
 }
@@ -322,6 +326,9 @@ hr {
   height: 90px;
   padding: 20px;
   text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   position: relative;
 }
 
@@ -355,6 +362,108 @@ hr {
 
 .take-likes-box .likes-product .button {
   width: 130px;
+}
+
+.take-likes-box .rsv-product {
+  width: 300px;
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.take-likes-box .product-box {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: #fff;
+}
+
+.take-likes-box .product-box hr {
+  width: 258px;
+  height: 1px;
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: none;
+}
+
+.take-likes-box .product-box .input-box {
+  width: 216px;
+  height: 38px;
+  line-height: 38px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 3px;
+}
+
+.take-likes-box .rsv-date {
+  width: 300px;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  padding-right: 10px;
+}
+
+.take-likes-box .take-datepicker {
+  width: 278px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: #fff;
+}
+
+.take-likes-box .rsv-time {
+  width: 300px;
+  height: 400px;
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+}
+
+.take-likes-box .time-box {
+  width: 258px;
+  height: 387px;
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: #fff;
+  overflow: scroll;
+}
+
+.take-likes-box .time-box hr {
+  width: 258px;
+  height: 1px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  border: none;
+}
+
+.take-likes-box .time-item {
+  height: 30px;
+  line-height: 30px;
+  color: #999;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.take-likes-box .time-box .selected {
+  color: #fff;
+  border-radius: 3px;
+  background-color: #3db7cc;
+}
+
+.take-likes-box .time-item:hover {
+  color: #404040;
+  font-weight: bold;
 }
 
 .take-navigation {
@@ -1191,6 +1300,7 @@ hr {
 
 #search-box {
   position: relative;
+  z-index: 100;
 }
 
 #search-box-category {
@@ -1281,8 +1391,7 @@ hr {
   margin-bottom: 15px;
   text-align: center;
   color: #404040;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 1.5em;
 }
 .ui-datepicker-prev, .ui-datepicker-next {
   text-align: center;
@@ -1302,6 +1411,7 @@ hr {
   font-weight: bold;
 }
 .ui-datepicker-current-day {
+  border-radius: 3px;
   background-color: #3db7cc;
 }
 .ui-datepicker-current-day a {

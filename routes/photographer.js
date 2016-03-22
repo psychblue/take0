@@ -882,4 +882,65 @@ photographerManager.getPortfolioPhotoList = function(req, res, next){
   mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
 };
 
+photographerManager.loadProduct = function(req, res, next){
+
+  var callbackForError = function(err){
+    httpUtil.sendDBErrorPage(req, res, err);
+  };
+
+  var callbackForNoResult = function(){
+    httpUtil.sendNoDataFromDBPage(req, res);
+  };
+
+  var callbackForSuccess = function(rows, fields){
+    req.__take_params.productData = rows[0];
+    next();
+  };
+
+  var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ??"
+
+  var params = [
+    [
+      "studioProducts.product_id",
+      "studioProducts.product_name",
+      "studio.studio_name",
+      "studio.username"
+    ],
+    "studioProducts",
+    "studio",
+    "studioProducts.product_id",
+    req.query.product_id,
+    "studioProducts.studio_id",
+    "studio.studio_id"
+  ];
+
+  logger.debug("SQL Query [SELECT %s %s %s %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s]",
+    params[0][0],
+    params[0][1],
+    params[0][2],
+    params[0][3],
+    params[1],
+    params[2],
+    params[3],
+    params[4],
+    params[5],
+    params[6]
+  );
+
+  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+};
+
+photographerManager.showReservPage = function(req, res){
+
+  res.render("photographer/reservation", {
+    title: confParams.html.title,
+    service: confParams.html.service_name,
+    isAuth: req.__take_params.isAuth,
+    hasStudio: req.__take_params.hasStudio,
+    username: req.__take_params.username,
+    nickname: req.__take_params.nickname,
+    productData: req.__take_params.productData
+  });
+};
+
 module.exports = photographerManager;

@@ -28,7 +28,8 @@ Send Mysql DB Error Page to Client
 httpUtil.sendDBErrorPage = function(req, res, err){
 
 	httpUtil.sendInfoPage(req, res, {
-		infoText: "죄송합니다. 서비스에 오류가 발생하였습니다.<br>" + err.toString(),
+		infoText: "죄송합니다. 서비스에 오류가 발생하였습니다.<br>",
+    subText: err.toString(),
 		infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
 	});
 };

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/take-main-style.css"/>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script type="text/javascript" src="/javascripts/take-util.js"></script>
+    <script type="text/javascript" src="/javascripts/take-login.js"></script>
+    <script type="text/javascript">
+      (function(){
+        $(document).ready(function(){
+          var $timeItems = $(".time-item");
+
+          $(".take-datepicker").datepicker({
+            inline: true,
+            showOtherMonths: false,
+            showMonthAfterYear: true,
+            monthNames: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+            dayNamesMin: ["일", "월", "화", "수", "목", "금", "토"],
+            nextText: ">",
+            prevText: "<",
+            yearSuffix: "년",
+            dateFormat: "yy'년' m'월' d'일'",
+            onSelect: function(date){
+              $("#date").removeClass("border-solid-thin-lightgrey")
+              .addClass("border-solid-thin-mint bg-color-lightmint")
+              .text(date);
+            }
+          });
+
+          ButtonController.setButton($(".editor-submit-button"));
+
+          $timeItems.click(function(){
+            $timeItems.each(function(){
+              $(this).removeClass("selected");
+            });
+
+            $(this).addClass("selected");
+            $("#time").removeClass("border-solid-thin-lightgrey")
+            .addClass("border-solid-thin-mint bg-color-lightmint")
+            .text($(this).text());
+          });
+
+        });
+      }());
+    </script>
+  </head>
+
+  <body>
+
+    <% include ../header %>
+
+    <div class="take-main-window bg-color-lightergrey">
+      <div class="take-basic-window">
+        <h1>예약하기</h1>
+        <span class="font-grey">예약하실 날짜와 시간을 선택해 주세요.</span>
+
+        <div class="take-likes-box">
+          <div class="box">
+            <div class="rsv-product float-left">
+              <div class="product-box">
+                <span class="font-darkgrey font-level-large">
+                  <%= productData.product_name %>
+                </span>
+                <br>
+                <a href="/studio/<%= productData.username %>">
+                  <span class="font-grey font-level-default">
+                    <%= productData.studio_name %>
+                  </span>
+                </a>
+                <hr class="bg-color-lightgrey">
+                <div class="editor-input-label font-grey">&nbsp;날짜&nbsp;&nbsp;|</div>
+                <div id="date" class="input-box font-darkgrey border-solid-thin-lightgrey center-aligned"></div>
+                <div class="editor-input-label font-grey">&nbsp;시간&nbsp;&nbsp;|</div>
+                <div id="time" class="input-box font-darkgrey border-solid-thin-lightgrey center-aligned"></div>
+                <div class="editor-button-box right-aligned">
+                  <button type="button" class="editor-submit-button take-button-mint">
+                    <img src="/images/studio/check.png"></img><span>&nbsp;예약요청</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="rsv-date float-left">
+              <div class="take-datepicker"></div>
+            </div>
+            <div class="rsv-time float-left">
+              <div class="time-box">
+                <% for(var i = 14; i < 39; i++){ %>
+                  <div class="time-item">
+                    <% if(i < 24){ %>
+                      <span>오전</span>
+                        <% if(i % 2 == 0){ %>
+                          <span>&nbsp;&nbsp;<%= i/2 + 1 %>:00</span>
+                        <% }else{ %>
+                          <span>&nbsp;&nbsp;<%= Math.round(i/2) %>:30</span>
+                        <% } %>
+                    <% }else{ %>
+                      <span>오후</span>
+                      <% if(i % 2 == 0){ %>
+                        <span>&nbsp;&nbsp;<%= (i - 24)/2 + 1 %>:00</span>
+                      <% }else{ %>
+                        <span>&nbsp;&nbsp;<%= Math.round((i - 24)/2) %>:30</span>
+                      <% } %>
+                    <% } %>
+                  </div>
+                  <hr class="bg-color-lightgrey">
+                <% } %>
+              </div>
+            </div>
+            <div class="float-clear"></div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <% include ../footer %>
+
+    <% include ../login/login-popup %>
+
+  </body>
+
+</html>

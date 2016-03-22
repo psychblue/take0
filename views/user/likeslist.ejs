@@ -154,11 +154,13 @@
               <div class="likes-col desc">
                 <%- likeProductsData[i].product_desc %>
               </div>
-              <div class="likes-col button">
-                <button type="button" class="product-reserve-button take-button-mint">
-                  <img src="/images/studio/reserve.png"></img><span>&nbsp;&nbsp;예약하기</span>
-                </button>
-              </div>
+              <a href="/reserve?product_id=<%= likeProductsData[i].product_id %>">
+                <div class="likes-col button">
+                  <button type="button" class="product-reserve-button take-button-mint">
+                    <img src="/images/studio/reserve.png"></img><span>&nbsp;&nbsp;예약하기</span>
+                  </button>
+                </div>
+              </a>
               <div class="float-clear"></div>
             </div>
           <% } %>
