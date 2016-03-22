@@ -266,6 +266,18 @@ userManager.updatePassword = function(req, res, next){
 	}
 };
 
+userManager.showCartPage = function(req, res){
+
+	res.render("user/cart", {
+    title: confParams.html.title,
+    service: confParams.html.service_name,
+    isAuth: req.__take_params.isAuth,
+    hasStudio: req.__take_params.hasStudio,
+    username: req.__take_params.username,
+    nickname: req.__take_params.nickname
+  });
+};
+
 userManager.loadLikesStudioIds = function(req, res, next){
 
 	var callbackForError = function(err){

@@ -126,6 +126,10 @@ router.post("/user/password/update",
   userManager.matchPassword,
   userManager.updatePassword
 );
+router.get("/user/cart",
+  userManager.checkLogin,
+  userManager.showCartPage
+);
 // Likes List
 router.get("/user/likeslist",
   userManager.checkLogin,

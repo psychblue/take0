@@ -1050,7 +1050,7 @@ photographerManager.sendReservationsData = function(req, res){
   });
 };
 
-photographerManager.insertReservation = function(req, res, next){
+photographerManager.insertReservation = function(req, res){
 
   var callbackForError = function(err){
 		res.send({
