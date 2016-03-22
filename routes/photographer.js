@@ -114,14 +114,16 @@ photographerManager.loadProducts = function(req, res, next){
     }
   };
 
-  var query = "SELECT * FROM ?? WHERE ?? = ?";
+  var query = "SELECT * FROM ?? WHERE ?? = ? AND ?? = ?";
 
-  var params = ["studioProducts", "studio_id", req.__take_params.studioData.studio_id];
+  var params = ["studioProducts", "studio_id", req.__take_params.studioData.studio_id, "is_available", 1];
 
-  logger.debug("SQL Query [SELECT * FROM %s WHERE %s=%s]",
+  logger.debug("SQL Query [SELECT * FROM %s WHERE %s=%s AND %s=%s]",
     params[0],
     params[1],
-    params[2]
+    params[2],
+    params[3],
+    params[4]
   );
 
   mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
@@ -618,6 +620,7 @@ photographerManager.updateProduct = function(req, res){
   mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
 };
 
+/*
 photographerManager.deleteProduct = function(req, res, next){
 
   var callbackForError = function(err){
@@ -643,6 +646,40 @@ photographerManager.deleteProduct = function(req, res, next){
 
   mysqlDb.doSQLDeleteQuery(query, params, callbackForSuccess, callbackForError);
 };
+*/
+
+photographerManager.deleteProduct = function(req, res, next){
+
+  var callbackForError = function(err){
+    res.send({
+      "result": "fail",
+      "text": err
+    });
+  };
+
+  var callbackForSuccess = function(){
+    next();
+  };
+
+  var query = "UPDATE ?? SET ? WHERE ?? = ?";
+
+  var params = [
+    "studioProducts",
+    {is_available: 0},
+    "product_id",
+    req.body.product_id
+  ];
+
+  logger.debug("SQL Query [UPDATE %s SET %s WHRER %s = %s]",
+    params[0],
+    JSON.stringify(params[1]),
+    params[2],
+    params[3]
+  );
+
+  mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
+};
+
 
 photographerManager.saveNewPortfolioFiles = function(req, res, next){
 

@@ -426,6 +426,7 @@ userManager.loadProductData = function(req, res, next){
 				"studioProducts.product_name",
 				"studioProducts.product_price",
 				"studioProducts.product_desc",
+				"studioProducts.is_available",
 				"studio.studio_name",
 				"studio.username"
 			],

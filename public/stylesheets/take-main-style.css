@@ -530,6 +530,27 @@ hr {
   vertical-align: -6px;
 }
 
+.take-button-lightgrey {
+  width: 130px;
+  height: 40px;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 1em;
+  color: #fff;
+  vertical-align: middle;
+  outline: 0;
+  border: none;
+  text-align: center;
+  background-color: #ccc;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.take-button-lightgrey img {
+  vertical-align: -6px;
+}
+
 .take-button-whiteborder {
   width: 130px;
   height: 40px;

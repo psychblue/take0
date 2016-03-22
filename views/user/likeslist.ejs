@@ -154,13 +154,20 @@
               <div class="likes-col desc">
                 <%- likeProductsData[i].product_desc %>
               </div>
-              <a href="/reserve?product_id=<%= likeProductsData[i].product_id %>">
-                <div class="likes-col button">
-                  <button type="button" class="product-reserve-button take-button-mint">
+              <div class="likes-col button">
+                <% if(likeProductsData[i].is_available){ %>
+                  <a href="/reserve?product_id=<%= likeProductsData[i].product_id %>">
+                    <button type="button" class="product-reserve-button take-button-mint">
+                      <img src="/images/studio/reserve.png"></img><span>&nbsp;&nbsp;예약하기</span>
+                    </button>
+                  </a>
+                <% }else{ %>
+                  <button type="button" class="take-button-lightgrey">
                     <img src="/images/studio/reserve.png"></img><span>&nbsp;&nbsp;예약하기</span>
                   </button>
-                </div>
-              </a>
+                  <span class="font-level-small">삭제된 상품입니다.</span>
+                <% } %>
+              </div>
               <div class="float-clear"></div>
             </div>
           <% } %>
