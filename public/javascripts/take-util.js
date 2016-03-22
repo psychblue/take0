@@ -6,7 +6,7 @@ var InputController = (function(){
   };
 
   function onFocusout(targetInput){
-    if(targetInput.val() == ""){
+    if(targetInput.val() === ""){
       targetInput.siblings("label").show();
     }
 
@@ -34,12 +34,12 @@ var InputController = (function(){
     targetInput.focusout(function(){
       onFocusout($(this));
     });
-  }
+  };
 
   return {
     onKeydown,
     setInputFocus
-  }
+  };
 }());
 
 var CheckboxController = (function(){
@@ -65,7 +65,7 @@ var CheckboxController = (function(){
 
   return {
     setCheckbox
-  }
+  };
 }());
 
 var ButtonController = (function(){
@@ -104,7 +104,7 @@ var ButtonController = (function(){
 
   return {
     setButton
-  }
+  };
 }());
 
 var BackgroundController = (function(){
@@ -130,7 +130,7 @@ var BackgroundController = (function(){
   return {
     onMouseenter,
     onMouseleave
-  }
+  };
 }());
 
 var HeaderController = (function(){
@@ -187,5 +187,5 @@ var HeaderController = (function(){
 
   return {
     setBgColor
-  }
+  };
 }());

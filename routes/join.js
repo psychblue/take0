@@ -8,7 +8,7 @@ var bcrypt = require("bcrypt-node");
 var mysqlDb = require("../database/mysqldb");
 var confParams = require("../conf/conf").getParams();
 var httpUtil = require("../util/http-util");
-var fileUtil = require("../util/file-util")
+var fileUtil = require("../util/file-util");
 var loginManager = require("./login");
 var joinManager = {};
 
@@ -245,7 +245,7 @@ joinManager.deleteUserFiles = function(req, res, next){
     var sliderPhotoList = JSON.parse(rows[0].slider_photo_list);
 
     for(var key in sliderPhotoList){
-      if(sliderPhotoList[key] != ""){
+      if(sliderPhotoList[key] !== ""){
         fileUtil.deleteImageFile(sliderPhotoList[key]);
       }
     }
@@ -254,7 +254,7 @@ joinManager.deleteUserFiles = function(req, res, next){
       var photoList = rows[rowsIndex].photo_list.split(",");
 
       for(var photoListIndex = 0; photoListIndex < photoList.length; photoListIndex++){
-        if(photoList[photoListIndex] != ""){
+        if(photoList[photoListIndex] !== ""){
           fileUtil.deleteImageFile(photoList[photoListIndex]);
         }
       }

@@ -118,7 +118,7 @@ var StudioPhotoSliderController = (function(){
 
               onClickDelButton($(this));
             });
-          }
+          };
           reader.readAsDataURL($(this)[0].files[0]);
         }
         else{
@@ -178,7 +178,7 @@ var StudioPhotoSliderController = (function(){
       init,
       show,
       close
-    }
+    };
   }());
   /***************************************************/
 
@@ -278,7 +278,7 @@ var StudioPhotoSliderController = (function(){
   return {
     enableSlider,
     closeEditor: SliderEditor.close
-  }
+  };
 }());
 
 /*
@@ -415,7 +415,7 @@ var StudioIntrodunctionController = (function(){
 
   return {
     closeEditor
-  }
+  };
 }());
 
 /*
@@ -651,7 +651,7 @@ var StudioProductController = (function(){
       getProductBox,
       enableAdder,
       closeEditor
-    }
+    };
   };
   /***************************************************/
 
@@ -726,7 +726,7 @@ var StudioProductController = (function(){
   return {
     setProduct,
     closeEditor
-  }
+  };
 }());
 
 /*
@@ -809,7 +809,7 @@ var StudioPortfolioController = (function(){
         photoList[Number($(this).parent().attr("for"))] = "";
 
         $photoListInput.val(photoList.filter(function(element){
-          return element != "";
+          return element !== "";
         }));
 
         $delPhotoListInput.val(delPhotoList);
@@ -837,7 +837,7 @@ var StudioPortfolioController = (function(){
 
     function setPhotoList(data){
       if(data.result == "success"){
-        if(data.body.photo_list != ""){
+        if(data.body.photo_list !== ""){
           photoList = data.body.photo_list.split(",");
         }
         setEditor();
@@ -963,7 +963,7 @@ var StudioPortfolioController = (function(){
 
               onClickDelButton($(this));
             });
-          }
+          };
           reader.readAsDataURL($(this)[0].files[0]);
 
           addInput();

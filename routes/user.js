@@ -190,11 +190,11 @@ userManager.matchPassword = function(req, res, next){
 
 	var callbackForError = function(err){
     httpUtil.sendDBErrorPage(req, res, err);
-  }
+  };
 
   var callbackForNoResult = function(){
     httpUtil.sendNoDataFromDBPage(req, res);
-  }
+  };
 
   var callbackForSuccess = function(rows, fields){
     if(bcrypt.compareSync(req.body.password_old, rows[0].password)){
@@ -203,7 +203,7 @@ userManager.matchPassword = function(req, res, next){
       req.__take_params.passwordMatched = 0;
     }
 		next();
-  }
+  };
 
   var query = "SELECT ?? FROM ?? WHERE ?? = ?";
 
@@ -402,11 +402,11 @@ userManager.loadProductData = function(req, res, next){
 
 		var callbackForError = function(err){
 	    httpUtil.sendDBErrorPage(req, res, err);
-	  }
+	  };
 
 	  var callbackForNoResult = function(){
 	    httpUtil.sendNoDataFromDBPage(req, res);
-	  }
+	  };
 
 	  var callbackForSuccess = function(rows, fields){
 	    req.__take_params.likeProductsData[iterator] = rows[0];
@@ -416,9 +416,9 @@ userManager.loadProductData = function(req, res, next){
 			else{
 				next();
 			}
-	  }
+	  };
 
-		var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ??"
+		var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ??";
 
 		var params = [
 			[
@@ -481,11 +481,11 @@ userManager.checkDupLikes = function(req, res, next){
 
 	var callbackForError = function(err){
     httpUtil.sendDBErrorPage(req, res, err);
-  }
+  };
 
   var callbackForNoResult = function(){
     next();
-  }
+  };
 
   var callbackForSuccess = function(rows, fields){
     for(var likesIndex = 0; likesIndex < rows.length; likesIndex++){
@@ -511,12 +511,14 @@ userManager.checkDupLikes = function(req, res, next){
 			}
 		}
 		next();
-  }
+  };
 
-	var query = "SELECT ?? FROM ?? WHERE ?? = ?"
+	var query = "SELECT ?? FROM ?? WHERE ?? = ?";
+
+	var params;
 
 	if(req.body.studio_id){
-		var params = [
+		params = [
 			"studio_id",
 			"takeUserLikeStudios",
 			"username",
@@ -524,7 +526,7 @@ userManager.checkDupLikes = function(req, res, next){
 		];
 	}
 	else if(req.body.product_id){
-		var params = [
+		params = [
 			"product_id",
 			"takeUserLikeProducts",
 			"username",
@@ -557,8 +559,10 @@ userManager.insertLikesList = function(req, res){
 
 	var query = "INSERT INTO ?? SET ?";
 
+	var params;
+
 	if(req.body.studio_id){
-		var params = [
+		params = [
 			"takeUserLikeStudios",
 			{
 				username: req.__take_params.username,
@@ -567,7 +571,7 @@ userManager.insertLikesList = function(req, res){
 		];
 	}
 	else if(req.body.product_id){
-		var params = [
+		params = [
 			"takeUserLikeProducts",
 			{
 				username: req.__take_params.username,
@@ -599,8 +603,10 @@ userManager.deleteLikesList = function(req, res){
 
   var query = "DELETE FROM ?? WHERE ?? = ? AND ?? = ?";
 
+	var params;
+
 	if(req.body.studio_id){
-	  var params = [
+	  params = [
 			"takeUserLikeStudios",
 			"username",
 			req.__take_params.username,
@@ -609,7 +615,7 @@ userManager.deleteLikesList = function(req, res){
 		];
 	}
 	else if(req.body.product_id){
-		var params = [
+		params = [
 			"takeUserLikeProducts",
 			"username",
 			req.__take_params.username,

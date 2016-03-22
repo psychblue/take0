@@ -26,7 +26,7 @@ mysqlDb.doSQLSelectQuery = function(query, params, callbackForSuccess, callbackF
 				callbackForError(err);
 		  }
 			else{
-			  if(rows.length == 0){
+			  if(rows.length === 0){
 					callbackForNoResult();
 				}
 				else if(rows.length > 0){

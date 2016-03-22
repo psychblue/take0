@@ -41,7 +41,7 @@ var SearchBoxController = (function(){
     .append($searchBoxDatepicker);
 
     $searchBoxDividers = $(".search-box-divider");
-    
+
     $searchBoxCategory
     .attr("id", "search-box-category")
     .append($("<span></span>").addClass("search-box-text").text("서비스를 선택하세요."))
@@ -73,7 +73,7 @@ var SearchBoxController = (function(){
     }
 
     var regionItems = ["서울", "경기", "인천", "부산"];
-    for(var item in regionItems){
+    for(item in regionItems){
       $searchBoxRegionList.append($("<div></div>").addClass("search-box-item").text(regionItems[item]));
     }
   };
@@ -99,7 +99,7 @@ var SearchBoxController = (function(){
     });
 
     $searchBoxCategory.click(function(){
-      if(categoryEnabled == 0){
+      if(categoryEnabled === 0){
         setSearchBoxListPosition($searchBoxCategoryList, $searchBoxCategory);
         $searchBoxCategoryList.fadeIn("fast");
         categoryEnabled = 1;
@@ -120,7 +120,7 @@ var SearchBoxController = (function(){
     });
 
     $searchBoxRegion.click(function(){
-      if(regionEnabled == 0){
+      if(regionEnabled === 0){
         setSearchBoxListPosition($searchBoxRegionList, $searchBoxRegion);
         $searchBoxRegionList.fadeIn("fast");
         regionEnabled = 1;
@@ -141,7 +141,7 @@ var SearchBoxController = (function(){
     });
 
     $searchBoxDate.click(function(){
-      if(dateEnabled == 0){
+      if(dateEnabled === 0){
         setSearchBoxListPosition($searchBoxDatepicker, $searchBoxDate);
         $searchBoxDatepicker.fadeIn("fast");
         dateEnabled = 1;
@@ -290,5 +290,5 @@ var SearchBoxController = (function(){
 
   return {
     setSearchBox
-  }
+  };
 }());

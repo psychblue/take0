@@ -27,7 +27,7 @@ var LoginController = (function(){
         bindEvents();
         Kakao.init("a481f23f90ba53b1b10d7e4fa6d7a067");
 
-        if(redirectUrl != ""){
+        if(redirectUrl !== ""){
           viewLoginPopup();
         }
       //});
@@ -96,7 +96,7 @@ var LoginController = (function(){
       data: $loginForm.serialize(),
       success: function(data){
         if(data.result == "success"){
-          if(redirectUrl == ""){
+          if(redirectUrl === ""){
             location.reload();
           }
           else{
@@ -116,7 +116,7 @@ var LoginController = (function(){
 
   function closeLoginPopup(){
     if(loginPopupEnabled == 1){
-      if(redirectUrl == ""){
+      if(redirectUrl === ""){
         $("body").css({
           "overflow": "auto"
         });
@@ -132,7 +132,7 @@ var LoginController = (function(){
   };
 
   var viewLoginPopup = function(){
-    if(loginPopupEnabled == 0){
+    if(loginPopupEnabled === 0){
 
       $loginError.empty();
       $loginForm[0].reset();
@@ -156,7 +156,7 @@ var LoginController = (function(){
       if(data.result == "success"){
         if(data.userfrom == 1){
           Kakao.Auth.logout(function(){
-            if(url != ""){
+            if(url !== ""){
               location.href = url;
             }
             else{
@@ -196,7 +196,7 @@ var LoginController = (function(){
           },
           success: function(data){
             if(data.result == "success"){
-              if(redirectUrl == ""){
+              if(redirectUrl === ""){
                 location.reload();
               }
               else{
@@ -226,5 +226,5 @@ var LoginController = (function(){
     setRedirectUrl,
     kakaoLogin,
     logout
-  }
+  };
 }());

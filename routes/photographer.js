@@ -42,7 +42,7 @@ photographerManager.loadStudio = function(req, res, next){
 
   var callbackForSuccess = function(rows, fields){
 
-    if(rows[0].num_products == 0 && rows[0].num_portfolios == 0){
+    if(rows[0].num_products === 0 && rows[0].num_portfolios === 0){
       res.render("photographer/studio", {
         title: confParams.html.title,
         service: confParams.html.service_name,
@@ -95,7 +95,7 @@ photographerManager.loadProducts = function(req, res, next){
   };
 
   var callbackForSuccess = function(rows, fields){
-    if(req.__take_params.studioData.num_portfolios == 0){
+    if(req.__take_params.studioData.num_portfolios === 0){
       res.render("photographer/studio", {
         title: confParams.html.title,
         service: confParams.html.service_name,
@@ -306,10 +306,10 @@ photographerManager.addServiceCategory = function(req, res){
 
     for(var categoryIndex = 0; categoryIndex < req.body.category.length; categoryIndex++){
       if(categoryIndex == req.body.category.length - 1){
-        query = query + "(?, ?)"
+        query = query + "(?, ?)";
       }
       else{
-        query = query + "(?, ?),"
+        query = query + "(?, ?),";
       }
 
       params.push(req.__take_params.studioId);
@@ -396,14 +396,14 @@ photographerManager.loadSliderPhotoList = function(req, res, next){
                             + req.__take_params.filenamePrefix
                             + req.files[index][0].originalname;
 
-          if(currentPhotoList[index] != ""){
+          if(currentPhotoList[index] !== ""){
             fileUtil.deleteImageFile(currentPhotoList[index]);
           }
           newPhotoList[index] = newFilename;
           break;
 
         case "2":
-          if(currentPhotoList[index] != ""){
+          if(currentPhotoList[index] !== ""){
             fileUtil.deleteImageFile(currentPhotoList[index]);
           }
           newPhotoList[index] = "";
@@ -415,14 +415,14 @@ photographerManager.loadSliderPhotoList = function(req, res, next){
 
     var numPhoto = 0;
 
-    for(var i = 1; i < 6; i++){
-      if(newPhotoList[String(i)] != ""){
+    for(var photoIndex = 1; photoIndex < 6; photoIndex++){
+      if(newPhotoList[String(photoIndex)] !== ""){
         numPhoto++;
       }
       else{
-        for(var j = i + 1; j < 6; j++){
-          if(newPhotoList[String(j)] != ""){
-            newPhotoList[String(i)] = newPhotoList[String(j)];
+        for(var j = photoIndex + 1; j < 6; j++){
+          if(newPhotoList[String(j)] !== ""){
+            newPhotoList[String(photoIndex)] = newPhotoList[String(j)];
             newPhotoList[String(j)] = "";
             numPhoto++;
             break;
@@ -734,7 +734,7 @@ photographerManager.updatePortfolio = function(req, res, next){
   var newPhotoList = req.body.photo_list.split(",");
   var delPhotoList = req.body.del_photo_list.split(",");
 
-  if(newPhotoList[0] == ""){
+  if(newPhotoList[0] === ""){
     newPhotoList = [];
   }
 
@@ -744,16 +744,16 @@ photographerManager.updatePortfolio = function(req, res, next){
     }
   }
 
-  if(newPhotoList[0] != ""){
+  if(newPhotoList[0] !== ""){
     numPhoto = newPhotoList.length;
   }
   else{
     numPhoto = 0;
   }
 
-  if(delPhotoList[0] != ""){
-    for(var i = 0; i < delPhotoList.length; i++){
-      fileUtil.deleteImageFile(delPhotoList[i]);
+  if(delPhotoList[0] !== ""){
+    for(var photoIndex = 0; photoIndex < delPhotoList.length; photoIndex++){
+      fileUtil.deleteImageFile(delPhotoList[photoIndex]);
     }
   }
 
@@ -871,7 +871,7 @@ photographerManager.deletePortfolio = function(req, res, next){
 
   var callbackForSuccess = function(){
     var photoList = req.body.photo_list.split(",");
-    if(photoList[0] != ""){
+    if(photoList[0] !== ""){
       for(var i = 0; i < photoList.length; i++){
         fileUtil.deleteImageFile(photoList[i]);
       }
@@ -945,7 +945,7 @@ photographerManager.loadProduct = function(req, res, next){
     next();
   };
 
-  var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ??"
+  var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ??";
 
   var params = [
     [
@@ -1007,7 +1007,7 @@ photographerManager.loadReservations = function(req, res, next){
     date = date + today.getFullYear() + month + dateNum;
   }
 
-  var query = "SELECT * FROM ?? WHERE ?? = ? AND ?? = ?"
+  var query = "SELECT * FROM ?? WHERE ?? = ? AND ?? = ?";
 
   var params = [
     "studioReservations",

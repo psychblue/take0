@@ -34,7 +34,7 @@ module.exports = function(jsname){
                   					+ padStr(temp.getSeconds());
     			};
 
-    			function padStr(i) {
+    			function padStr(i){
         		return (i < 10) ? "0" + i : "" + i;
     			};
 
@@ -58,4 +58,4 @@ module.exports = function(jsname){
 	var logger = container.get(label);
 	logger.info("Logger for %s is set... ", label);
 	return logger;
-}
+};

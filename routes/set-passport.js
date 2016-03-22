@@ -14,11 +14,11 @@ passport.use(new LocalStrategy(function(username, password, done){
 
   var callbackForError = function(err){
     return done(null, false);
-  }
+  };
 
   var callbackForNoResult = function(){
     return done(null, false);
-  }
+  };
 
   var callbackForSuccess = function(rows, fields){
     if(bcrypt.compareSync(password, rows[0].password)){
@@ -27,8 +27,8 @@ passport.use(new LocalStrategy(function(username, password, done){
     }else{
       return done(null, false);
     }
-  }
-  
+  };
+
   var query = "SELECT ?? FROM ?? WHERE ?? = ?";
 
   var params = ["password", "takeUser", "username", username];
