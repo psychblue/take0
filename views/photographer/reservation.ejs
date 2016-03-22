@@ -10,8 +10,10 @@
     <script type="text/javascript" src="/javascripts/take-login.js"></script>
     <script type="text/javascript">
       (function(){
+        var $timeItems;
+
         $(document).ready(function(){
-          var $timeItems = $(".time-item");
+          $timeItems = $(".time-item");
 
           $(".take-datepicker").datepicker({
             inline: true,
@@ -24,9 +26,13 @@
             yearSuffix: "년",
             dateFormat: "yy'년' m'월' d'일'",
             onSelect: function(date){
+              $("#time").removeClass("border-solid-thin-mint bg-color-lightmint")
+              .addClass("border-solid-thin-lightgrey")
+              .empty();
               $("#date").removeClass("border-solid-thin-lightgrey")
               .addClass("border-solid-thin-mint bg-color-lightmint")
               .text(date);
+              loadSchedule(date);
             }
           });
 
@@ -42,8 +48,11 @@
             .addClass("border-solid-thin-mint bg-color-lightmint")
             .text($(this).text());
           });
-
         });
+
+        function loadSchedule(date){
+          
+        };
       }());
     </script>
   </head>

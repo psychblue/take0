@@ -1386,6 +1386,10 @@ hr {
   padding: 0;
   margin: 0;
 }
+.ui-datepicker td:hover a {
+  color: #404040;
+  font-weight: bold;
+}
 .ui-datepicker-header {
   margin-top: 10px;
   margin-bottom: 15px;
@@ -1405,10 +1409,6 @@ hr {
 .ui-datepicker-next {
   float: right;
   margin-right: 10px;
-}
-.ui-datepicker-calendar a:hover {
-  color: #404040;
-  font-weight: bold;
 }
 .ui-datepicker-current-day {
   border-radius: 3px;
