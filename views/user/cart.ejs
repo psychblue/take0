@@ -12,67 +12,7 @@
     <script type="text/javascript">
       (function(){
         $(document).ready(function(){
-          var $deleteButtons = $(".delete"),
-          $studioDeleteButtons = $(".likes-studio .delete"),
-          $productDeleteButtons = $(".likes-product .delete");
-
-          ButtonController.setButton($(".product-reserve-button"));
-
-          $deleteButtons.hover(function(){
-            $(this).css({"background-color": "#3db7cc"});
-          },
-          function(){
-            $(this).css({"background-color": "#999"});
-          });
-
-          $studioDeleteButtons.click(function(){
-            $.ajax({
-              type: "POST",
-              url: "/user/likeslist/delete",
-              data: {
-                studio_id: Number($(this).attr("for"))
-              },
-              success: function(data){
-                if(data.result == "success"){
-                  location.reload();
-                }
-                else if(data.result == "fail"){
-                  alert(data.text);
-                }
-              },
-              error: function(xhr, option, error){
-                alert(error);
-              }
-            });
-
-            return false;
-          });
-
-          $productDeleteButtons.click(function(){
-            $.ajax({
-              type: "POST",
-              url: "/user/likeslist/delete",
-              data: {
-                product_id: Number($(this).attr("for"))
-              },
-              success: function(data){
-                if(data.result == "success"){
-                  location.reload();
-                }
-                else if(data.result == "fail"){
-                  alert(data.text);
-                  if(data.code == "401"){
-                    location.href = "/login?redirect=/user/likeslist";
-                  }
-                }
-              },
-              error: function(xhr, option, error){
-                alert(error);
-              }
-            });
-
-            return false;
-          });
+          ButtonController.setButton($(".rsv-details-button"));
         });
       }());
     </script>
@@ -111,7 +51,70 @@
     <div class="take-main-window bg-color-lightergrey">
 
       <div class="take-basic-window2">
-
+        <h1>예약 리스트</h1>
+        <div class="take-likes-box">
+          <% for(var i = 0; i < reservationsData.length; i++){ %>
+            <div class="likes-product font-grey">
+              <div class="likes-col name">
+                <span class="font-darkgrey font-level-large">
+                  <%= reservationsData[i].product_name %>
+                </span>
+                <br>
+                <a href="/studio/<%= reservationsData[i].username %>">
+                  <span class="font-grey font-level-default">
+                    <%= reservationsData[i].studio_name %>
+                  </span>
+                </a>
+              </div>
+              <div class=" likes-col date">
+                <span class="font-darkgrey font-bold">
+                  <% var date = reservationsData[i].rsv_date.toString() %>
+                  <% var year = date.slice(0, 4) %>
+                  <% var month = date.slice(4, 6) %>
+                  <% if(month[0] == "0"){ %>
+                    <% month = month.slice(1, 2) %>
+                  <% } %>
+                  <% var dateNum = date.slice(6, 8) %>
+                  <% if(dateNum[0] == "0"){ %>
+                    <% dateNum = dateNum.slice(1, 2) %>
+                  <% } %>
+                  <% var time = reservationsData[i].rsv_start_time %>
+                  <% var time_prefix = "오전" %>
+                  <% if(time >= 1300){ %>
+                    <% time_prefix = "오후" %>
+                    <% time = time - 1200 %>
+                  <% } %>
+                  <% time = time.toString() %>
+                  <% var hour %>
+                  <% if(time.length == 3){ %>
+                    <% hour = time.slice(0, 1) %>
+                  <% }else{ %>
+                    <% hour = time.slice(0, 2) %>
+                  <% } %>
+                  <% var minute = time.slice(-2) %>
+                  <%= year %>년 <%= month %>월 <%= dateNum %>일&nbsp;
+                </span>
+                <br>
+                <span class="font-darkgrey">
+                  <%= time_prefix %>&nbsp;<%= hour %>:<%= minute %>
+                </span>
+              </div>
+              <div class="likes-col status">
+                <button type="button" class="take-button-greyborder">
+                  <span><%= reservationsData[i].rsv_status %></span>
+                </button>
+              </div>
+              <div class="likes-col button">
+                <a href="#">
+                  <button type="button" class="rsv-details-button take-button-mint">
+                    <img src="/images/user/details.png"></img><span>&nbsp;&nbsp;상세보기</span>
+                  </button>
+                </a>
+              </div>
+              <div class="float-clear"></div>
+            </div>
+          <% } %>
+        </div>
 
       </div>
 

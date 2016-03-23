@@ -963,11 +963,8 @@ photographerManager.loadProduct = function(req, res, next){
     "studio.studio_id"
   ];
 
-  logger.debug("SQL Query [SELECT %s %s %s %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s]",
-    params[0][0],
-    params[0][1],
-    params[0][2],
-    params[0][3],
+  logger.debug("SQL Query [SELECT %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s]",
+    params[0].toString(),
     params[1],
     params[2],
     params[3],

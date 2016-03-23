@@ -345,7 +345,7 @@ hr {
 }
 
 .take-likes-box .likes-product .name {
-  width: 200px;
+  width: 250px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -357,11 +357,19 @@ hr {
 }
 
 .take-likes-box .likes-product .desc {
-  width: 380px;
+  width: 330px;
 }
 
 .take-likes-box .likes-product .button {
   width: 130px;
+}
+
+.take-likes-box .likes-product .date {
+  width: 300px;
+}
+
+.take-likes-box .likes-product .status {
+  width: 160px;
 }
 
 .take-likes-box .rsv-product {
@@ -562,6 +570,27 @@ hr {
 }
 
 .take-button-whiteborder img {
+  vertical-align: -6px;
+}
+
+.take-button-greyborder {
+  width: 130px;
+  height: 40px;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 1em;
+  color: #404040;
+  vertical-align: middle;
+  outline: 0;
+  border: 1px solid #999;
+  text-align: center;
+  background-color: transparent;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.take-button-greyborder img {
   vertical-align: -6px;
 }
 
@@ -920,6 +949,7 @@ hr {
 
 #studio-product-window .product-box {
   width: 800px;
+  border-radius: 3px;
   overflow: hidden;
   margin: 50px auto;
   position: relative;

@@ -46,9 +46,8 @@ userManager.loadDefaultTakeParams = function(req, res, next){
 
 		var params = [["nickname", "has_studio"], "takeUser", "username", req.__take_params.username];
 
-		logger.debug("SQL Query [SELECT %s %s FROM %s WHERE %s=%s]",
-			params[0][0],
-			params[0][1],
+		logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
+			params[0].toString(),
 			params[1],
 			params[2],
 			params[3]
@@ -266,6 +265,66 @@ userManager.updatePassword = function(req, res, next){
 	}
 };
 
+userManager.loadReservations = function(req, res, next){
+
+	var callbackForError = function(err){
+    httpUtil.sendDBErrorPage(req, res, err);
+  };
+
+  var callbackForNoResult = function(){
+    req.__take_params.reservationsData = [];
+    next();
+  };
+
+  var callbackForSuccess = function(rows, fields){
+    req.__take_params.reservationsData = rows;
+    next();
+  };
+
+  var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ?? AND ?? = ? INNER JOIN ?? ON ?? = ??";
+
+  var params = [
+		[
+			"studioProducts.product_id",
+			"studioProducts.product_name",
+			"studioProducts.product_desc",
+			"studioProducts.product_price",
+			"studioReservations.rsv_id",
+			"studioReservations.request_date",
+			"studioReservations.rsv_date",
+			"studioReservations.rsv_start_time",
+			"studioReservations.rsv_end_time",
+			"studioReservations.rsv_status",
+			"studio.studio_name",
+			"studio.username"
+		],
+		"studioProducts",
+		"studioReservations",
+		"studioProducts.product_id",
+		"studioReservations.product_id",
+    "studioReservations.request_user",
+    req.__take_params.username,
+		"studio",
+		"studioProducts.studio_id",
+		"studio.studio_id"
+  ];
+
+  logger.debug("SQL Query [SELECT %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s INNER JOIN %s ON %s=%s]",
+		params[0].toString(),
+    params[1],
+    params[2],
+		params[3],
+		params[4],
+		params[5],
+		params[6],
+		params[7],
+		params[8],
+		params[9]
+  );
+
+  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+};
+
 userManager.showCartPage = function(req, res){
 
 	res.render("user/cart", {
@@ -274,7 +333,8 @@ userManager.showCartPage = function(req, res){
     isAuth: req.__take_params.isAuth,
     hasStudio: req.__take_params.hasStudio,
     username: req.__take_params.username,
-    nickname: req.__take_params.nickname
+    nickname: req.__take_params.nickname,
+		reservationsData: req.__take_params.reservationsData
   });
 };
 
@@ -382,11 +442,8 @@ userManager.loadStudioData = function(req, res, next){
 			"takeUser.username"
 		];
 
-	  logger.debug("SQL Query [SELECT %s %s %s %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s]",
-	    params[0][0],
-			params[0][1],
-			params[0][2],
-			params[0][3],
+	  logger.debug("SQL Query [SELECT %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s]",
+	    params[0].toString(),
 	    params[1],
 	    params[2],
 			params[3],
@@ -450,12 +507,8 @@ userManager.loadProductData = function(req, res, next){
 			"studio.studio_id"
 		];
 
-	  logger.debug("SQL Query [SELECT %s %s %s %s %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s]",
-	    params[0][0],
-			params[0][1],
-			params[0][2],
-			params[0][3],
-			params[0][4],
+	  logger.debug("SQL Query [SELECT %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s]",
+	    params[0].toString(),
 	    params[1],
 	    params[2],
 			params[3],

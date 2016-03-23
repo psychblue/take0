@@ -128,6 +128,7 @@ router.post("/user/password/update",
 );
 router.get("/user/cart",
   userManager.checkLogin,
+  userManager.loadReservations,
   userManager.showCartPage
 );
 // Likes List

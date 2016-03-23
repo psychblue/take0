@@ -148,11 +148,11 @@
                 </a>
                 <div class="delete" for="<%= likeProductsData[i].product_id %>">X 삭제</div>
               </div>
-              <div class="likes-col price font-grey font-level-default">
-                \<%= likeProductsData[i].product_price.toString().split(/(?=(?:\d{3})+(?:\.|$))/g).join(',') %>
-              </div>
               <div class="likes-col desc">
                 <%- likeProductsData[i].product_desc %>
+              </div>
+              <div class="likes-col price font-grey font-level-default">
+                \<%= likeProductsData[i].product_price.toString().split(/(?=(?:\d{3})+(?:\.|$))/g).join(',') %>
               </div>
               <div class="likes-col button">
                 <% if(likeProductsData[i].is_available){ %>

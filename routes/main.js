@@ -63,10 +63,8 @@ mainManager.showTodayStudioList = function(req, res){
     Number(req.body.end)
   ];
 
-  logger.debug("SQL Query [SELECT %s, %s, %s FROM %s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s LIMIT %d,%d]",
-    params[0][0],
-    params[0][1],
-    params[0][2],
+  logger.debug("SQL Query [SELECT %s FROM %s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s LIMIT %d,%d]",
+    params[0].toString(),
     params[1],
     params[2],
     params[3],
