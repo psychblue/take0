@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/take-main-style.css"/>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script type="text/javascript" src="/javascripts/take-util.js"></script>
+    <script type="text/javascript" src="/javascripts/take-login.js"></script>
+    <script type="text/javascript">
+      (function(){
+        $(document).ready(function(){
+          ButtonController.setButton($(".back-button"), goBack);
+          ButtonController.setButton($(".rsv-cancel-button"));
+          setStatus();
+          setTimeline();
+        });
+
+        function goBack(){
+          location.href = history.go(-1);
+        };
+
+        function setStatus(){
+          var status = <%= reservationData.rsv_status %>;
+
+          $(".rsv-status[for='" + status + "']").removeClass("bg-color-grey")
+          .addClass("bg-color-mint");
+        };
+
+        function setTimeline(){
+          $(".timeline").each(function(){
+            $(this).find(".line").css({
+              "height": $(this).next(".contents").outerHeight()
+            });
+          });
+        };
+
+      }());
+    </script>
+  </head>
+
+  <body>
+
+    <% include ../header %>
+
+      <nav class="take-navigation bg-color-darkgrey font-lightgrey">
+        <ul>
+          <li class="nav-item">
+            <a href="/user/userinfo">
+              <img src="/images/user/userinfo.png"></img><span>회원정보 관리</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/user/cart">
+              <img src="/images/user/cart.png"></img><span class="selected">예약 관리</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/user/likeslist">
+              <img src="/images/user/likes.png"></img><span>찜 리스트</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/user/userinfo">
+              <img src="/images/user/gallery.png"></img><span>갤러리</span>
+            </a>
+          </li>
+      </ul>
+      </nav>
+
+
+    <div class="take-main-window bg-color-lightergrey">
+
+      <div class="take-basic-window2">
+        <h1>예약 타임라인</h1>
+        <span class="font-grey">예약 진행 상황을 확인하세요.</span>
+        <hr class="bg-color-lightgrey">
+
+        <div class="rsv-status-box">
+          <div class="rsv-status font-white bg-color-lightgrey" for="1">예약요청중</div>
+          <div class="rsv-status-arrow font-grey font-level-larger">></div>
+          <div class="rsv-status font-white bg-color-lightgrey" for="2">예약확인중</div>
+          <div class="rsv-status-arrow font-grey font-level-larger">></div>
+          <div class="rsv-status font-white bg-color-lightgrey" for="3">예약확정</div>
+          <div class="rsv-status-arrow font-grey font-level-larger">></div>
+          <div class="rsv-status font-white bg-color-lightgrey" for="4">결제완료</div>
+          <div class="rsv-status-arrow font-grey font-level-larger">></div>
+          <div class="rsv-status font-white bg-color-lightgrey" for="5">촬영완료</div>
+          <div class="rsv-status-arrow font-grey font-level-larger">></div>
+          <div class="rsv-status font-white bg-color-lightgrey" for="6">상품전달중</div>
+          <div class="rsv-status-arrow font-grey font-level-larger">></div>
+          <div class="rsv-status font-white bg-color-lightgrey" for="7">상품확인</div>
+          <div class="float-clear"></div>
+
+          <div class="rsv-status-desc font-grey font-level-small">
+            스튜디오에<br>촬영 예약을<br>요청하였습니다.
+          </div>
+          <div class="rsv-status-arrow font-grey font-level-larger"></div>
+          <div class="rsv-status-desc font-grey font-level-small">
+            스튜디오와<br>예약 내용을<br>확인중입니다.
+          </div>
+          <div class="rsv-status-arrow font-grey font-level-larger"></div>
+          <div class="rsv-status-desc font-grey font-level-small">
+            촬영 일정이<br>확정되었습니다.
+          </div>
+          <div class="rsv-status-arrow font-grey font-level-larger"></div>
+          <div class="rsv-status-desc font-grey font-level-small">
+            예약/결제/확인이<br>완료되었습니다.
+          </div>
+          <div class="rsv-status-arrow font-grey font-level-larger"></div>
+          <div class="rsv-status-desc font-grey font-level-small">
+            예약된 일정에<br>촬영이<br>완료되었습니다.
+          </div>
+          <div class="rsv-status-arrow font-grey font-level-larger"></div>
+          <div class="rsv-status-desc font-grey font-level-small">
+            촬영 결과물이<br>전달중입니다.
+          </div>
+          <div class="rsv-status-arrow font-grey font-level-larger"></div>
+          <div class="rsv-status-desc font-grey font-level-small">
+            결과물이<br>확인되었습니다.
+          </div>
+          <div class="float-clear"></div>
+        </div>
+
+        <div class="rsv-timeline-box">
+
+          <div class="rsv-timeline-item">
+
+            <div class="datetime">
+              <span class="font-darkgrey font-bold"><%= service %></span><br>
+              <span class="font-grey font-level-small"><%= reservationData.request_date %></span>
+            </div>
+
+            <div class="timeline">
+              <div class="line bg-color-grey"></div>
+              <div class="dot bg-color-mint"></div>
+              <div class="arrow-darkgrey"></div>
+            </div>
+
+            <div class="contents">
+              <div class="main-line bg-color-darkgrey">
+                <span class="font-white">예약요청중&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                <span class="font-lightgrey">예약을 요청하였습니다.</span>
+              </div>
+              <div class="sub-line">
+                <table>
+                  <tr>
+                    <td class="label">
+                      상품명
+                    </td>
+                    <td class="desc">
+                      <span class="font-darkgrey font-bold">
+                        <%= reservationData.product_name %>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label">
+                      스튜디오
+                    </td>
+                    <td class="desc">
+                      <span class="font-darkgrey">
+                        <%= reservationData.studio_name %>&nbsp;&nbsp;
+                      </span>
+                      <a href="/studio/<%= reservationData.username %>">
+                        <span class="font-white font-level-small bg-color-grey">&nbsp;바로가기&nbsp;</span>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label">
+                      예약 일정
+                    </td>
+                    <td class="desc">
+                      <span class="font-darkgrey font-bold">
+                        <% var date = reservationData.rsv_date.toString() %>
+                        <% var year = date.slice(0, 4) %>
+                        <% var month = date.slice(4, 6) %>
+                        <% if(month[0] == "0"){ %>
+                          <% month = month.slice(1, 2) %>
+                        <% } %>
+                        <% var dateNum = date.slice(6, 8) %>
+                        <% if(dateNum[0] == "0"){ %>
+                          <% dateNum = dateNum.slice(1, 2) %>
+                        <% } %>
+                        <% var time = reservationData.rsv_start_time %>
+                        <% var time_prefix = "오전" %>
+                        <% if(time >= 1300){ %>
+                          <% time_prefix = "오후" %>
+                          <% time = time - 1200 %>
+                        <% } %>
+                        <% time = time.toString() %>
+                        <% var hour %>
+                        <% if(time.length == 3){ %>
+                          <% hour = time.slice(0, 1) %>
+                        <% }else{ %>
+                          <% hour = time.slice(0, 2) %>
+                        <% } %>
+                        <% var minute = time.slice(-2) %>
+                        <%= year %>년 <%= month %>월 <%= dateNum %>일&nbsp;
+                      </span>
+                      <span class="font-darkgrey">
+                        <%= time_prefix %>&nbsp;<%= hour %>:<%= minute %>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label last-line">
+                      상품 내용
+                    </td>
+                    <td class="desc last-line">
+                      <ul class="font-darkgrey">
+                        <%- reservationData.product_desc %>
+                      </ul>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <div class="float-clear"></div>
+
+          </div>
+
+        </div>
+
+        <hr class="bg-color-lightgrey">
+
+        <div class="editor-button-box center-aligned">
+          <button type="button" class="back-button take-button-mint">
+            <img src="/images/common/list.png"></img><span>&nbsp;&nbsp;목록으로</span>
+          </button>
+          <button type="button" class="rsv-cancel-button take-button-mint">
+            <img src="/images/common/list.png"></img><span>&nbsp;&nbsp;예약취소</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <% include ../footer %>
+
+    <% include ../login/login-popup %>
+
+  </body>
+
+</html>

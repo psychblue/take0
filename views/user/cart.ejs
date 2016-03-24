@@ -31,7 +31,7 @@
           </li>
           <li class="nav-item">
             <a href="/user/cart">
-              <img src="/images/user/cart.png"></img><span class="selected">예약정보</span>
+              <img src="/images/user/cart.png"></img><span class="selected">예약 관리</span>
             </a>
           </li>
           <li class="nav-item">
@@ -101,13 +101,29 @@
               </div>
               <div class="likes-col status">
                 <button type="button" class="take-button-greyborder">
-                  <span><%= reservationsData[i].rsv_status %></span>
+                  <% var status %>
+                  <% if(reservationsData[i].rsv_status == 1){ %>
+                    <% status = "예약요청중" %>
+                  <% }else if(reservationsData[i].rsv_status == 2){ %>
+                    <% status = "예약확인중" %>
+                  <% }else if(reservationsData[i].rsv_status == 3){ %>
+                    <% status = "예약확정" %>
+                  <% }else if(reservationsData[i].rsv_status == 4){ %>
+                    <% status = "결제완료" %>
+                  <% }else if(reservationsData[i].rsv_status == 5){ %>
+                    <% status = "촬영완료" %>
+                  <% }else if(reservationsData[i].rsv_status == 6){ %>
+                    <% status = "상품전달중" %>
+                  <% }else if(reservationsData[i].rsv_status == 7){ %>
+                    <% status = "상품확인" %>
+                  <% } %>
+                  <span><%= status %></span>
                 </button>
               </div>
               <div class="likes-col button">
-                <a href="#">
+                <a href="/reservedetails?rsv_id=<%= reservationsData[i].rsv_id %>">
                   <button type="button" class="rsv-details-button take-button-mint">
-                    <img src="/images/user/details.png"></img><span>&nbsp;&nbsp;상세보기</span>
+                    <img src="/images/user/details.png"></img><span>&nbsp;&nbsp;진행상황</span>
                   </button>
                 </a>
               </div>

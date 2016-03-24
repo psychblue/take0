@@ -177,9 +177,15 @@ router.get("/reserve",
   photographerManager.loadReservations,
   photographerManager.showReservPage
 );
+// Show Product Reservation Page
+router.get("/reservedetails",
+  photographerManager.checkLogin,
+  photographerManager.loadReservation,
+  photographerManager.showReservDetailsPage
+);
 // Request Product Reservation (AJAX)
 router.post("/reserve",
-  photographerManager.checkLogin,
+  photographerManager.checkLoginOnAjax,
   photographerManager.insertReservation
 );
 //Get Reservation Data (AJAX)

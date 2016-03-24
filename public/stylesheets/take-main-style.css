@@ -13,9 +13,9 @@ a {
 h1 {
   padding: 0px;
   margin-top: 0px;
+  margin-right: 0px;
   margin-bottom: 5px;
   margin-left: 0px;
-  margin-right: 0px;
   color: #404040;
   font-size: 2em;
   font-weight: normal;
@@ -26,7 +26,7 @@ h1 a {
 }
 
 hr {
-  width: 800px;
+  width: 1000px;
   height: 1px;
   margin: 0 auto;
   margin-top: 10px;
@@ -223,7 +223,7 @@ hr {
 
 .take-basic-window {
   width: 100%;
-  padding-top: 100px;
+  padding-top: 130px;
   padding-bottom: 50px;
   text-align: center;
   position: relative;
@@ -358,6 +358,7 @@ hr {
 
 .take-likes-box .likes-product .desc {
   width: 330px;
+  line-height: 1.5em;
 }
 
 .take-likes-box .likes-product .button {
@@ -375,9 +376,9 @@ hr {
 .take-likes-box .rsv-product {
   width: 300px;
   padding-top: 10px;
-  padding-left: 20px;
   padding-right: 20px;
   padding-bottom: 10px;
+  padding-left: 20px;
   text-align: left;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -404,17 +405,17 @@ hr {
   width: 216px;
   height: 38px;
   line-height: 38px;
-  padding-left: 20px;
   padding-right: 20px;
+  padding-left: 20px;
   border-radius: 3px;
 }
 
 .take-likes-box .rsv-date {
   width: 300px;
   padding-top: 10px;
-  padding-left: 10px;
-  padding-bottom: 10px;
   padding-right: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
 }
 
 .take-likes-box .take-datepicker {
@@ -427,20 +428,20 @@ hr {
 
 .take-likes-box .rsv-time {
   width: 300px;
-  height: 400px;
+  height: 480px;
   padding-top: 10px;
-  padding-left: 20px;
   padding-right: 20px;
   padding-bottom: 10px;
+  padding-left: 20px;
 }
 
 .take-likes-box .time-box {
   width: 258px;
-  height: 387px;
+  height: 398px;
   padding-top: 10px;
-  padding-left: 20px;
   padding-right: 20px;
   padding-bottom: 20px;
+  padding-left: 20px;
   border: 1px solid #ccc;
   border-radius: 3px;
   background-color: #fff;
@@ -466,6 +467,33 @@ hr {
   font-weight: bold;
 }
 
+.rsv-status-box {
+  width: 1000px;
+  margin: 0 auto;
+  padding-top: 30px;
+}
+
+.rsv-status-box .rsv-status {
+  width: 100px;
+  line-height: 100px;
+  border-radius: 50px;
+  float: left;
+}
+
+.rsv-status-box .rsv-status-arrow {
+  width: 50px;
+  height: 50px;
+  line-height: 100px;
+  text-align: center;
+  float: left;
+}
+
+.rsv-status-box .rsv-status-desc {
+  width: 100px;
+  padding-top: 10px;
+  float: left;
+}
+
 .take-navigation {
   width: 100%;
   height: 100px;
@@ -483,8 +511,8 @@ hr {
 }
 
 .take-navigation li {
-  margin-left: 25px;
   margin-right: 25px;
+  margin-left: 25px;
   display: inline;
 }
 
@@ -498,9 +526,9 @@ hr {
 
 .take-navigation span {
   margin-left: 7px;
-  padding-left: 3px;
   padding-right: 3px;
   padding-bottom: 3px;
+  padding-left: 3px;
 }
 
 .take-navigation .selected {
@@ -630,13 +658,137 @@ hr {
   text-align: left;
 }
 
+.rsv-timeline-box {
+  width: 800px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.rsv-timeline-box .rsv-timeline-item .datetime {
+  width: 160px;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  float: left;
+  text-align: right;
+}
+
+.rsv-timeline-box .rsv-timeline-item .timeline {
+  width: 50px;
+  float: left;
+  position: relative;
+}
+
+.rsv-timeline-box .rsv-timeline-item .timeline .line {
+  width: 4px;
+  margin: 0 auto;
+}
+
+.rsv-timeline-box .rsv-timeline-item .timeline .dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  position: absolute;
+  top: 20px;
+  left: 15px;
+}
+
+.rsv-timeline-box .rsv-timeline-item .timeline .arrow-white {
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-right: 15px solid #fff;
+  border-bottom: 5px solid transparent;
+  border-left: 15px solid transparent;
+  position: absolute;
+  top: 25px;
+  right: 0px;
+}
+
+.rsv-timeline-box .rsv-timeline-item .timeline .arrow-darkgrey {
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-right: 15px solid #404040;
+  border-bottom: 5px solid transparent;
+  border-left: 15px solid transparent;
+  position: absolute;
+  top: 25px;
+  right: 0px;
+}
+
+.rsv-timeline-box .rsv-timeline-item .contents {
+  width: 590px;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  float: left;
+}
+
+.rsv-timeline-box .rsv-timeline-item .contents .main-line {
+  width: 570px;
+  padding-right: 20px;
+  padding-left: 20px;
+  line-height: 40px;
+  border-radius: 3px;
+}
+
+.rsv-timeline-box .rsv-timeline-item .contents .sub-line {
+  width: 570px;
+  padding-top: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+  padding-left: 20px;
+  margin-top: 10px;
+  line-height: 40px;
+  background-color: #fff;
+  border-radius: 3px;
+}
+
+.rsv-timeline-box .rsv-timeline-item .contents table {
+  border-collapse: collapse;
+}
+
+.rsv-timeline-box .rsv-timeline-item .contents td {
+  padding: 0;
+  margin: 0;
+  vertical-align: top;
+  border-top: none;
+  border-right: none;
+  border-bottom: 1px solid #eee;
+  border-left: none;
+}
+
+.rsv-timeline-box .rsv-timeline-item .contents .last-line {
+  border-bottom: none;
+}
+
+.rsv-timeline-box .rsv-timeline-item .contents .label {
+  width: 100px;
+  color: #999;
+}
+
+.rsv-timeline-box .rsv-timeline-item .contents .desc {
+  width: 470px;
+}
+
+.rsv-timeline-box .rsv-timeline-item .contents ul {
+  line-height: 1.5em;
+  margin: 0;
+  padding-top: 10px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+}
+
+
 .take-text-input {
   width: 500px;
   height: 40px;
   padding-top: 0;
+  padding-right: 20px;
   padding-bottom: 0;
   padding-left: 20px;
-  padding-right: 20px;
   font-size: 1em;
   font-family: "Nanum Gothic";
   border-radius: 3px;
@@ -654,9 +806,9 @@ hr {
   width: 300px;
   height: 40px;
   padding-top: 0;
+  padding-right: 20px;
   padding-bottom: 0;
   padding-left: 20px;
-  padding-right: 20px;
   font-size: 1em;
   font-family: "Nanum Gothic";
   border-radius: 3px;
@@ -676,9 +828,9 @@ hr {
   height: 100px;
   resize: none;
   padding-top: 10px;
+  padding-right: 20px;
   padding-bottom: 10px;
   padding-left: 20px;
-  padding-right: 20px;
   font-size: 1em;
   font-family: "Nanum Gothic";
   border-radius: 3px;
@@ -692,9 +844,9 @@ hr {
   width: 300px;
   height: 100px;
   padding-top: 10px;
+  padding-right: 20px;
   padding-bottom: 10px;
   padding-left: 20px;
-  padding-right: 20px;
   border-radius: 3px;
   font-size: 0.8em;
   line-height: 1.5em;
@@ -773,8 +925,8 @@ hr {
 }
 
 .list-slider-list .list-box {
-  margin-left: 5px;
   margin-right: 5px;
+  margin-left: 5px;
   display: none;
   position: relative;
   overflow: hidden;
@@ -873,9 +1025,9 @@ hr {
   width: 150px;
   height: 150px;
   margin-top: 5px;
+  margin-right: 10px;
   margin-bottom: 5px;
   margin-left: 10px;
-  margin-right: 10px;
   border: 1px dashed #999;
   font-size: 3em;
   line-height: 150px;
@@ -987,9 +1139,9 @@ hr {
 #studio-product-window .product-desc-box {
   width: 750px;
   padding-top: 20px;
+  margin-right: 25px;
   padding-bottom: 50px;
   margin-left: 25px;
-  margin-right: 25px;
   text-align: left;
   line-height: 1.5em;
   border-top: 1px solid #ccc;
@@ -1228,8 +1380,8 @@ hr {
   width: 342px;
   height: 400px;
   padding-top: 40px;
-  padding-left: 20px;
   padding-right: 20px;
+  padding-left: 20px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -1290,17 +1442,17 @@ hr {
   position: absolute;
   right: 20px;
   border-top: 10px solid transparent;
-  border-left: 10px solid transparent;
   border-right: 10px solid transparent;
   border-bottom: 10px solid #fff;
+  border-left: 10px solid transparent;
 }
 
 #header .user-menu {
   width: 180px;
   padding-top: 20px;
-  padding-left: 10px;
-  padding-bottom: 20px;
   padding-right: 10px;
+  padding-bottom: 20px;
+  padding-left: 10px;
   background-color: #fff;
   position: absolute;
   top: 20px;
@@ -1405,9 +1557,9 @@ hr {
   position: relative;
   top: 5px;
   border-top: 10px solid #ccc;
-  border-left: 10px solid transparent;
   border-right: 10px solid transparent;
   border-bottom: 10px solid transparent;
+  border-left: 10px solid transparent;
 }
 
 .ui-datepicker {
@@ -1470,7 +1622,7 @@ hr {
 }
 
 #footer hr {
-  width: 800px;
+  width: 1000px;
   height: 1px;
   margin: 0 auto;
   margin-bottom: 5px;
