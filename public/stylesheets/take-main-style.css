@@ -456,6 +456,15 @@ hr {
   cursor: pointer;
 }
 
+.take-likes-box .time-item-reserved {
+  height: 25px;
+  line-height: 30px;
+  color: #bb2929;
+  text-decoration: line-through;
+  padding: 10px;
+  cursor: normal;
+}
+
 .take-likes-box .time-box .selected {
   color: #fff;
   border-radius: 3px;

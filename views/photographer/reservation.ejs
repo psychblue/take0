@@ -96,7 +96,9 @@
               var time = Number($(this).children("span").attr("for"));
 
               if(time > data[rsvIndex].rsv_start_time - 100 * <%= productData.product_duration %> && time < data[rsvIndex].rsv_end_time){
-                $(this).hide();
+                $(this).removeClass("time-item")
+                .addClass("time-item-reserved font-bold").
+                unbind();
               }
             });
           }
@@ -187,15 +189,15 @@
                   <div class="time-item">
                     <% if(i < 24){ %>
                         <% if(i % 2 == 0){ %>
-                          <span for="<%= i/2 + 1 %>00">오전&nbsp;&nbsp;<%= i/2 + 1 %>:00</span>
+                          <span for="<%= i/2 + 1 %>00">&nbsp;오전&nbsp;&nbsp;<%= i/2 + 1 %>:00&nbsp;</span>
                         <% }else{ %>
-                          <span for="<%= Math.round(i/2) %>30">오전&nbsp;&nbsp;<%= Math.round(i/2) %>:30</span>
+                          <span for="<%= Math.round(i/2) %>30">&nbsp;오전&nbsp;&nbsp;<%= Math.round(i/2) %>:30&nbsp;</span>
                         <% } %>
                     <% }else{ %>
                       <% if(i % 2 == 0){ %>
-                        <span for="<%= i/2 + 1 %>00">오후&nbsp;&nbsp;<%= (i - 24)/2 + 1 %>:00</span>
+                        <span for="<%= i/2 + 1 %>00">&nbsp;오후&nbsp;&nbsp;<%= (i - 24)/2 + 1 %>:00&nbsp;</span>
                       <% }else{ %>
-                        <span for="<%= Math.round(i/2) %>30">오후&nbsp;&nbsp;<%= Math.round((i - 24)/2) %>:30</span>
+                        <span for="<%= Math.round(i/2) %>30">&nbsp;오후&nbsp;&nbsp;<%= Math.round((i - 24)/2) %>:30&nbsp;</span>
                       <% } %>
                     <% } %>
                   </div>
