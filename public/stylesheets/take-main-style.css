@@ -558,6 +558,28 @@ hr {
   vertical-align: -6px;
 }
 
+.take-button-red {
+  width: 130px;
+  height: 40px;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 1em;
+  color: #fff;
+  vertical-align: middle;
+  outline: 0;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  background-color: #bb2929;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.take-button-red img {
+  vertical-align: -6px;
+}
+
 .take-button-lightgrey {
   width: 130px;
   height: 40px;
@@ -726,7 +748,7 @@ hr {
 }
 
 .rsv-timeline-box .rsv-timeline-item .contents .main-line {
-  width: 570px;
+  width: 550px;
   padding-right: 20px;
   padding-left: 20px;
   line-height: 40px;
@@ -734,7 +756,7 @@ hr {
 }
 
 .rsv-timeline-box .rsv-timeline-item .contents .sub-line {
-  width: 570px;
+  width: 550px;
   padding-top: 20px;
   padding-right: 20px;
   padding-bottom: 20px;
