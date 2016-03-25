@@ -385,6 +385,18 @@ hr {
   white-space: nowrap;
 }
 
+.take-likes-box .label-box {
+  height: 40px;
+  line-height: 40px;
+  padding-right: 20px;
+  padding-left: 20px;
+  margin-bottom: 10px;
+  color: #fff;
+  text-align: left;
+  background-color: #404040;
+  border-radius: 3px;
+}
+
 .take-likes-box .product-box {
   padding: 20px;
   border: 1px solid #ccc;
@@ -454,15 +466,6 @@ hr {
   color: #999;
   padding: 10px;
   cursor: pointer;
-}
-
-.take-likes-box .time-item-reserved {
-  height: 25px;
-  line-height: 30px;
-  color: #bb2929;
-  text-decoration: line-through;
-  padding: 10px;
-  cursor: normal;
 }
 
 .take-likes-box .time-box .selected {
@@ -856,6 +859,23 @@ hr {
 
 .take-textarea {
   width: 500px;
+  height: 100px;
+  resize: none;
+  padding-top: 10px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  font-size: 1em;
+  font-family: "Nanum Gothic";
+  border-radius: 3px;
+  outline-style: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.rsv-textarea {
+  width: 216px;
   height: 100px;
   resize: none;
   padding-top: 10px;
@@ -1502,6 +1522,7 @@ hr {
 #header .user-menu-item:hover {
   background-color: #3db7cc;
   color: #fff;
+  font-weight: normal;
 }
 
 #header hr {

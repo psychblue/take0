@@ -66,6 +66,7 @@
 
         function bindEvents(){
           ButtonController.setButton($(".editor-submit-button"), requestRsv);
+          InputController.setInputFocus($(".rsv-textarea"));
 
           $timeItems.click(function(){
             $timeItems.each(function(){
@@ -96,9 +97,7 @@
               var time = Number($(this).children("span").attr("for"));
 
               if(time > data[rsvIndex].rsv_start_time - 100 * <%= productData.product_duration %> && time < data[rsvIndex].rsv_end_time){
-                $(this).removeClass("time-item")
-                .addClass("time-item-reserved font-bold").
-                unbind();
+                $(this).hide();
               }
             });
           }
@@ -148,6 +147,9 @@
         <div class="take-likes-box">
           <div class="box">
             <div class="rsv-product float-left">
+              <div class="label-box">
+                예약 내용
+              </div>
               <div class="product-box">
                 <span class="font-darkgrey font-level-large">
                   <%= productData.product_name %>
@@ -166,13 +168,15 @@
                   <input type="hidden" name="rsv_date" value="<%= '' + today.getFullYear() + month + dateNum %>"></input>
                   <input type="hidden" name="rsv_start_time"></input>
                   <input type="hidden" name="product_duration" value="<%= productData.product_duration %>"></input>
+                  <div class="editor-input-label font-grey">&nbsp;날짜&nbsp;&nbsp;|</div>
+                  <div id="date" class="input-box font-darkgrey bg-color-lightmint border-solid-thin-mint center-aligned">
+                  <%= today.getFullYear() %>년 <%= today.getMonth() + 1 %>월 <%= today.getDate() %>일
+                  </div>
+                  <div class="editor-input-label font-grey">&nbsp;시간&nbsp;&nbsp;|</div>
+                  <div id="time" class="input-box font-darkgrey border-solid-thin-lightgrey center-aligned"></div>
+                  <div class="editor-input-label font-grey">&nbsp;추가 사항&nbsp;&nbsp;|</div>
+                  <textarea class="rsv-textarea border-solid-thin-lightgrey" placeholder="예약 장소 등 추가 사항을 작성해주세요." name="rsv_desc"></textarea>
                 </form>
-                <div class="editor-input-label font-grey">&nbsp;날짜&nbsp;&nbsp;|</div>
-                <div id="date" class="input-box font-darkgrey bg-color-lightmint border-solid-thin-mint center-aligned">
-                <%= today.getFullYear() %>년 <%= today.getMonth() + 1 %>월 <%= today.getDate() %>일
-                </div>
-                <div class="editor-input-label font-grey">&nbsp;시간&nbsp;&nbsp;|</div>
-                <div id="time" class="input-box font-darkgrey border-solid-thin-lightgrey center-aligned"></div>
                 <div class="editor-button-box right-aligned">
                   <button type="button" class="editor-submit-button take-button-mint">
                     <img src="/images/studio/check.png"></img><span>&nbsp;예약요청</span>
@@ -181,9 +185,15 @@
               </div>
             </div>
             <div class="rsv-date float-left">
+              <div class="label-box">
+                날짜 선택
+              </div>
               <div class="take-datepicker"></div>
             </div>
             <div class="rsv-time float-left">
+              <div class="label-box">
+                시간 선택
+              </div>
               <div class="time-box">
                 <% for(var i = 14; i < 39; i++){ %>
                   <div class="time-item">

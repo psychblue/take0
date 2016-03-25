@@ -54,7 +54,7 @@
           </li>
           <li class="nav-item">
             <a href="/user/cart">
-              <img src="/images/user/cart.png"></img><span class="selected">예약 관리</span>
+              <img src="/images/user/cart.png"></img><span class="selected">나의 예약</span>
             </a>
           </li>
           <li class="nav-item">
@@ -206,16 +206,39 @@
                       </span>
                     </td>
                   </tr>
-                  <tr>
-                    <td class="label last-line">
-                      상품 내용
-                    </td>
-                    <td class="desc last-line">
-                      <ul class="font-darkgrey">
-                        <%- reservationData.product_desc %>
-                      </ul>
-                    </td>
-                  </tr>
+                  <% if(reservationData.rsv_desc){ %>
+                    <tr>
+                      <td class="label">
+                        상품 내용
+                      </td>
+                      <td class="desc">
+                        <ul class="font-darkgrey">
+                          <%- reservationData.product_desc %>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="label last-line">
+                        추가 사항
+                      </td>
+                      <td class="desc last-line">
+                        <span class="font-darkgrey">
+                          <%- reservationData.rsv_desc %>
+                        </span>
+                      </td>
+                    </tr>
+                  <% }else{ %>
+                    <tr>
+                      <td class="label last-line">
+                        상품 내용
+                      </td>
+                      <td class="desc last-line">
+                        <ul class="font-darkgrey">
+                          <%- reservationData.product_desc %>
+                        </ul>
+                      </td>
+                    </tr>
+                  <% } %>
                 </table>
               </div>
             </div>

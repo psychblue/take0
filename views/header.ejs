@@ -32,9 +32,13 @@
       <div class="user-menu-arrow"></div>
       <div class="user-menu">
         <a href="/user/userinfo"><div class="user-menu-item">&nbsp;&nbsp;회원정보 관리</div></a>
-        <a href="/user/cart"><div class="user-menu-item">&nbsp;&nbsp;예약 관리</div></a>
+        <a href="/user/cart"><div class="user-menu-item">&nbsp;&nbsp;나의 예약</div></a>
         <a href="/user/likeslist"><div class="user-menu-item">&nbsp;&nbsp;찜 리스트</div></a>
         <hr>
+        <% if(hasStudio){ %>
+          <a href="/studio/<%= username %>/reserve"><div class="user-menu-item font-mint font-bold">&nbsp;&nbsp;스튜디오 예약 관리</div></a>
+          <hr>
+        <% } %>
         <div id="logout-button" class="user-menu-item">&nbsp;&nbsp;로그아웃</div>
       </div>
     </div>

@@ -1110,6 +1110,7 @@ photographerManager.loadReservation = function(req, res, next){
 			"studioReservations.rsv_date",
 			"studioReservations.rsv_start_time",
 			"studioReservations.rsv_end_time",
+      "studioReservations.rsv_desc",
 			"studioReservations.rsv_status",
 			"studio.studio_name",
 			"studio.username"
@@ -1189,7 +1190,8 @@ photographerManager.insertReservation = function(req, res){
       request_user: req.__take_params.username,
       rsv_date: req.body.rsv_date,
       rsv_start_time: req.body.rsv_start_time,
-      rsv_end_time: Number(req.body.rsv_start_time) + 100 * Number(req.body.product_duration)
+      rsv_end_time: Number(req.body.rsv_start_time) + 100 * Number(req.body.product_duration),
+      rsv_desc: req.body.rsv_desc
 		}
 	];
 
