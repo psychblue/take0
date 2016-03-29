@@ -76,7 +76,7 @@ var SearchBoxController = (function(){
     for(item in regionItems){
       $searchBoxRegionList.append($("<div></div>").addClass("search-box-item").text(regionItems[item]));
     }
-  };
+  }
 
   function bindEvents(){
     $(window).click(function(e){
@@ -155,15 +155,15 @@ var SearchBoxController = (function(){
     $searchBoxButton.click(function(){
       categoryCheck();
     });
-  };
+  }
 
   function selectMenuMouseOver(e){
     $(e.target).find(".down-arrow").css({"border-top": "10px solid #404040"});
-  };
+  }
 
   function selectMenuMouseOut(e){
     $(e.target).find(".down-arrow").css({"border-top": "10px solid #ccc"});
-  };
+  }
 
   function setSearchBoxListPosition(list, menu){
     var leftOfList = menu.offset().left
@@ -179,7 +179,7 @@ var SearchBoxController = (function(){
       "left": leftOfList,
       "top": topOfList
     });
-  };
+  }
 
   function hideSelectMenu(e){
     if(!$searchBoxCategory.is(e.target)
@@ -211,7 +211,7 @@ var SearchBoxController = (function(){
       $searchBoxDatepicker.fadeOut("fast");
       dateEnabled = 0;
     }
-  };
+  }
 
   function selectItem(e){
     if($searchBoxCategoryList.has(e.target).length){
@@ -224,14 +224,14 @@ var SearchBoxController = (function(){
       $searchBoxRegionList.fadeOut("fast");
       regionEnabled = 0;
     }
-  };
+  }
 
   function categoryCheck(){
     if($searchBoxCategory.children(".search-box-text").text() == "서비스를 선택하세요."){
       $searchBoxCategory.children(".search-box-text").addClass("font-red font-bold");
       $searchBoxCategory.addClass("bg-color-pink");
     }
-  };
+  }
 
   function initDatepicker(){
     $searchBoxDatepicker.datepicker({
@@ -250,7 +250,7 @@ var SearchBoxController = (function(){
         dateEnabled = 0;
       }
     });
-  };
+  }
 
   var setSearchBox = function(options){
     $searchBox.css({
@@ -289,6 +289,6 @@ var SearchBoxController = (function(){
   };
 
   return {
-    setSearchBox
+    setSearchBox: setSearchBox
   };
 }());

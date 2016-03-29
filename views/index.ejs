@@ -7,10 +7,10 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-    <script type="text/javascript" src="/javascripts/take-util.js"></script>
-    <script type="text/javascript" src="/javascripts/take-login.js"></script>
-    <script type="text/javascript" src="/javascripts/take-search-box.js"></script>
-    <script type="text/javascript" src="/javascripts/take-list-slider.js"></script>
+    <script type="text/javascript" src="/javascripts/take.util.js"></script>
+    <script type="text/javascript" src="/javascripts/take.login.js"></script>
+    <script type="text/javascript" src="/javascripts/take.search-box.js"></script>
+    <script type="text/javascript" src="/javascripts/take.list-slider.js"></script>
     <script>
       (function(){
         $(document).ready(function(){
@@ -19,7 +19,7 @@
             boxHeight: 50,
             borderStyle: "10px solid rgba(255, 255, 255, 0.4)",
             marginStyle: "0 auto"
-          }
+          };
           SearchBoxController.setSearchBox(searchBoxOptions);
 
           ListSlider($("#today-studio-box"), "/todaystudiolist");

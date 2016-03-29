@@ -34,7 +34,7 @@ var ListSlider = function(box, url){
     $listSliderArrowLeft.css({"visibility": "hidden"});
 
     postList(0);
-  };
+  }
 
   function bindEvents(){
     $(window).resize(function(){
@@ -62,7 +62,7 @@ var ListSlider = function(box, url){
         $listSliderArrowLeft.css({"visibility": "hidden"});
       }
     });
-  };
+  }
 
   function onHoverListBox(){
     $listBoxes.hover(function(){
@@ -71,7 +71,7 @@ var ListSlider = function(box, url){
     function(){
       BackgroundController.onMouseleave($(this).children(".take-item-img"));
     });
-  };
+  }
 
   function postList(pageNum){
     $.post(postUrl, {start:(pageNum * 3), end:3}, function(data){
@@ -79,7 +79,7 @@ var ListSlider = function(box, url){
       resizeListItemBox();
       onHoverListBox();
     });
-  };
+  }
 
   function resizeListItemBox(){
     $listBoxes = targetBox.find(".list-box");
@@ -110,5 +110,5 @@ var ListSlider = function(box, url){
     $listBoxNotes.css({
       "width": listBoxWidth - 40
     });
-  };
+  }
 };

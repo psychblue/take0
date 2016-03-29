@@ -174,13 +174,14 @@ router.post("/addstudio",
 // Show Product Reservation Page
 router.get("/reserve",
   photographerManager.loadProduct,
-  photographerManager.loadReservations,
+  photographerManager.loadUserReservationsByDate,
   photographerManager.showReservPage
 );
 // Show Product Reservation Page
 router.get("/reservedetails",
   photographerManager.checkLogin,
   photographerManager.loadReservation,
+  photographerManager.loadReservUserNickname,
   photographerManager.showReservDetailsPage
 );
 // Request Product Reservation (AJAX)
@@ -190,7 +191,7 @@ router.post("/reserve",
 );
 //Get Reservation Data (AJAX)
 router.get("/rsvdata",
-  photographerManager.loadReservations,
+  photographerManager.loadUserReservationsByDate,
   photographerManager.sendReservationsData
 );
 // Studio Photo Slider Update
@@ -246,6 +247,20 @@ router.post("/studio/:photographer/portfolio/delete",
 // Get Portfolio Photo List
 router.get("/studio/:photographer/portfolio/:portfolio_id/photolist",
   photographerManager.getPortfolioPhotoList
+);
+//Studio Reservation page
+router.get("/studio/:photographer/reserve",
+  photographerManager.isOwner,
+  photographerManager.checkReqFromOwner,
+  photographerManager.loadStudioReservations,
+  photographerManager.showReservManamgementPage
+);
+// Show Product Reservation Page
+router.get("/studio/:photographer/reservedetails",
+  photographerManager.checkLogin,
+  photographerManager.loadReservation,
+  photographerManager.loadReservUserNickname,
+  photographerManager.showReservDetailsPage
 );
 
 // Not Found

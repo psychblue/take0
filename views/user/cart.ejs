@@ -7,8 +7,8 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-    <script type="text/javascript" src="/javascripts/take-util.js"></script>
-    <script type="text/javascript" src="/javascripts/take-login.js"></script>
+    <script type="text/javascript" src="/javascripts/take.util.js"></script>
+    <script type="text/javascript" src="/javascripts/take.login.js"></script>
     <script type="text/javascript">
       (function(){
         $(document).ready(function(){
@@ -52,10 +52,10 @@
 
       <div class="take-basic-window2">
         <h1>나의 예약</h1>
-        <div class="take-likes-box">
+        <div class="take-board-window">
           <% for(var i = 0; i < reservationsData.length; i++){ %>
-            <div class="likes-product font-grey">
-              <div class="likes-col name">
+            <div class="board-row font-grey">
+              <div class="board-col name">
                 <span class="font-darkgrey font-level-large">
                   <%= reservationsData[i].product_name %>
                 </span>
@@ -66,7 +66,7 @@
                   </span>
                 </a>
               </div>
-              <div class=" likes-col date">
+              <div class=" board-col date">
                 <span class="font-darkgrey font-bold">
                   <% var date = reservationsData[i].rsv_date.toString() %>
                   <% var year = date.slice(0, 4) %>
@@ -99,28 +99,14 @@
                   <%= time_prefix %>&nbsp;<%= hour %>:<%= minute %>
                 </span>
               </div>
-              <div class="likes-col status">
+              <div class="board-col status">
                 <button type="button" class="take-button-greyborder">
-                  <% var status %>
-                  <% if(reservationsData[i].rsv_status == 1){ %>
-                    <% status = "예약요청중" %>
-                  <% }else if(reservationsData[i].rsv_status == 2){ %>
-                    <% status = "예약확인중" %>
-                  <% }else if(reservationsData[i].rsv_status == 3){ %>
-                    <% status = "예약확정" %>
-                  <% }else if(reservationsData[i].rsv_status == 4){ %>
-                    <% status = "결제완료" %>
-                  <% }else if(reservationsData[i].rsv_status == 5){ %>
-                    <% status = "촬영완료" %>
-                  <% }else if(reservationsData[i].rsv_status == 6){ %>
-                    <% status = "상품전달중" %>
-                  <% }else if(reservationsData[i].rsv_status == 7){ %>
-                    <% status = "상품확인" %>
-                  <% } %>
+                  <% var statusStrings = ["예약요청중", "예약확인중", "예약확정", "결제완료", "촬영완료", "상품전달중", "상품확인"]; %>
+                  <% var status = statusStrings[reservationsData[i].rsv_status - 1] %>
                   <span><%= status %></span>
                 </button>
               </div>
-              <div class="likes-col button">
+              <div class="board-col button">
                 <a href="/reservedetails?rsv_id=<%= reservationsData[i].rsv_id %>">
                   <button type="button" class="rsv-details-button take-button-mint">
                     <img src="/images/user/details.png"></img><span>&nbsp;&nbsp;진행상황</span>

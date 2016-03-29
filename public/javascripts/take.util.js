@@ -3,7 +3,7 @@ var InputController = (function(){
   function onFocus(targetInput){
     targetInput.removeClass("bg-color-pink border-solid-thin-lightgrey").addClass("border-solid-thin-mint");
     targetInput.siblings("label").removeClass("font-red font-bold").addClass("font-grey");
-  };
+  }
 
   function onFocusout(targetInput){
     if(targetInput.val() === ""){
@@ -11,7 +11,7 @@ var InputController = (function(){
     }
 
     targetInput.removeClass("border-solid-thin-mint").addClass("border-solid-thin-lightgrey");
-  };
+  }
 
   var onKeydown = function(keyEvent, targetInput, submitButton){
     targetInput.siblings("label").hide();
@@ -37,8 +37,8 @@ var InputController = (function(){
   };
 
   return {
-    onKeydown,
-    setInputFocus
+    onKeydown: onKeydown,
+    setInputFocus: setInputFocus
   };
 }());
 
@@ -64,7 +64,7 @@ var CheckboxController = (function(){
   };
 
   return {
-    setCheckbox
+    setCheckbox: setCheckbox
   };
 }());
 
@@ -72,11 +72,11 @@ var ButtonController = (function(){
 
   function onMouseenter(targetButton){
     targetButton.animate({"font-size": "1.1em"}, 100);
-  };
+  }
 
   function onMouseleave(targetButton){
     targetButton.animate({"font-size": "1em"}, 100);
-  };
+  }
 
   var setButton = function(targetButton, clickFunc, target){
     targetButton.hover(function(){
@@ -103,7 +103,7 @@ var ButtonController = (function(){
   };
 
   return {
-    setButton
+    setButton: setButton
   };
 }());
 
@@ -128,8 +128,8 @@ var BackgroundController = (function(){
   };
 
   return {
-    onMouseenter,
-    onMouseleave
+    onMouseenter: onMouseenter,
+    onMouseleave: onMouseleave
   };
 }());
 
@@ -151,7 +151,7 @@ var HeaderController = (function(){
     $header = $("#header");
     $userButton = $header.find("#user-button");
     $userMenuBox = $header.find(".user-menu-box");
-  };
+  }
 
   function bindEvents(){
     $userButton.hover(function(){
@@ -177,7 +177,7 @@ var HeaderController = (function(){
         $userMenuBox.fadeOut(100);
       }
     });
-  };
+  }
 
   var setBgColor = function(color){
     $header.css({
@@ -186,6 +186,6 @@ var HeaderController = (function(){
   };
 
   return {
-    setBgColor
+    setBgColor: setBgColor
   };
 }());

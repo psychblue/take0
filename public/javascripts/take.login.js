@@ -45,7 +45,7 @@ var LoginController = (function(){
     $loginSubmitButton = $loginPopup.find("#login-submit-button");
     $kakaoLoginButton = $("#kakao-login-button");
     $logoutButton = $("#logout-button");
-  };
+  }
 
   function bindEvents(){
 
@@ -87,7 +87,7 @@ var LoginController = (function(){
         }
       });
     });
-  };
+  }
 
   function takeLogin(){
     $.ajax({
@@ -112,7 +112,7 @@ var LoginController = (function(){
         alert(error);
       }
     });
-  };
+  }
 
   function closeLoginPopup(){
     if(loginPopupEnabled == 1){
@@ -129,7 +129,7 @@ var LoginController = (function(){
         history.go(-1);
       }
     }
-  };
+  }
 
   var viewLoginPopup = function(){
     if(loginPopupEnabled === 0){
@@ -222,9 +222,9 @@ var LoginController = (function(){
   };
 
   return {
-    viewLoginPopup,
-    setRedirectUrl,
-    kakaoLogin,
-    logout
+    viewLoginPopup: viewLoginPopup,
+    setRedirectUrl: setRedirectUrl,
+    kakaoLogin: kakaoLogin,
+    logout: logout
   };
 }());

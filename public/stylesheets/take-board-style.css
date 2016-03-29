@@ -1,0 +1,37 @@
+.take-board-box table, thead, tbody, tr, td, th {
+  padding: 0;
+  margin: 0;
+  font-size: 1em;
+  font-weight: normal;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.take-board-box table {
+  border-collapse: collapse;
+}
+
+.take-board-box tbody tr {
+	cursor: pointer;
+}
+
+.take-board-box tbody tr:hover {
+	background-color: #ddd;
+}
+
+.take-board-box td {
+	border-top: none;
+	border-right: none;
+	border-left: none;
+	border-bottom: 1px solid #ccc;
+}
+
+.take-board-box .col-label {
+	margin-top: 0;
+	margin-right: 2px;
+	margin-bottom: 5px;
+	margin-left: 2px;
+	color: #fff;
+	background-color: #404040;
+	border-radius: 3px;
+}

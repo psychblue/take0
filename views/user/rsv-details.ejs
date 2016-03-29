@@ -7,8 +7,8 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-    <script type="text/javascript" src="/javascripts/take-util.js"></script>
-    <script type="text/javascript" src="/javascripts/take-login.js"></script>
+    <script type="text/javascript" src="/javascripts/take.util.js"></script>
+    <script type="text/javascript" src="/javascripts/take.login.js"></script>
     <script type="text/javascript">
       (function(){
         $(document).ready(function(){
@@ -19,15 +19,15 @@
         });
 
         function goBack(){
-          location.href = history.go(-1);
-        };
+          location.href = "/user/cart";
+        }
 
         function setStatus(){
           var status = <%= reservationData.rsv_status %>;
 
           $(".rsv-status[for='" + status + "']").removeClass("bg-color-grey")
           .addClass("bg-color-mint");
-        };
+        }
 
         function setTimeline(){
           $(".timeline").each(function(){
@@ -35,7 +35,7 @@
               "height": $(this).next(".contents").outerHeight()
             });
           });
-        };
+        }
 
       }());
     </script>
@@ -129,7 +129,7 @@
           <div class="rsv-timeline-item">
 
             <div class="datetime">
-              <span class="font-darkgrey font-bold"><%= service %></span><br>
+              <span class="font-darkgrey font-bold"><%= reservationData.user_nickname %></span><br>
               <span class="font-grey font-level-small"><%= reservationData.request_date %></span>
             </div>
 

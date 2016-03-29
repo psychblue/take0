@@ -36,7 +36,7 @@ var StudioPhotoSliderController = (function(){
       $submitButton = $sliderEditorBox.find(".editor-submit-button");
       $cancelButton = $sliderEditorBox.find(".editor-cancel-button");
       $flag = $sliderEditorBox.find("#flag");
-    };
+    }
 
     function addDelButton(target){
       var $delButton = $("<img></img>");
@@ -51,7 +51,7 @@ var StudioPhotoSliderController = (function(){
 
       target.empty()
       .append($delButton);
-    };
+    }
 
     function onClickDelButton(target){
       target.find(".del-button").click(function(){
@@ -69,7 +69,7 @@ var StudioPhotoSliderController = (function(){
 
         return false;
       });
-    };
+    }
 
     function resetPhotoBox(target){
       target.css({
@@ -78,7 +78,7 @@ var StudioPhotoSliderController = (function(){
       });
 
       return target;
-    };
+    }
 
     function setPreview(target, src){
       target.css({
@@ -174,10 +174,10 @@ var StudioPhotoSliderController = (function(){
     };
 
     return {
-      bindEvents,
-      init,
-      show,
-      close
+      bindEvents: bindEvents,
+      init: init,
+      show: show,
+      close: close
     };
   }());
   /***************************************************/
@@ -208,7 +208,7 @@ var StudioPhotoSliderController = (function(){
     function(){
       $unsliderArrows.fadeOut();
     });
-  };
+  }
 
   function bindEditorEvents(){
     $sliderEditButton.hover(function(){
@@ -223,7 +223,7 @@ var StudioPhotoSliderController = (function(){
     });
 
     SliderEditor.bindEvents();
-  };
+  }
 
   function setPhotoSlider(){
     $studioPhotoSliderWindow.unslider({
@@ -245,7 +245,7 @@ var StudioPhotoSliderController = (function(){
     $unsliderArrows.each(function(){
       $(this).hide();
     });
-  };
+  }
 
   function showEditor(){
     closeOtherEditors();
@@ -259,7 +259,7 @@ var StudioPhotoSliderController = (function(){
     else{
       $studioPhotoSliderWindow.find(".font-level-larger").fadeOut("fast");
     }
-  };
+  }
 
   function closeOtherEditors(){
       StudioIntrodunctionController.closeEditor();
@@ -276,7 +276,7 @@ var StudioPhotoSliderController = (function(){
   };
 
   return {
-    enableSlider,
+    enableSlider: enableSlider,
     closeEditor: SliderEditor.close
   };
 }());
@@ -320,7 +320,7 @@ var StudioIntrodunctionController = (function(){
     $introEditorInputs = $introEditorBox.find("input").add($introEditorBox.find("textarea"));
     $submitButton = $introEditorBox.find(".editor-submit-button");
     $cancelButton = $introEditorBox.find(".editor-cancel-button");
-  };
+  }
 
   function bindEvents(){
     ButtonController.setButton($studioLikeButtion, addToLikesList, $studioLikeButtion);
@@ -332,7 +332,7 @@ var StudioIntrodunctionController = (function(){
     ButtonController.setButton($cancelButton, closeEditor);
 
     InputController.setInputFocus($introEditorInputs);
-  };
+  }
 
   function showEditor(){
     closeOtherEditors();
@@ -340,27 +340,27 @@ var StudioIntrodunctionController = (function(){
     $introEditorBox.fadeIn("fast");
 
     isVisible = 1;
-  };
+  }
 
   function closeOtherEditors(){
     StudioPhotoSliderController.closeEditor();
     StudioProductController.closeEditor();
     StudioPortfolioController.closeEditor();
-  };
+  }
 
   function loadInputValues(){
     inputValues.studioName = $studioIntroWindow.children("h1").text();
     inputValues.telNum = $studioIntroWindow.find("#tel-num").text();
     inputValues.address = $studioIntroWindow.find("#address").text();
     inputValues.introduction = $studioIntroWindow.find("p").html().replace(/<br>/gi, "\r\n");
-  };
+  }
 
   function resetInputValues(){
     $introEditorInputs.filter("[name='studio_name']").val(inputValues.studioName);
     $introEditorInputs.filter("[name='tel_num']").val(inputValues.telNum);
     $introEditorInputs.filter("[name='address']").val(inputValues.address);
     $introEditorInputs.filter("[name='introduction']").html(inputValues.introduction);
-  };
+  }
 
   function addToLikesList(targetButton){
     var studioId = Number(targetButton.attr("for"));
@@ -383,7 +383,7 @@ var StudioIntrodunctionController = (function(){
         alert(error);
       }
     });
-  };
+  }
 
   function submit(){
     $.ajax({
@@ -414,7 +414,7 @@ var StudioIntrodunctionController = (function(){
   };
 
   return {
-    closeEditor
+    closeEditor: closeEditor
   };
 }());
 
@@ -490,7 +490,7 @@ var StudioProductController = (function(){
       $productForm = $productEditorBox.find(".product-form");
 
       productBoxHeight = $productBox.height();
-    };
+    }
 
     function bindEvents(){
       if(isAdder != 1){
@@ -516,7 +516,7 @@ var StudioProductController = (function(){
       ButtonController.setButton($cancelButton, closeEditor);
 
       InputController.setInputFocus($productEditorInputs);
-    };
+    }
 
     function showEditor(){
       closeOtherEditors();
@@ -531,7 +531,7 @@ var StudioProductController = (function(){
       $productEditorBox.fadeIn("fast");
 
       isVisible = 1;
-    };
+    }
 
     function closeOtherEditors(){
       StudioPhotoSliderController.closeEditor();
@@ -543,7 +543,7 @@ var StudioProductController = (function(){
           productEditors[index].closeEditor();
         }
       }
-    };
+    }
 
     function loadInputValues(){
       inputValues.productId = $productForm.find("[name='product_id']").val();
@@ -553,14 +553,14 @@ var StudioProductController = (function(){
       inputValues.productDesc = $productDescBox.find("ul").html()
       .trim()
       .replace(/<\/li><li>/gi, "\r\n").replace(/<li>/gi, "").replace(/<\/li>/gi, "");
-    };
+    }
 
     function resetInputValues(){
       $productEditorInputs.filter("[name='product_name']").val(inputValues.productName);
       $productEditorInputs.filter("[name='product_price']").val(inputValues.productPrice);
       $productEditorInputs.filter("[name='product_duration']").val(inputValues.productDuration);
       $productEditorInputs.filter("[name='product_desc']").val(inputValues.productDesc);
-    };
+    }
 
     function updateProduct(){
       $.ajax({
@@ -579,7 +579,7 @@ var StudioProductController = (function(){
           alert(error);
         }
       });
-    };
+    }
 
     function addProduct(){
       $.ajax({
@@ -598,7 +598,7 @@ var StudioProductController = (function(){
           alert(error);
         }
       });
-    };
+    }
 
     function deleteProduct(){
       $.ajax({
@@ -621,7 +621,7 @@ var StudioProductController = (function(){
           alert(error);
         }
       });
-    };
+    }
 
 
     var getProductBox = function(){
@@ -648,9 +648,9 @@ var StudioProductController = (function(){
     };
 
     return {
-      getProductBox,
-      enableAdder,
-      closeEditor
+      getProductBox: getProductBox,
+      enableAdder: enableAdder,
+      closeEditor: closeEditor
     };
   };
   /***************************************************/
@@ -666,7 +666,7 @@ var StudioProductController = (function(){
     $studioProductWindow = $("#studio-product-window");
     $productReserveButtons = $studioProductWindow.find(".product-reserve-button");
     $productLikeButtons = $studioProductWindow.find(".product-like-button");
-  };
+  }
 
   function bindEvents(){
     $productReserveButtons.each(function(){
@@ -676,7 +676,7 @@ var StudioProductController = (function(){
     $productLikeButtons.each(function(){
       ButtonController.setButton($(this), addToLikesList, $(this));
     });
-  };
+  }
 
   function addToLikesList(targetButton){
     var productId = Number(targetButton.attr("for"));
@@ -702,7 +702,7 @@ var StudioProductController = (function(){
         alert(error);
       }
     });
-  };
+  }
 
   var setProduct = function(productId, studioId){
     var editor = ProductEditor(productId, studioId);
@@ -724,8 +724,8 @@ var StudioProductController = (function(){
   };
 
   return {
-    setProduct,
-    closeEditor
+    setProduct: setProduct,
+    closeEditor: closeEditor
   };
 }());
 
@@ -794,7 +794,7 @@ var StudioPortfolioController = (function(){
       $photoListInput = $portfolioEditorBox.find("input[name='photo_list']");
       $numPortfoliosInput = $portfolioEditorBox.find("input[name='num_portfolios']");
       $delPhotoListInput = $portfolioEditorBox.find("input[name='del_photo_list']");
-    };
+    }
 
     function bindEvents(){
       ButtonController.setButton($submitButton);
@@ -814,7 +814,7 @@ var StudioPortfolioController = (function(){
 
         $delPhotoListInput.val(delPhotoList);
       });
-    };
+    }
 
     function unbindEvents(){
       $submitButton.unbind("hover");
@@ -824,7 +824,7 @@ var StudioPortfolioController = (function(){
       $cancelButton.unbind("hover");
       $cancelButton.unbind("click");
       $delButtons.unbind("click");
-    };
+    }
 
     function getPhotoList(){
       if(portfolioData.portfolio_id){
@@ -833,7 +833,7 @@ var StudioPortfolioController = (function(){
       else{
         setEditor();
       }
-    };
+    }
 
     function setPhotoList(data){
       if(data.result == "success"){
@@ -845,7 +845,7 @@ var StudioPortfolioController = (function(){
       else{
         alert(data.text);
       }
-    };
+    }
 
     function deletePortfolio(){
       $.ajax({
@@ -872,7 +872,7 @@ var StudioPortfolioController = (function(){
           alert(error);
         }
       });
-    };
+    }
 
     function resizeEditorBoxes(){
       var mainBoxPadding = 0.1 * $(window).width();
@@ -896,13 +896,13 @@ var StudioPortfolioController = (function(){
         "height": photoBoxWidth - 2,
         "line-height": ( photoBoxWidth - 2 ) + "px"
       });
-    };
+    }
 
     function resizePortfolioWindow(){
       $studioPortfolioWindow.css({
         "height": $portfolioEditorBox.height() - 150
       }, 200);
-    };
+    }
 
     function addDelButton(target){
       var $delButton = $("<img></img>");
@@ -916,7 +916,7 @@ var StudioPortfolioController = (function(){
       });
 
       target.append($delButton);
-    };
+    }
 
     function onClickDelButton(target){
       target.find(".del-button").click(function(){
@@ -928,7 +928,7 @@ var StudioPortfolioController = (function(){
 
         return false;
       });
-    };
+    }
 
     function setPreview(target, src){
       target.empty().css({
@@ -973,7 +973,7 @@ var StudioPortfolioController = (function(){
           //under IE10
         }
       });
-    };
+    }
 
     function addInput(){
       inputCounter++;
@@ -1000,7 +1000,7 @@ var StudioPortfolioController = (function(){
         onChangeInput($editorMainBox.find("#" + inputCounter));
 
         $editorPhotoBoxes = $editorPhotoBoxes.add($editorMainBox.find("[for='" + inputCounter + "']"));
-    };
+    }
 
     function setEditor(){
       $editorMainBox.empty();
@@ -1069,13 +1069,13 @@ var StudioPortfolioController = (function(){
       }
 
       bindEvents();
-    };
+    }
 
     function closeOtherEditors(){
       StudioPhotoSliderController.closeEditor();
       StudioIntrodunctionController.closeEditor();
       StudioProductController.closeEditor();
-    };
+    }
 
     var showEditor = function(targetElement){
       closeOtherEditors();
@@ -1103,9 +1103,9 @@ var StudioPortfolioController = (function(){
     };
 
     return {
-      showEditor,
-      closeEditor
-    }
+      showEditor: showEditor,
+      closeEditor: closeEditor
+    };
   }());
   /***************************************************/
 
@@ -1140,7 +1140,7 @@ var StudioPortfolioController = (function(){
        loadElements();
        portfolioData = portfolioDataSet[Number(targetElement.attr("for"))];
        getPhotoList();
-     };
+     }
 
      function loadElements(){
        $portfolioViewer = $portfolioBox.next("#portfolio-viewer");
@@ -1153,7 +1153,7 @@ var StudioPortfolioController = (function(){
        $viewerThumbBox = $portfolioViewer.find(".thumb-box");
        $viewerThumbInnerBox = $viewerThumbBox.find(".inner-box");
        $viewerCounter = $portfolioViewer.find(".counter");
-     };
+     }
 
      function bindEvents(){
        $viewerThumbItems.click(function(){
@@ -1168,7 +1168,7 @@ var StudioPortfolioController = (function(){
          if(viewerThumbIndex == photoList.length - 1){
            $viewerRightArrow.hide();
          }
-         else if(viewerThumbIndex == 0){
+         else if(viewerThumbIndex === 0){
            $viewerLeftArrow.hide();
          }
          else{
@@ -1219,11 +1219,11 @@ var StudioPortfolioController = (function(){
            $viewerRightArrow.show();
          }
 
-         if(viewerThumbIndex == 0){
+         if(viewerThumbIndex === 0){
            $(this).hide();
          }
        });
-     };
+     }
 
      function unbindEvents(){
        $viewerThumbItems.unbind("click");
@@ -1231,7 +1231,7 @@ var StudioPortfolioController = (function(){
        $viewerThumbBox.unbind("hover");
        $viewerRightArrow.unbind("click");
        $viewerLeftArrow.unbind("click");
-     };
+     }
 
      function moveThumbBox(item){
        $viewerThumbItems.css({
@@ -1256,15 +1256,15 @@ var StudioPortfolioController = (function(){
        }, 200);
 
        setCounter();
-     };
+     }
 
      function getPhotoList(){
        $.get(location.href + "/portfolio/" + portfolioData.portfolio_id + "/photolist", setPhotoList);
-     };
+     }
 
      function setPhotoList(data){
        if(data.result == "success"){
-         if(data.body.photo_list != ""){
+         if(data.body.photo_list !== ""){
            photoList = data.body.photo_list.split(",");
          }
          setViewer();
@@ -1272,7 +1272,7 @@ var StudioPortfolioController = (function(){
        else{
          alert(data.text);
        }
-     };
+     }
 
      function setViewer(){
        $viewerLeftArrow.css({
@@ -1309,7 +1309,7 @@ var StudioPortfolioController = (function(){
        setCounter();
        setViewerThumbs();
        bindEvents();
-     };
+     }
 
      function setCounter(){
        if(photoList.length > 0){
@@ -1318,7 +1318,7 @@ var StudioPortfolioController = (function(){
        else{
          $viewerCounter.text(portfolioData.portfolio_subject + " : " + "0 / " + photoList.length);
        }
-     };
+     }
 
      function resizeOrigImageSize(){
        $origImage.attr({
@@ -1337,7 +1337,7 @@ var StudioPortfolioController = (function(){
          "padding-top": ( $origImageBox.height() - $origImage.height() ) / 2,
          "padding-bottom": ( $origImageBox.height() - $origImage.height() ) / 2
        });
-     };
+     }
 
      function setViewerThumbs(){
        $viewerThumbInnerBox.empty();
@@ -1349,7 +1349,7 @@ var StudioPortfolioController = (function(){
            "background-image": "url\(\"" + photoList[i] + "\"\)"
          }).attr("for", i);
 
-         if(i == 0){
+         if(i === 0){
            thumbBoxItem.css({
              "border-bottom": "5px solid #3db7cc"
            });
@@ -1365,7 +1365,7 @@ var StudioPortfolioController = (function(){
        $viewerThumbInnerBox.css({
          "left": "0"
        });
-     };
+     }
 
      function closeViewer(){
        $("body").css({
@@ -1375,15 +1375,15 @@ var StudioPortfolioController = (function(){
        unbindEvents();
 
        $portfolioViewer.fadeOut("fast");
-     };
+     }
 
      var showViewer = function(targetElement){
        init(targetElement);
      };
 
      return {
-       showViewer
-     }
+       showViewer: showViewer
+     };
    }());
    /***************************************************/
 
@@ -1402,17 +1402,17 @@ var StudioPortfolioController = (function(){
     $portfolioItems = $portfolioBox.find(".portfolio-item");
     $portfolioEditButtons = $portfolioBox.find(".portfolio-edit-button");
     $portfolioAddButton = $portfolioBox.find(".portfolio-add-button");
-  };
+  }
 
   function loadItems(){
     $portfolioItems.each(function(index){
-      if(portfolioDataSet[index].photo_list != ""){
+      if(portfolioDataSet[index].photo_list !== ""){
         $(this).children(".take-item-img").css({
           "background-image": "url\(\"" + portfolioDataSet[index].photo_list + "\"\)"
         });
       }
     });
-  };
+  }
 
   function bindEvents(){
     $portfolioItems.hover(function(){
@@ -1435,7 +1435,7 @@ var StudioPortfolioController = (function(){
     $portfolioAddButton.click(function(){
       PortfolioEditor.showEditor($(this));
     });
-  };
+  }
 
   var initPortfolio = function(data){
     portfolioDataSet = data;
@@ -1446,7 +1446,7 @@ var StudioPortfolioController = (function(){
   };
 
   return {
-    initPortfolio,
-    closeEditor
-  }
+    initPortfolio: initPortfolio,
+    closeEditor: closeEditor
+  };
 }());

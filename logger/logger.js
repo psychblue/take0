@@ -32,11 +32,11 @@ module.exports = function(jsname){
 														+ padStr(temp.getHours())
                   					+ padStr(temp.getMinutes())
                   					+ padStr(temp.getSeconds());
-    			};
+    			}
 
     			function padStr(i){
         		return (i < 10) ? "0" + i : "" + i;
-    			};
+    			}
 
 					return getFormattedDate();
   			},

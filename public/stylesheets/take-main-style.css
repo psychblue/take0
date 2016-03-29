@@ -3,6 +3,7 @@
 body {
   padding: 0px;
   margin: 0px;
+  font-size: 14px;
   font-family: "Nanum Gothic";
 }
 
@@ -279,12 +280,12 @@ hr {
   line-height: 1.5em;
 }
 
-.take-likes-box {
+.take-board-window {
   padding-top: 30px;
   padding-bottom: 100px;
 }
 
-.take-likes-box .delete {
+.take-board-window .delete {
   width: 50px;
   height: 17px;
   line-height: 17px;
@@ -297,14 +298,14 @@ hr {
   cursor: pointer;
 }
 
-.take-likes-box .box {
+.take-board-window .box {
   width: 1000px;
   margin: 0 auto;
   padding-top: 10px;
   border-top: 1px solid #ccc;
 }
 
-.take-likes-box .likes-studio {
+.take-board-window .likes-studio {
   width: 230px;
   height: 360px;
   margin: 10px;
@@ -313,7 +314,7 @@ hr {
   overflow: hidden;
 }
 
-.take-likes-box .likes-studio .image {
+.take-board-window .likes-studio .image {
   width: 100%;
   height: 230px;
   background-repeat: no-repeat;
@@ -321,7 +322,7 @@ hr {
   background-size: cover;
 }
 
-.take-likes-box .likes-studio .desc {
+.take-board-window .likes-studio .desc {
   width: 190px;
   height: 90px;
   padding: 20px;
@@ -332,19 +333,19 @@ hr {
   position: relative;
 }
 
-.take-likes-box .likes-product {
+.take-board-window .board-row {
   width: 1000px;
   margin: 0 auto;
   border-top: 1px solid #ccc;
 }
 
-.take-likes-box .likes-product .likes-col {
+.take-board-window .board-row .board-col {
   padding: 20px;
   text-align: left;
   float: left;
 }
 
-.take-likes-box .likes-product .name {
+.take-board-window .board-row .name {
   width: 250px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -352,28 +353,28 @@ hr {
   position: relative;
 }
 
-.take-likes-box .likes-product .price {
+.take-board-window .board-row .price {
   width: 130px;
 }
 
-.take-likes-box .likes-product .desc {
+.take-board-window .board-row .desc {
   width: 330px;
   line-height: 1.5em;
 }
 
-.take-likes-box .likes-product .button {
+.take-board-window .board-row .button {
   width: 130px;
 }
 
-.take-likes-box .likes-product .date {
+.take-board-window .board-row .date {
   width: 300px;
 }
 
-.take-likes-box .likes-product .status {
+.take-board-window .board-row .status {
   width: 160px;
 }
 
-.take-likes-box .rsv-product {
+.take-board-window .rsv-product {
   width: 300px;
   padding-top: 10px;
   padding-right: 20px;
@@ -385,7 +386,7 @@ hr {
   white-space: nowrap;
 }
 
-.take-likes-box .label-box {
+.take-board-window .label-box {
   height: 40px;
   line-height: 40px;
   padding-right: 20px;
@@ -397,14 +398,14 @@ hr {
   border-radius: 3px;
 }
 
-.take-likes-box .product-box {
+.take-board-window .product-box {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 3px;
   background-color: #fff;
 }
 
-.take-likes-box .product-box hr {
+.take-board-window .product-box hr {
   width: 258px;
   height: 1px;
   margin: 0 auto;
@@ -413,7 +414,7 @@ hr {
   border: none;
 }
 
-.take-likes-box .product-box .input-box {
+.take-board-window .product-box .input-box {
   width: 216px;
   height: 38px;
   line-height: 38px;
@@ -422,7 +423,7 @@ hr {
   border-radius: 3px;
 }
 
-.take-likes-box .rsv-date {
+.take-board-window .rsv-date {
   width: 300px;
   padding-top: 10px;
   padding-right: 10px;
@@ -430,7 +431,7 @@ hr {
   padding-left: 10px;
 }
 
-.take-likes-box .take-datepicker {
+.take-board-window .take-datepicker {
   width: 278px;
   padding: 10px;
   border: 1px solid #ccc;
@@ -438,7 +439,7 @@ hr {
   background-color: #fff;
 }
 
-.take-likes-box .rsv-time {
+.take-board-window .rsv-time {
   width: 300px;
   height: 480px;
   padding-top: 10px;
@@ -447,7 +448,7 @@ hr {
   padding-left: 20px;
 }
 
-.take-likes-box .time-box {
+.take-board-window .time-box {
   width: 258px;
   height: 398px;
   padding-top: 10px;
@@ -460,7 +461,7 @@ hr {
   overflow: scroll;
 }
 
-.take-likes-box .time-item {
+.take-board-window .time-item {
   height: 25px;
   line-height: 30px;
   color: #999;
@@ -468,13 +469,13 @@ hr {
   cursor: pointer;
 }
 
-.take-likes-box .time-box .selected {
+.take-board-window .time-box .selected {
   color: #fff;
   border-radius: 3px;
   background-color: #3db7cc;
 }
 
-.take-likes-box .time-item:hover {
+.take-board-window .time-item:hover {
   color: #404040;
   font-weight: bold;
 }
@@ -702,8 +703,8 @@ hr {
 
 .rsv-timeline-box .rsv-timeline-item .datetime {
   width: 160px;
-  padding-top: 10px;
-  padding-bottom: 20px;
+  padding-top: 15px;
+  padding-bottom: 15px;
   float: left;
   text-align: right;
 }

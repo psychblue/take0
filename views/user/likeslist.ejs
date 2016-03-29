@@ -7,14 +7,14 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-    <script type="text/javascript" src="/javascripts/take-util.js"></script>
-    <script type="text/javascript" src="/javascripts/take-login.js"></script>
+    <script type="text/javascript" src="/javascripts/take.util.js"></script>
+    <script type="text/javascript" src="/javascripts/take.login.js"></script>
     <script type="text/javascript">
       (function(){
         $(document).ready(function(){
           var $deleteButtons = $(".delete"),
           $studioDeleteButtons = $(".likes-studio .delete"),
-          $productDeleteButtons = $(".likes-product .delete");
+          $productDeleteButtons = $(".board-row .delete");
 
           ButtonController.setButton($(".product-reserve-button"));
 
@@ -112,7 +112,7 @@
 
       <div class="take-basic-window2">
         <h1>찜한 스튜디오들</h1>
-        <div class="take-likes-box">
+        <div class="take-board-window">
           <div class="box">
             <% for(var i = 0; i < likeStudiosData.length; i++){ %>
               <a href="/studio/<%= likeStudiosData[i].username %>">
@@ -133,10 +133,10 @@
         </div>
 
         <h1>찜한 상품들</h1>
-        <div class="take-likes-box">
+        <div class="take-board-window">
           <% for(var i = 0; i < likeProductsData.length; i++){ %>
-            <div class="likes-product font-grey">
-              <div class="likes-col name">
+            <div class="board-row font-grey">
+              <div class="board-col name">
                 <span class="font-darkgrey font-level-large">
                   <%= likeProductsData[i].product_name %>
                 </span>
@@ -148,13 +148,13 @@
                 </a>
                 <div class="delete" for="<%= likeProductsData[i].product_id %>">X 삭제</div>
               </div>
-              <div class="likes-col desc">
+              <div class="board-col desc">
                 <%- likeProductsData[i].product_desc %>
               </div>
-              <div class="likes-col price font-grey font-level-default">
+              <div class="board-col price font-grey font-level-default">
                 \<%= likeProductsData[i].product_price.toString().split(/(?=(?:\d{3})+(?:\.|$))/g).join(',') %>
               </div>
-              <div class="likes-col button">
+              <div class="board-col button">
                 <% if(likeProductsData[i].is_available){ %>
                   <a href="/reserve?product_id=<%= likeProductsData[i].product_id %>">
                     <button type="button" class="product-reserve-button take-button-mint">

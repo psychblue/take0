@@ -6,8 +6,8 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-    <script type="text/javascript" src="/javascripts/take-util.js"></script>
-    <script type="text/javascript" src="/javascripts/take-login.js"></script>
+    <script type="text/javascript" src="/javascripts/take.util.js"></script>
+    <script type="text/javascript" src="/javascripts/take.login.js"></script>
     <script type="text/javascript">
       (function(){
         var $timeItems;
@@ -62,7 +62,7 @@
 
         function loadElements(){
           $timeItems = $(".time-item");
-        };
+        }
 
         function bindEvents(){
           ButtonController.setButton($(".editor-submit-button"), requestRsv);
@@ -80,7 +80,7 @@
 
             $("input[name='rsv_start_time']").val($(this).children("span").attr("for"));
           });
-        };
+        }
 
         function loadSchedule(id, date){
           $.get("/rsvdata/?product_id=" + id + "&date=" + date, function(data){
@@ -89,7 +89,7 @@
               setSchedule(data.data);
             }
           });
-        };
+        }
 
         function setSchedule(data){
           for(var rsvIndex = 0; rsvIndex < data.length; rsvIndex++){
@@ -101,7 +101,7 @@
               }
             });
           }
-        };
+        }
 
         function requestRsv(){
           if($("input[name='rsv_start_time']").val() === ""){
@@ -144,7 +144,7 @@
         <h1>예약하기</h1>
         <span class="font-grey">예약하실 날짜와 시간을 선택해 주세요.</span>
 
-        <div class="take-likes-box">
+        <div class="take-board-window">
           <div class="box">
             <div class="rsv-product float-left">
               <div class="label-box">

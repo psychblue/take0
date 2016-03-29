@@ -981,7 +981,7 @@ photographerManager.loadProduct = function(req, res, next){
   mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
 };
 
-photographerManager.loadReservations = function(req, res, next){
+photographerManager.loadUserReservationsByDate = function(req, res, next){
 
   var callbackForError = function(err){
     httpUtil.sendDBErrorPage(req, res, err);
@@ -1030,7 +1030,7 @@ photographerManager.loadReservations = function(req, res, next){
   mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
 };
 
-photographerManager.loadReservations = function(req, res, next){
+photographerManager.loadStudioReservations = function(req, res, next){
 
   var callbackForError = function(err){
     httpUtil.sendDBErrorPage(req, res, err);
@@ -1042,38 +1042,90 @@ photographerManager.loadReservations = function(req, res, next){
   };
 
   var callbackForSuccess = function(rows, fields){
+
+    for(var dataIndex = 0; dataIndex < rows.length; dataIndex++){
+      var date = rows[dataIndex].rsv_date.toString();
+      var time = rows[dataIndex].rsv_start_time;
+
+      var year = date.slice(0, 4);
+      var month = date.slice(4, 6);
+      var dateNum = date.slice(6, 8);
+
+      var timePrefix = "오전";
+
+      if(time >= 1300){
+        timePrefix = "오후";
+        time = time - 1200;
+      }
+      time = time.toString();
+      var hour;
+
+      if(time.length == 3){
+        hour = time.slice(0, 1);
+      }
+      else{
+        hour = time.slice(0, 2);
+      }
+
+      var minute = time.slice(-2);
+
+      date = year + "-" + month + "-" + dateNum;
+      time = timePrefix + " " + hour + ":" + minute;
+
+      rows[dataIndex].rsv_datetime = date + " " + time;
+
+      var statusStrings = ["예약요청중", "예약확인중", "예약확정", "결제완료", "촬영완료", "상품전달중", "상품확인"];
+      rows[dataIndex].rsv_status_string = statusStrings[rows[dataIndex].rsv_status - 1];
+    }
+
     req.__take_params.reservationsData = rows;
     next();
   };
 
-  var date = "";
+  var order;
 
-  if(req.query.date){
-    date = req.query.date;
+  if(req.query.order){
+    order = "studioReservations." + req.query.order;
   }
   else{
-    var today = new Date();
-    var month = today.getMonth() + 1 < 10 ? "0" + (today.getMonth() + 1) : today.getMonth() + 1;
-    var dateNum = today.getDate() < 10 ? "0" + today.getDate() : today.getDate();
-    date = date + today.getFullYear() + month + dateNum;
+    order = "studioReservations.rsv_id";
   }
 
-  var query = "SELECT * FROM ?? WHERE ?? = ? AND ?? = ?";
+  var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ?? INNER JOIN ?? ON ?? = ?? WHERE ?? = ? ORDER BY ?? DESC";
 
   var params = [
+    [
+      "studioReservations.rsv_id",
+      "studioReservations.request_date",
+      "studioReservations.rsv_date",
+      "studioReservations.rsv_start_time",
+      "studioReservations.rsv_status",
+      "studioProducts.product_name"
+    ],
+    "studioProducts",
     "studioReservations",
-    "product_id",
-    req.query.product_id,
-    "rsv_date",
-    date
+    "studioReservations.product_id",
+    "studioProducts.product_id",
+    "studio",
+    "studioProducts.studio_id",
+    "studio.studio_id",
+    "studio.username",
+    req.user.username,
+    order
   ];
 
-  logger.debug("SQL Query [SELECT * FROM %s WHERE %s=%s AND %s=%s]",
-    params[0],
+  logger.debug("SQL Query [SELECT %s FROM %s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s WHERE %s=%s ORDER BY %s DESC]",
+    params[0].toString(),
     params[1],
     params[2],
     params[3],
-    params[4]
+    params[4],
+    params[5],
+    params[6],
+    params[7],
+    params[8],
+    params[9],
+    params[10]
   );
 
   mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
@@ -1097,7 +1149,7 @@ photographerManager.loadReservation = function(req, res, next){
     next();
   };
 
-  var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ?? AND ?? = ? AND ?? = ? INNER JOIN ?? ON ?? = ??";
+  var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ?? AND ?? = ? INNER JOIN ?? ON ?? = ??";
 
   var params = [
 		[
@@ -1106,6 +1158,7 @@ photographerManager.loadReservation = function(req, res, next){
 			"studioProducts.product_desc",
 			"studioProducts.product_price",
 			"studioReservations.rsv_id",
+      "studioReservations.request_user",
 			"studioReservations.request_date",
 			"studioReservations.rsv_date",
 			"studioReservations.rsv_start_time",
@@ -1119,8 +1172,6 @@ photographerManager.loadReservation = function(req, res, next){
 		"studioReservations",
 		"studioProducts.product_id",
 		"studioReservations.product_id",
-    "studioReservations.request_user",
-    req.__take_params.username,
     "studioReservations.rsv_id",
     req.query.rsv_id,
 		"studio",
@@ -1128,7 +1179,7 @@ photographerManager.loadReservation = function(req, res, next){
 		"studio.studio_id"
   ];
 
-  logger.debug("SQL Query [SELECT %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s AND %s=%s INNER JOIN %s ON %s=%s]",
+  logger.debug("SQL Query [SELECT %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s INNER JOIN %s ON %s=%s]",
 		params[0].toString(),
     params[1],
     params[2],
@@ -1138,9 +1189,7 @@ photographerManager.loadReservation = function(req, res, next){
 		params[6],
 		params[7],
 		params[8],
-		params[9],
-    params[10],
-    params[11]
+		params[9]
   );
 
   mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
@@ -1166,6 +1215,43 @@ photographerManager.sendReservationsData = function(req, res){
     "result": "success",
     "data": req.__take_params.reservationsData
   });
+};
+
+photographerManager.loadReservUserNickname = function(req, res, next){
+
+  var callbackForError = function(err){
+    httpUtil.sendDBErrorPage(req, res, err);
+  };
+
+  var callbackForNoResult = function(){
+    httpUtil.sendInfoPage(req, res, {
+      infoText: "잘못된 예약 정보입니다.",
+  		infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
+    });
+  };
+
+  var callbackForSuccess = function(rows, fields){
+    req.__take_params.reservationData.user_nickname = rows[0].nickname;
+    next();
+  };
+
+  var query = "SELECT ?? FROM ?? WHERE ?? = ?";
+
+  var params = [
+    "nickname",
+    "takeUser",
+    "username",
+    req.__take_params.reservationData.request_user
+  ];
+
+  logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
+		params[0],
+    params[1],
+    params[2],
+		params[3]
+  );
+
+  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
 };
 
 photographerManager.insertReservation = function(req, res){
@@ -1213,6 +1299,19 @@ photographerManager.showReservDetailsPage = function(req, res){
     username: req.__take_params.username,
     nickname: req.__take_params.nickname,
 		reservationData: req.__take_params.reservationData
+  });
+};
+
+photographerManager.showReservManamgementPage = function(req, res){
+
+  res.render("photographer/rsv-management", {
+    title: confParams.html.title,
+    service: confParams.html.service_name,
+    isAuth: req.__take_params.isAuth,
+    hasStudio: req.__take_params.hasStudio,
+    username: req.__take_params.username,
+    nickname: req.__take_params.nickname,
+    reservationsData: req.__take_params.reservationsData
   });
 };
 

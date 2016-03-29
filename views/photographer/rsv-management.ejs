@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/take-main-style.css"/>
+    <link rel="stylesheet" href="/stylesheets/take-board-style.css"/>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script type="text/javascript" src="/javascripts/take.util.js"></script>
+    <script type="text/javascript" src="/javascripts/take.login.js"></script>
+    <script type="text/javascript" src="/javascripts/take.board.js"></script>
+    <script type="text/javascript">
+      (function(){
+        $(document).ready(function(){
+          BoardController($("#rsv-board"), {
+            cols: {
+              num: 4,
+              labels: ["요청시각", "예약일정", "상품", "상태"],
+              widths: ["25%", "25%", "30%", "20%"],
+              dataKeys: ["request_date", "rsv_datetime", "product_name", "rsv_status_string"]
+            },
+            rows: {
+              num: <%= reservationsData.length %>,
+              for: "rsv_id",
+              height: "30px",
+              headerHeight: "30px"
+            },
+            layout: {
+              width: "100%",
+              showTableHeader: true
+            },
+            onClickRow: function(){
+              location.href = location.href + "details?rsv_id=" + $(this).attr("for");
+            }
+          }, <%- JSON.stringify(reservationsData) %>);
+        });
+      }());
+    </script>
+  </head>
+
+  <body>
+
+    <% include ../header %>
+
+    <div class="take-main-window">
+      <div class="take-basic-window">
+        <h1>예약 관리</h1>
+
+        <div class="take-board-window">
+          <div id="rsv-board" class="box"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <% include ../footer %>
+
+    <% include ../login/login-popup %>
+
+  </body>
+
+</html>
