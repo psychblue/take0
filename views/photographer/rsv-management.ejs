@@ -31,7 +31,7 @@
               showTableHeader: true
             },
             onClickRow: function(){
-              location.href = location.href + "details?rsv_id=" + $(this).attr("for");
+              location.href = "/reserve/details?mode=1&rsv_id=" + $(this).attr("for");
             }
           }, <%- JSON.stringify(reservationsData) %>);
         });
@@ -43,7 +43,7 @@
 
     <% include ../header %>
 
-    <div class="take-main-window">
+    <div class="take-main-window bg-color-lightergrey">
       <div class="take-basic-window">
         <h1>예약 관리</h1>
 

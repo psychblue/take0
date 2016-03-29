@@ -756,7 +756,7 @@ hr {
 .rsv-timeline-box .rsv-timeline-item .contents {
   width: 590px;
   padding-top: 10px;
-  padding-bottom: 20px;
+  padding-bottom: 0px;
   float: left;
 }
 
@@ -765,6 +765,8 @@ hr {
   padding-right: 20px;
   padding-left: 20px;
   line-height: 40px;
+  text-align: center;
+  font-size: 1.1em;
   border-radius: 3px;
 }
 

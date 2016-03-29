@@ -177,17 +177,26 @@ router.get("/reserve",
   photographerManager.loadUserReservationsByDate,
   photographerManager.showReservPage
 );
-// Show Product Reservation Page
-router.get("/reservedetails",
+// Show Product Reservation Detail Page
+router.get("/reserve/details",
   photographerManager.checkLogin,
   photographerManager.loadReservation,
+  photographerManager.loadReservationEvents,
   photographerManager.loadReservUserNickname,
+  photographerManager.loadReservEventsNickname,
   photographerManager.showReservDetailsPage
 );
 // Request Product Reservation (AJAX)
 router.post("/reserve",
   photographerManager.checkLoginOnAjax,
   photographerManager.insertReservation
+);
+// Change Reservation Status (AJAX)
+router.post("/reserve/status",
+  photographerManager.checkLoginOnAjax,
+  photographerManager.loadReservation,
+  photographerManager.updateReservationStatus,
+  photographerManager.insertReservationEvent
 );
 //Get Reservation Data (AJAX)
 router.get("/rsvdata",
@@ -254,13 +263,6 @@ router.get("/studio/:photographer/reserve",
   photographerManager.checkReqFromOwner,
   photographerManager.loadStudioReservations,
   photographerManager.showReservManamgementPage
-);
-// Show Product Reservation Page
-router.get("/studio/:photographer/reservedetails",
-  photographerManager.checkLogin,
-  photographerManager.loadReservation,
-  photographerManager.loadReservUserNickname,
-  photographerManager.showReservDetailsPage
 );
 
 // Not Found

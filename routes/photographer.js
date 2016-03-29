@@ -1195,6 +1195,39 @@ photographerManager.loadReservation = function(req, res, next){
   mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
 };
 
+photographerManager.loadReservationEvents = function(req, res, next){
+
+  var callbackForError = function(err){
+    httpUtil.sendDBErrorPage(req, res, err);
+  };
+
+  var callbackForNoResult = function(){
+    req.__take_params.reservationEventsData = [];
+    next();
+  };
+
+  var callbackForSuccess = function(rows, fields){
+    req.__take_params.reservationEventsData = rows;
+    next();
+  };
+
+  var query = "SELECT * FROM ?? WHERE ?? = ?";
+
+  var params = [
+    "studioReservationEvents",
+    "rsv_id",
+    req.query.rsv_id
+  ];
+
+  logger.debug("SQL Query [SELECT * FROM %s WHERE %s=%s]",
+    params[0],
+    params[1],
+    params[2]
+  );
+
+  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+};
+
 photographerManager.showReservPage = function(req, res){
 
   res.render("photographer/reservation", {
@@ -1254,6 +1287,62 @@ photographerManager.loadReservUserNickname = function(req, res, next){
   mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
 };
 
+photographerManager.loadReservEventsNickname = function(req, res, next){
+
+  var maxIterator = req.__take_params.reservationEventsData.length;
+  var statusStrings = ["예약요청중", "예약확인중", "예약확정", "결제완료", "촬영완료", "상품전달중", "상품확인"];
+
+  var load = function(iterator){
+
+		var callbackForError = function(err){
+	    httpUtil.sendDBErrorPage(req, res, err);
+	  };
+
+	  var callbackForNoResult = function(){
+	    httpUtil.sendNoDataFromDBPage(req, res);
+	  };
+
+	  var callbackForSuccess = function(rows, fields){
+      if(req.__take_params.reservationEventsData[iterator].event_type == 0){
+        req.__take_params.reservationEventsData[iterator].rsv_status_string = statusStrings[req.__take_params.reservationEventsData[iterator].event_desc - 1];
+      }
+      req.__take_params.reservationEventsData[iterator].nickname = rows[0].nickname;
+
+			if(iterator < maxIterator - 1){
+				load(iterator + 1);
+			}
+			else{
+				next();
+			}
+	  };
+
+		var query = "SELECT ?? FROM ?? WHERE ?? = ?";
+
+		var params = [
+			"nickname",
+			"takeUser",
+			"username",
+			req.__take_params.reservationEventsData[iterator].username
+		];
+
+	  logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
+	    params[0],
+	    params[1],
+	    params[2],
+			params[3]
+	  );
+
+	  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+	};
+
+	if(maxIterator > 0){
+			load(0);
+	}
+	else{
+		next();
+	}
+};
+
 photographerManager.insertReservation = function(req, res){
 
   var callbackForError = function(err){
@@ -1298,7 +1387,9 @@ photographerManager.showReservDetailsPage = function(req, res){
     hasStudio: req.__take_params.hasStudio,
     username: req.__take_params.username,
     nickname: req.__take_params.nickname,
-		reservationData: req.__take_params.reservationData
+		reservationData: req.__take_params.reservationData,
+    reservationEventsData: req.__take_params.reservationEventsData,
+    mode: req.query.mode
   });
 };
 
@@ -1313,6 +1404,85 @@ photographerManager.showReservManamgementPage = function(req, res){
     nickname: req.__take_params.nickname,
     reservationsData: req.__take_params.reservationsData
   });
+};
+
+photographerManager.updateReservationStatus = function(req, res, next){
+
+  if(req.__take_params.username != req.__take_params.reservationData.username){
+
+    res.send({
+      "result": "fail",
+      "text": "허락된 사진작가가 아닙니다."
+    });
+
+    return;
+  }
+
+  var callbackForError = function(err){
+      res.send({
+        "result": "fail",
+        "text": err
+      });
+    };
+
+  var callbackForSuccess = function(){
+    req.__take_params.event_type = 0;
+    req.__take_params.event_desc = req.body.rsv_status;
+    next();
+  };
+
+  var query = "UPDATE ?? SET ? WHERE ?? = ?";
+
+  var params = [
+    "studioReservations",
+    {
+      rsv_status: req.body.rsv_status
+    },
+    "rsv_id",
+    req.query.rsv_id
+  ];
+
+  logger.debug("SQL Query [UPDATE %s SET %s WHRER %s = %s]",
+    params[0],
+    JSON.stringify(params[1]),
+    params[2],
+    params[3]
+  );
+
+  mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
+};
+
+photographerManager.insertReservationEvent = function(req, res){
+
+  var callbackForError = function(err){
+    res.send({
+      "result": "fail",
+      "text": err
+    });
+  };
+
+  var callbackForSuccess = function(result){
+    res.send({"result": "success"});
+  };
+
+  var query = "INSERT INTO ?? SET ?";
+
+  var params = [
+    "studioReservationEvents",
+    {
+      rsv_id: req.query.rsv_id,
+      username: req.__take_params.username,
+      event_type: req.__take_params.event_type,
+      event_desc: req.__take_params.event_desc
+    }
+  ];
+
+  logger.debug("SQL Query [INSERT INTO %s SET %s]",
+    params[0],
+    JSON.stringify(params[1])
+  );
+
+  mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
 };
 
 module.exports = photographerManager;
