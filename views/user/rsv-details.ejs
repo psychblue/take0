@@ -155,25 +155,12 @@
                 <table>
                   <tr>
                     <td class="label">
-                      상품명
+                      예약자
                     </td>
                     <td class="desc">
                       <span class="font-darkgrey font-bold">
-                        <%= reservationData.product_name %>
+                        <%= reservationData.user_nickname %>
                       </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="label">
-                      스튜디오
-                    </td>
-                    <td class="desc">
-                      <span class="font-darkgrey">
-                        <%= reservationData.studio_name %>&nbsp;&nbsp;
-                      </span>
-                      <a href="/studio/<%= reservationData.username %>">
-                        <span class="font-white font-level-small bg-color-grey">&nbsp;바로가기&nbsp;</span>
-                      </a>
                     </td>
                   </tr>
                   <tr>
@@ -210,6 +197,29 @@
                       </span>
                       <span class="font-darkgrey">
                         <%= time_prefix %>&nbsp;<%= hour %>:<%= minute %>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label">
+                      스튜디오
+                    </td>
+                    <td class="desc">
+                      <span class="font-darkgrey">
+                        <%= reservationData.studio_name %>&nbsp;&nbsp;
+                      </span>
+                      <a href="/studio/<%= reservationData.username %>">
+                        <span class="font-white font-level-small bg-color-grey">&nbsp;바로가기&nbsp;</span>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label">
+                      상품명
+                    </td>
+                    <td class="desc">
+                      <span class="font-darkgrey font-bold">
+                        <%= reservationData.product_name %>
                       </span>
                     </td>
                   </tr>
