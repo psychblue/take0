@@ -75,6 +75,10 @@ hr {
   background-color: #fde2e2;
 }
 
+.bg-color-yellow {
+  background-color: #ffcc00;
+}
+
 .width-full {
   width: 100%;
 }
@@ -133,6 +137,10 @@ hr {
 
 .font-level-small {
   font-size: 0.8em;
+}
+
+.font-level-medium {
+  font-size: 1.1em;
 }
 
 .font-level-large {
@@ -694,7 +702,7 @@ hr {
 }
 
 .rsv-timeline-box {
-  width: 800px;
+  width: 760px;
   padding-top: 50px;
   padding-bottom: 50px;
   margin: 0 auto;
@@ -702,7 +710,7 @@ hr {
 }
 
 .rsv-timeline-box .rsv-timeline-item .datetime {
-  width: 160px;
+  width: 120px;
   padding-top: 15px;
   padding-bottom: 15px;
   float: left;
@@ -761,13 +769,13 @@ hr {
 }
 
 .rsv-timeline-box .rsv-timeline-item .contents .main-line {
-  width: 550px;
+  width: 150px;
   padding-right: 20px;
   padding-left: 20px;
   line-height: 40px;
   text-align: center;
-  font-size: 1.1em;
   border-radius: 3px;
+  position: relative;
 }
 
 .rsv-timeline-box .rsv-timeline-item .contents .sub-line {
@@ -780,6 +788,12 @@ hr {
   line-height: 40px;
   background-color: #fff;
   border-radius: 3px;
+}
+
+.rsv-timeline-box .rsv-timeline-item .contents .rsv-button {
+  position: absolute;
+  top: 0;
+  right: -135px;
 }
 
 .rsv-timeline-box .rsv-timeline-item .contents table {
@@ -817,7 +831,6 @@ hr {
   padding-bottom: 10px;
   padding-left: 20px;
 }
-
 
 .take-text-input {
   width: 500px;

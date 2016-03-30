@@ -181,6 +181,9 @@ router.get("/reserve",
 router.get("/reserve/details",
   photographerManager.checkLogin,
   photographerManager.loadReservation,
+  photographerManager.openedByOnwer,
+  photographerManager.updateReservationStatusByOwner,
+  photographerManager.insertReservationEvent,
   photographerManager.loadReservationEvents,
   photographerManager.loadReservUserNickname,
   photographerManager.loadReservEventsNickname,
@@ -195,7 +198,7 @@ router.post("/reserve",
 router.post("/reserve/status",
   photographerManager.checkLoginOnAjax,
   photographerManager.loadReservation,
-  photographerManager.updateReservationStatus,
+  photographerManager.updateReservationStatusByOwner,
   photographerManager.insertReservationEvent
 );
 //Get Reservation Data (AJAX)

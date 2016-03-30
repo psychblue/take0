@@ -1211,18 +1211,20 @@ photographerManager.loadReservationEvents = function(req, res, next){
     next();
   };
 
-  var query = "SELECT * FROM ?? WHERE ?? = ?";
+  var query = "SELECT * FROM ?? WHERE ?? = ? ORDER BY ?? DESC";
 
   var params = [
     "studioReservationEvents",
     "rsv_id",
-    req.query.rsv_id
+    req.query.rsv_id,
+    "event_id"
   ];
 
-  logger.debug("SQL Query [SELECT * FROM %s WHERE %s=%s]",
+  logger.debug("SQL Query [SELECT * FROM %s WHERE %s=%s ORDER BY %s DESC]",
     params[0],
     params[1],
-    params[2]
+    params[2],
+    params[3]
   );
 
   mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
@@ -1406,83 +1408,113 @@ photographerManager.showReservManamgementPage = function(req, res){
   });
 };
 
-photographerManager.updateReservationStatus = function(req, res, next){
+photographerManager.updateReservationStatusByOwner = function(req, res, next){
 
-  if(req.__take_params.username != req.__take_params.reservationData.username){
+  if(req.body.rsv_status){
 
-    res.send({
-      "result": "fail",
-      "text": "허락된 사진작가가 아닙니다."
-    });
+    if(req.__take_params.username != req.__take_params.reservationData.username){
 
-    return;
+      res.send({
+        "result": "fail",
+        "text": "허락된 사진작가가 아닙니다."
+      });
+
+      return;
+    }
+
+    var callbackForError = function(err){
+        res.send({
+          "result": "fail",
+          "text": err
+        });
+      };
+
+    var callbackForSuccess = function(){
+      req.__take_params.event_type = 0;
+      req.__take_params.event_desc = req.body.rsv_status;
+
+      next();
+    };
+
+    var query = "UPDATE ?? SET ? WHERE ?? = ?";
+
+    var params = [
+      "studioReservations",
+      {
+        rsv_status: req.body.rsv_status
+      },
+      "rsv_id",
+      req.query.rsv_id
+    ];
+
+    logger.debug("SQL Query [UPDATE %s SET %s WHRER %s = %s]",
+      params[0],
+      JSON.stringify(params[1]),
+      params[2],
+      params[3]
+    );
+
+    mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
   }
+  else{
+    next();
+  }
+};
 
-  var callbackForError = function(err){
+photographerManager.insertReservationEvent = function(req, res, next){
+
+  if(req.__take_params.event_type !== undefined){
+    var callbackForError = function(err){
       res.send({
         "result": "fail",
         "text": err
       });
     };
 
-  var callbackForSuccess = function(){
-    req.__take_params.event_type = 0;
-    req.__take_params.event_desc = req.body.rsv_status;
+    var callbackForSuccess = function(result){
+      if(req.path == "/reserve/details"){
+        next();
+      }
+      else{
+        res.send({"result": "success"});
+      }
+    };
+
+    var query = "INSERT INTO ?? SET ?";
+
+    var params = [
+      "studioReservationEvents",
+      {
+        rsv_id: req.query.rsv_id,
+        username: req.__take_params.username,
+        event_type: req.__take_params.event_type,
+        event_desc: req.__take_params.event_desc
+      }
+    ];
+
+    logger.debug("SQL Query [INSERT INTO %s SET %s]",
+      params[0],
+      JSON.stringify(params[1])
+    );
+
+    mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
+  }
+  else{
     next();
-  };
-
-  var query = "UPDATE ?? SET ? WHERE ?? = ?";
-
-  var params = [
-    "studioReservations",
-    {
-      rsv_status: req.body.rsv_status
-    },
-    "rsv_id",
-    req.query.rsv_id
-  ];
-
-  logger.debug("SQL Query [UPDATE %s SET %s WHRER %s = %s]",
-    params[0],
-    JSON.stringify(params[1]),
-    params[2],
-    params[3]
-  );
-
-  mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
+  }
 };
 
-photographerManager.insertReservationEvent = function(req, res){
+photographerManager.openedByOnwer = function(req, res, next){
 
-  var callbackForError = function(err){
-    res.send({
-      "result": "fail",
-      "text": err
-    });
-  };
+  if(req.__take_params.username == req.__take_params.reservationData.username && req.__take_params.reservationData.rsv_status == 1){
 
-  var callbackForSuccess = function(result){
-    res.send({"result": "success"});
-  };
-
-  var query = "INSERT INTO ?? SET ?";
-
-  var params = [
-    "studioReservationEvents",
-    {
-      rsv_id: req.query.rsv_id,
-      username: req.__take_params.username,
-      event_type: req.__take_params.event_type,
-      event_desc: req.__take_params.event_desc
-    }
-  ];
-
-  logger.debug("SQL Query [INSERT INTO %s SET %s]",
-    params[0],
-    JSON.stringify(params[1])
-  );
-
-  mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
+    req.__take_params.reservationData.rsv_status = 2;
+    req.body.rsv_status = 2;
+    next();
+  }
+  else{
+    next();
+  }
 };
 
 module.exports = photographerManager;

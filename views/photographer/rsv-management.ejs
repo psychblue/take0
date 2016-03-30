@@ -13,7 +13,8 @@
     <script type="text/javascript">
       (function(){
         $(document).ready(function(){
-          BoardController($("#rsv-board"), {
+          BoardController($("#rsv-board"),
+          {
             cols: {
               num: 4,
               labels: ["요청시각", "예약일정", "상품", "상태"],
@@ -33,7 +34,8 @@
             onClickRow: function(){
               location.href = "/reserve/details?mode=1&rsv_id=" + $(this).attr("for");
             }
-          }, <%- JSON.stringify(reservationsData) %>);
+          },
+          <%- JSON.stringify(reservationsData) %>);
         });
       }());
     </script>

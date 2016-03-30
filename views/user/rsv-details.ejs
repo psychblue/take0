@@ -150,7 +150,13 @@
             <div class="contents">
               <div class="main-line bg-color-darkgrey">
                 <span class="font-white">예약요청중</span>
+                <% if(reservationData.username == username && ( reservationData.rsv_status == 1 || reservationData.rsv_status == 2 )){ %>
+                  <button type="button" class="rsv-confirm-button rsv-button take-button-mint">
+                    <img src="/images/studio/check.png"></img><span>&nbsp;&nbsp;예약확정</span>
+                  </button>
+                <% } %>
               </div>
+
               <div class="sub-line">
                 <table>
                   <tr>
@@ -266,17 +272,16 @@
 
         </div>
 
+        <div class="chat-box bg-color-white">
+          <textarea class="take-textarea border-solid-thin-lightgrey"></textarea>
+        </div>
+
         <hr class="bg-color-lightgrey">
 
         <div class="editor-button-box center-aligned">
           <button type="button" class="back-button take-button-mint">
             <img src="/images/common/list.png"></img><span>&nbsp;&nbsp;목록으로</span>
           </button>
-          <% if(reservationData.username == username && ( reservationData.rsv_status == 1 || reservationData.rsv_status == 2 )){ %>
-            <button type="button" class="rsv-confirm-button take-button-mint">
-              <img src="/images/studio/check.png"></img><span>&nbsp;&nbsp;예약확정</span>
-            </button>
-          <% } %>
           <button type="button" class="rsv-cancel-button take-button-red">
             <img src="/images/common/cancel.png"></img><span>&nbsp;&nbsp;예약취소</span>
           </button>
