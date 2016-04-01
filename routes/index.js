@@ -19,7 +19,12 @@ var router = express.Router();
 
 //Routing Middleware
 router.use(function(req, res, next){
-  logger.debug("User request is on [ %s ]", req.path);
+  if(req.user !== undefined){
+    logger.debug("User request is on [ %s ] by [ \"%s\" ]", req.path, req.user.username);
+  }
+  else{
+    logger.debug("User request is on [ %s ] by [ Anonymous ]", req.path);
+  }
   next();
 });
 router.use(userManager.loadDefaultTakeParams);

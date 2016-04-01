@@ -16,10 +16,11 @@ function queryToString(query, params, callerFunc){
 		logString = logString.replace(/\?+/, JSON.stringify(params[paramIndex]));
 	}
 
-	logger.debug("------------------- MySQL --------------------");
+	logger.debug("SQL Query >>>");
+	logger.debug("-------------------------------------------------------");
 	logger.debug("BY\t: " + callerFunc.functionName);
-	logger.debug("Query\t: " + logString);
-	logger.debug("----------------------------------------------\n");
+	logger.debug("QUERY\t: " + logString);
+	logger.debug("-------------------------------------------------------");
 }
 
 //MySQL User DB Settings
@@ -37,15 +38,26 @@ mysqlDb.doSQLQuery = function(options){
 		connection.query(options.query, options.params, function(err, rows, fields){
 			connection.release();
 		  if(err){
-		    logger.error("SQL Error >>> [ " + err.toString() + " ]");
+		    logger.error("SQL Result >>>");
+				logger.error("-------------------------------------------------------");
+				logger.error("ERROR\t: " + err.toString());
+				logger.error("-------------------------------------------------------");
 				options.onError(err);
 		  }
 			else{
 				if(options.onNoResult){
 				  if(rows.length === 0){
+						logger.debug("SQL Result >>>");
+						logger.debug("-------------------------------------------------------");
+						logger.debug("DATA\t: No Data");
+						logger.debug("-------------------------------------------------------");
 						options.onNoResult();
 					}
 					else if(rows.length > 0){
+						logger.debug("SQL Result >>>");
+						logger.debug("-------------------------------------------------------");
+						logger.debug("DATA\t: " + JSON.stringify(rows));
+						logger.debug("-------------------------------------------------------");
 				    options.onSuccess(rows, fields);
 				  }
 				}
