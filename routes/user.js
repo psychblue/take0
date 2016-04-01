@@ -17,8 +17,6 @@ Load user data
 */
 userManager.loadDefaultTakeParams = function(req, res, next){
 
-	logger.debug("User request is on [ %s ]", req.path);
-
 	req.__take_params = {};
 
 	req.__take_params.isAuth = req.isAuthenticated();
@@ -26,34 +24,32 @@ userManager.loadDefaultTakeParams = function(req, res, next){
 
 	if(!commonUtil.checkPathWhiteList(req.path)){
 
-		var callbackForError = function(err){
-			httpUtil.sendDBErrorPage(req, res, err);
-		};
+		mysqlDb.doSQLQuery({
+			query: "SELECT ?? FROM ?? WHERE ?? = ?",
 
-		var callbackForNoResult = function(){
-			req.__take_params.nickname = "";
-			req.__take_params.hasStudio = 0;
-			next();
-		};
+			params: [
+				["nickname", "has_studio"],
+				"takeUser",
+				"username",
+				req.__take_params.username
+			],
 
-		var callbackForSuccess = function(rows, fields){
-			req.__take_params.nickname = rows[0].nickname;
-			req.__take_params.hasStudio = rows[0].has_studio;
-			next();
-		};
+			onSuccess: function(rows, fields){
+				req.__take_params.nickname = rows[0].nickname;
+				req.__take_params.hasStudio = rows[0].has_studio;
+				next();
+			},
 
-		var query = "SELECT ?? FROM ?? WHERE ?? = ?";
+			onError: function(err){
+				httpUtil.sendDBErrorPage(req, res, err);
+			},
 
-		var params = [["nickname", "has_studio"], "takeUser", "username", req.__take_params.username];
-
-		logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
-			params[0].toString(),
-			params[1],
-			params[2],
-			params[3]
-		);
-
-		mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+			onNoResult: function(){
+				req.__take_params.nickname = "";
+				req.__take_params.hasStudio = 0;
+				next();
+			}
+		});
 	}
 	else{
 		next();
@@ -86,30 +82,24 @@ userManager.checkLoginOnAjax = function(req, res, next){
 
 userManager.loadUserInfo = function(req, res, next){
 
-	var callbackForError = function(err){
-		httpUtil.sendDBErrorPage(req, res, err);
-	};
+	mysqlDb.doSQLQuery({
+		query: "SELECT * FROM ?? WHERE ?? = ?",
 
-	var callbackForNoResult = function(){
-		httpUtil.sendNoDataFromDBPage(req, res);
-	};
+		params: ["takeUser", "username", req.__take_params.username],
 
-	var callbackForSuccess = function(rows, fields){
-		req.__take_params.userInfo = rows[0];
-		next();
-	};
+		onSuccess: function(rows, fields){
+			req.__take_params.userInfo = rows[0];
+			next();
+		},
 
-	var query = "SELECT * FROM ?? WHERE ?? = ?";
+		onError: function(err){
+			httpUtil.sendDBErrorPage(req, res, err);
+		},
 
-	var params = ["takeUser", "username", req.__take_params.username];
-
-	logger.debug("SQL Query [SELECT * FROM %s WHERE %s=%s]",
-		params[0],
-		params[1],
-		params[2]
-	);
-
-	mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+		onNoResult: function(){
+			httpUtil.sendNoDataFromDBPage(req, res);
+		}
+	});
 };
 
 userManager.showUserInfoPage = function(req, res){
@@ -129,19 +119,6 @@ userManager.showUserInfoPage = function(req, res){
 
 userManager.updateUserInfo = function(req, res, next){
 
-	var callbackForError = function(err){
-    res.send({
-      "result": "fail",
-      "text": err
-    });
-  };
-
-  var callbackForSuccess = function(){
-    res.send({
-			"result": "success"
-		});
-  };
-
 	var emailAgree;
 	if(req.body.email_agree == 1){
 		emailAgree = 1;
@@ -150,27 +127,33 @@ userManager.updateUserInfo = function(req, res, next){
 		emailAgree = 0;
 	}
 
-  var query = "UPDATE ?? SET ? WHERE ?? = ?";
+	mysqlDb.doSQLQuery({
+		query: "UPDATE ?? SET ? WHERE ?? = ?",
 
-  var params = [
-		"takeUser",
-		{
-			nickname: req.body.nickname,
-			email: req.body.email,
-			email_agree: emailAgree
-		},
-		"username",
-		req.user.username
-	];
+		params: [
+			"takeUser",
+			{
+				nickname: req.body.nickname,
+				email: req.body.email,
+				email_agree: emailAgree
+			},
+			"username",
+			req.user.username
+		],
 
-  logger.debug("SQL Query [UPDATE %s SET %s WHRER %s = %s]",
-    params[0],
-    JSON.stringify(params[1]),
-    params[2],
-    params[3]
-  );
+		onSuccess: function(){
+	    res.send({
+				"result": "success"
+			});
+	  },
 
-  mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
+		onError: function(err){
+	    res.send({
+	      "result": "fail",
+	      "text": err
+	    });
+	  }
+	});
 };
 
 userManager.showPasswordPage = function(req, res){
@@ -187,75 +170,61 @@ userManager.showPasswordPage = function(req, res){
 
 userManager.matchPassword = function(req, res, next){
 
-	var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
+	mysqlDb.doSQLQuery({
+		query: "SELECT ?? FROM ?? WHERE ?? = ?",
 
-  var callbackForNoResult = function(){
-    httpUtil.sendNoDataFromDBPage(req, res);
-  };
+		params: ["password", "takeUser", "username", req.__take_params.username],
 
-  var callbackForSuccess = function(rows, fields){
-    if(bcrypt.compareSync(req.body.password_old, rows[0].password)){
-      req.__take_params.passwordMatched = 1;
-    }else{
-      req.__take_params.passwordMatched = 0;
-    }
-		next();
-  };
+		onSuccess: function(rows, fields){
+	    if(bcrypt.compareSync(req.body.password_old, rows[0].password)){
+	      req.__take_params.passwordMatched = 1;
+	    }else{
+	      req.__take_params.passwordMatched = 0;
+	    }
+			next();
+	  },
 
-  var query = "SELECT ?? FROM ?? WHERE ?? = ?";
+		onError: function(err){
+	    httpUtil.sendDBErrorPage(req, res, err);
+	  },
 
-  var params = ["password", "takeUser", "username", req.__take_params.username];
-
-  logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
-    params[0],
-    params[1],
-    params[2],
-    params[3]
-  );
-
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+		onNoResult: function(){
+	    httpUtil.sendNoDataFromDBPage(req, res);
+	  }
+	});
 };
 
 userManager.updatePassword = function(req, res, next){
 
 	if(req.__take_params.passwordMatched){
-		var callbackForError = function(err){
-	    res.send({
-	      "result": "fail",
-	      "text": err
-	    });
-	  };
-
-	  var callbackForSuccess = function(){
-	    res.send({
-				"result": "success"
-			});
-	  };
-
 		//Password Encryption
 	  var encryptedPassword = joinManager.encryptPassword(req.body.password_new);
 
-	  var query = "UPDATE ?? SET ? WHERE ?? = ?";
+		mysqlDb.doSQLQuery({
+			query: "UPDATE ?? SET ? WHERE ?? = ?",
 
-	  var params = [
-			"takeUser",
-			{
-				password: encryptedPassword,
-			},
-			"username",
-			req.user.username
-		];
+			params: [
+				"takeUser",
+				{
+					password: encryptedPassword,
+				},
+				"username",
+				req.user.username
+			],
 
-	  logger.debug("SQL Query [UPDATE %s SET %s WHRER %s = %s]",
-	    params[0],
-	    JSON.stringify(params[1]),
-	    params[2],
-	    params[3]
-	  );
+			onSuccess: function(){
+		    res.send({
+					"result": "success"
+				});
+		  },
 
-	  mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
+			onError: function(err){
+		    res.send({
+		      "result": "fail",
+		      "text": err
+		    });
+		  }
+		});
 	}
 	else{
 		res.send({
@@ -267,62 +236,49 @@ userManager.updatePassword = function(req, res, next){
 
 userManager.loadReservations = function(req, res, next){
 
-	var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
+	mysqlDb.doSQLQuery({
+		query: "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ?? AND ?? = ? INNER JOIN ?? ON ?? = ??",
 
-  var callbackForNoResult = function(){
-    req.__take_params.reservationsData = [];
-    next();
-  };
-
-  var callbackForSuccess = function(rows, fields){
-    req.__take_params.reservationsData = rows;
-    next();
-  };
-
-  var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ?? AND ?? = ? INNER JOIN ?? ON ?? = ??";
-
-  var params = [
-		[
+		params: [
+			[
+				"studioProducts.product_id",
+				"studioProducts.product_name",
+				"studioProducts.product_desc",
+				"studioProducts.product_price",
+				"studioReservations.rsv_id",
+				"studioReservations.request_date",
+				"studioReservations.rsv_date",
+				"studioReservations.rsv_start_time",
+				"studioReservations.rsv_end_time",
+				"studioReservations.rsv_status",
+				"studio.studio_name",
+				"studio.username"
+			],
+			"studioProducts",
+			"studioReservations",
 			"studioProducts.product_id",
-			"studioProducts.product_name",
-			"studioProducts.product_desc",
-			"studioProducts.product_price",
-			"studioReservations.rsv_id",
-			"studioReservations.request_date",
-			"studioReservations.rsv_date",
-			"studioReservations.rsv_start_time",
-			"studioReservations.rsv_end_time",
-			"studioReservations.rsv_status",
-			"studio.studio_name",
-			"studio.username"
-		],
-		"studioProducts",
-		"studioReservations",
-		"studioProducts.product_id",
-		"studioReservations.product_id",
-    "studioReservations.request_user",
-    req.__take_params.username,
-		"studio",
-		"studioProducts.studio_id",
-		"studio.studio_id"
-  ];
+			"studioReservations.product_id",
+	    "studioReservations.request_user",
+	    req.__take_params.username,
+			"studio",
+			"studioProducts.studio_id",
+			"studio.studio_id"
+	  ],
 
-  logger.debug("SQL Query [SELECT %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s INNER JOIN %s ON %s=%s]",
-		params[0].toString(),
-    params[1],
-    params[2],
-		params[3],
-		params[4],
-		params[5],
-		params[6],
-		params[7],
-		params[8],
-		params[9]
-  );
+		onSuccess: function(rows, fields){
+	    req.__take_params.reservationsData = rows;
+	    next();
+	  },
 
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+		onError: function(err){
+	    httpUtil.sendDBErrorPage(req, res, err);
+	  },
+
+		onNoResult: function(){
+	    req.__take_params.reservationsData = [];
+	    next();
+	  }
+	});
 };
 
 userManager.showCartPage = function(req, res){
@@ -340,62 +296,48 @@ userManager.showCartPage = function(req, res){
 
 userManager.loadLikesStudioIds = function(req, res, next){
 
-	var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
+	mysqlDb.doSQLQuery({
+		query: "SELECT ?? FROM ?? WHERE ?? = ?",
 
-  var callbackForNoResult = function(){
-    req.__take_params.likeStudiosData = [];
-		next();
-  };
+		params: ["studio_id", "takeUserLikeStudios", "username", req.__take_params.username],
 
-  var callbackForSuccess = function(rows, fields){
-    req.__take_params.likeStudiosData = rows;
-		next();
-  };
+		onSuccess: function(rows, fields){
+	    req.__take_params.likeStudiosData = rows;
+			next();
+	  },
 
-  var query = "SELECT ?? FROM ?? WHERE ?? = ?";
+		onError: function(err){
+	    httpUtil.sendDBErrorPage(req, res, err);
+	  },
 
-  var params = ["studio_id", "takeUserLikeStudios", "username", req.__take_params.username];
-
-  logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
-    params[0],
-    params[1],
-    params[2],
-    params[3]
-  );
-
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+		onNoResult: function(){
+	    req.__take_params.likeStudiosData = [];
+			next();
+	  }
+	});
 };
 
 userManager.loadLikesProductIds = function(req, res, next){
 
-	var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
+	mysqlDb.doSQLQuery({
+		query: "SELECT ?? FROM ?? WHERE ?? = ?",
 
-  var callbackForNoResult = function(){
-    req.__take_params.likeProductsData = [];
-		next();
-  };
+		params: ["product_id", "takeUserLikeProducts", "username", req.__take_params.username],
 
-  var callbackForSuccess = function(rows, fields){
-    req.__take_params.likeProductsData = rows;
-		next();
-  };
+		onSuccess: function(rows, fields){
+	    req.__take_params.likeProductsData = rows;
+			next();
+	  },
 
-  var query = "SELECT ?? FROM ?? WHERE ?? = ?";
+		onError: function(err){
+	    httpUtil.sendDBErrorPage(req, res, err);
+	  },
 
-  var params = ["product_id", "takeUserLikeProducts", "username", req.__take_params.username];
-
-  logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
-    params[0],
-    params[1],
-    params[2],
-    params[3]
-  );
-
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+		onNoResult: function(){
+	    req.__take_params.likeProductsData = [];
+			next();
+	  }
+	});
 };
 
 userManager.loadStudioData = function(req, res, next){
@@ -404,55 +346,45 @@ userManager.loadStudioData = function(req, res, next){
 
 	var load = function(iterator){
 
-		var callbackForError = function(err){
-	    httpUtil.sendDBErrorPage(req, res, err);
-	  };
+		mysqlDb.doSQLQuery({
+			query: "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ??",
 
-	  var callbackForNoResult = function(){
-	    httpUtil.sendNoDataFromDBPage(req, res);
-	  };
-
-	  var callbackForSuccess = function(rows, fields){
-			rows[0].slider_photo_list = JSON.parse(rows[0].slider_photo_list)["1"];
-	    req.__take_params.likeStudiosData[iterator] = rows[0];
-
-			if(iterator < maxIterator - 1){
-				load(iterator + 1);
-			}
-			else{
-				next();
-			}
-	  };
-
-		var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ??";
-
-		var params = [
-			[
+			params: [
+				[
+					"studio.studio_id",
+					"studio.studio_name",
+					"studio.username",
+					"studio.slider_photo_list",
+					"takeUser.nickname"
+				],
+				"studio",
+				"takeUser",
 				"studio.studio_id",
-				"studio.studio_name",
+				req.__take_params.likeStudiosData[iterator].studio_id,
 				"studio.username",
-				"studio.slider_photo_list",
-				"takeUser.nickname"
+				"takeUser.username"
 			],
-			"studio",
-			"takeUser",
-			"studio.studio_id",
-			req.__take_params.likeStudiosData[iterator].studio_id,
-			"studio.username",
-			"takeUser.username"
-		];
 
-	  logger.debug("SQL Query [SELECT %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s]",
-	    params[0].toString(),
-	    params[1],
-	    params[2],
-			params[3],
-			params[4],
-			params[5],
-			params[6]
-	  );
+			onSuccess: function(rows, fields){
+				rows[0].slider_photo_list = JSON.parse(rows[0].slider_photo_list)["1"];
+		    req.__take_params.likeStudiosData[iterator] = rows[0];
 
-	  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+				if(iterator < maxIterator - 1){
+					load(iterator + 1);
+				}
+				else{
+					next();
+				}
+		  },
+
+			onError: function(err){
+		    httpUtil.sendDBErrorPage(req, res, err);
+		  },
+
+			onNoResult: function(){
+		    httpUtil.sendNoDataFromDBPage(req, res);
+		  }
+		});
 	};
 
 	if(maxIterator > 0){
@@ -469,55 +401,45 @@ userManager.loadProductData = function(req, res, next){
 
 	var load = function(iterator){
 
-		var callbackForError = function(err){
-	    httpUtil.sendDBErrorPage(req, res, err);
-	  };
+		mysqlDb.doSQLQuery({
+			query: "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ??",
 
-	  var callbackForNoResult = function(){
-	    httpUtil.sendNoDataFromDBPage(req, res);
-	  };
-
-	  var callbackForSuccess = function(rows, fields){
-	    req.__take_params.likeProductsData[iterator] = rows[0];
-			if(iterator < maxIterator - 1){
-				load(iterator + 1);
-			}
-			else{
-				next();
-			}
-	  };
-
-		var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ??";
-
-		var params = [
-			[
+			params: [
+				[
+					"studioProducts.product_id",
+					"studioProducts.product_name",
+					"studioProducts.product_price",
+					"studioProducts.product_desc",
+					"studioProducts.is_available",
+					"studio.studio_name",
+					"studio.username"
+				],
+				"studioProducts",
+				"studio",
 				"studioProducts.product_id",
-				"studioProducts.product_name",
-				"studioProducts.product_price",
-				"studioProducts.product_desc",
-				"studioProducts.is_available",
-				"studio.studio_name",
-				"studio.username"
+				req.__take_params.likeProductsData[iterator].product_id,
+				"studioProducts.studio_id",
+				"studio.studio_id"
 			],
-			"studioProducts",
-			"studio",
-			"studioProducts.product_id",
-			req.__take_params.likeProductsData[iterator].product_id,
-			"studioProducts.studio_id",
-			"studio.studio_id"
-		];
 
-	  logger.debug("SQL Query [SELECT %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s]",
-	    params[0].toString(),
-	    params[1],
-	    params[2],
-			params[3],
-			params[4],
-			params[5],
-			params[6]
-	  );
+			onSuccess: function(rows, fields){
+		    req.__take_params.likeProductsData[iterator] = rows[0];
+				if(iterator < maxIterator - 1){
+					load(iterator + 1);
+				}
+				else{
+					next();
+				}
+		  },
 
-	  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+			onError: function(err){
+		    httpUtil.sendDBErrorPage(req, res, err);
+		  },
+
+			onNoResult: function(){
+		    httpUtil.sendNoDataFromDBPage(req, res);
+		  }
+		});
 	};
 
 	if(maxIterator > 0){
@@ -544,46 +466,10 @@ userManager.showLikesListPage = function(req, res){
 
 userManager.checkDupLikes = function(req, res, next){
 
-	var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
-
-  var callbackForNoResult = function(){
-    next();
-  };
-
-  var callbackForSuccess = function(rows, fields){
-    for(var likesIndex = 0; likesIndex < rows.length; likesIndex++){
-			if(req.body.studio_id){
-				if(rows[likesIndex].studio_id == req.body.studio_id){
-					res.send({
-						"result": "fail",
-						"text": "이미 찜하신 스튜디오입니다."
-					});
-
-					return;
-				}
-			}
-			else if(req.body.product_id){
-				if(rows[likesIndex].product_id == req.body.product_id){
-					res.send({
-						"result": "fail",
-						"text": "이미 찜하신 상품입니다."
-					});
-
-					return;
-				}
-			}
-		}
-		next();
-  };
-
-	var query = "SELECT ?? FROM ?? WHERE ?? = ?";
-
-	var params;
+	var sqlParams;
 
 	if(req.body.studio_id){
-		params = [
+		sqlParams = [
 			"studio_id",
 			"takeUserLikeStudios",
 			"username",
@@ -591,7 +477,7 @@ userManager.checkDupLikes = function(req, res, next){
 		];
 	}
 	else if(req.body.product_id){
-		params = [
+		sqlParams = [
 			"product_id",
 			"takeUserLikeProducts",
 			"username",
@@ -599,35 +485,53 @@ userManager.checkDupLikes = function(req, res, next){
 		];
 	}
 
-	logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
-    params[0],
-    params[1],
-    params[2],
-    params[3]
-  );
+	mysqlDb.doSQLQuery({
+		query: "SELECT ?? FROM ?? WHERE ?? = ?",
 
-	mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+		params: sqlParams,
+
+		onSuccess: function(rows, fields){
+	    for(var likesIndex = 0; likesIndex < rows.length; likesIndex++){
+				if(req.body.studio_id){
+					if(rows[likesIndex].studio_id == req.body.studio_id){
+						res.send({
+							"result": "fail",
+							"text": "이미 찜하신 스튜디오입니다."
+						});
+
+						return;
+					}
+				}
+				else if(req.body.product_id){
+					if(rows[likesIndex].product_id == req.body.product_id){
+						res.send({
+							"result": "fail",
+							"text": "이미 찜하신 상품입니다."
+						});
+
+						return;
+					}
+				}
+			}
+			next();
+	  },
+
+		onError: function(err){
+	    httpUtil.sendDBErrorPage(req, res, err);
+	  },
+
+		onNoResult: function(){
+	    next();
+	  }
+	});
 };
 
 userManager.insertLikesList = function(req, res){
 
-	var callbackForError = function(err){
-		res.send({
-			"result": "fail",
-			"text": err
-		});
-	};
-
-	var callbackForSuccess = function(result){
-		res.send({"result": "success"});
-	};
-
-	var query = "INSERT INTO ?? SET ?";
-
-	var params;
+	var sqlParams;
 
 	if(req.body.studio_id){
-		params = [
+		sqlParams = [
 			"takeUserLikeStudios",
 			{
 				username: req.__take_params.username,
@@ -636,7 +540,7 @@ userManager.insertLikesList = function(req, res){
 		];
 	}
 	else if(req.body.product_id){
-		params = [
+		sqlParams = [
 			"takeUserLikeProducts",
 			{
 				username: req.__take_params.username,
@@ -645,33 +549,30 @@ userManager.insertLikesList = function(req, res){
 		];
 	}
 
-	logger.debug("SQL Query [INSERT INTO %s SET %s]",
-		params[0],
-		JSON.stringify(params[1])
-	);
+	mysqlDb.doSQLQuery({
+		query: "INSERT INTO ?? SET ?",
 
-	mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
+		params: sqlParams,
+
+		onSuccess: function(result){
+			res.send({"result": "success"});
+		},
+
+		onError: function(err){
+			res.send({
+				"result": "fail",
+				"text": err
+			});
+		}
+	});
 };
 
 userManager.deleteLikesList = function(req, res){
 
-	var callbackForError = function(err){
-    res.send({
-			"result": "fail",
-			"text": err
-		});
-  };
-
-  var callbackForSuccess = function(){
-    res.send({"result": "success"});
-  };
-
-  var query = "DELETE FROM ?? WHERE ?? = ? AND ?? = ?";
-
-	var params;
+	var sqlParams;
 
 	if(req.body.studio_id){
-	  params = [
+	  sqlParams = [
 			"takeUserLikeStudios",
 			"username",
 			req.__take_params.username,
@@ -680,7 +581,7 @@ userManager.deleteLikesList = function(req, res){
 		];
 	}
 	else if(req.body.product_id){
-		params = [
+		sqlParams = [
 			"takeUserLikeProducts",
 			"username",
 			req.__take_params.username,
@@ -689,15 +590,22 @@ userManager.deleteLikesList = function(req, res){
 		];
 	}
 
-  logger.debug("SQL Query [DELETE FROM %s WHERE %s=%s AND %s=%s]",
-    params[0],
-    params[1],
-    params[2],
-		params[3],
-		params[4]
-  );
+	mysqlDb.doSQLQuery({
+		query: "DELETE FROM ?? WHERE ?? = ? AND ?? = ?",
 
-  mysqlDb.doSQLDeleteQuery(query, params, callbackForSuccess, callbackForError);
+		params: sqlParams,
+
+		onSuccess: function(){
+	    res.send({"result": "success"});
+	  },
+
+		onError: function(err){
+	    res.send({
+				"result": "fail",
+				"text": err
+			});
+	  }
+	});
 };
 
 module.exports = userManager;

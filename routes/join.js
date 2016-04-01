@@ -107,39 +107,6 @@ joinManager.joinUser = function(req, res){
   //Check Submitted Fields
   if(isAvailField(req, res)){
 
-    var callbackForError = function(err){
-      if(err.code == "ER_DUP_ENTRY"){
-        res.send({
-					"result": "fail",
-					"text": "아이디가 이미 존재합니다."
-				});
-      }
-      else{
-        res.send({
-					"result": "fail",
-					"text": "죄송합니다. 서비스에 문제가 발생하였습니다. 다시 시도해주세요."
-				});
-      }
-    };
-
-    var callbackForSuccess = function(result){
-      var user = {"username": req.body.username};
-      //Session Login
-      req.login(user, function(err){
-        //Session Error Case
-        if(err){
-          logger.error(err.toString());
-          res.send({
-						"result": "fail",
-						"text": "죄송합니다. 서비스에 문제가 발생하였습니다. 다시 시도해주세요."
-					});
-        }
-				else{
-          res.send({"result": "success"});
-        }
-      });
-    };
-
     var emailAgree;
     if(req.body.email_agree == 1){
   		emailAgree = 1;
@@ -156,9 +123,7 @@ joinManager.joinUser = function(req, res){
   		privateAgree = 0;
   	}
 
-		var query = "INSERT INTO ?? SET ?";
-
-  	var params = [
+    var sqlParams = [
 			"takeUser",
 			{
 				username: req.body.username,
@@ -172,16 +137,48 @@ joinManager.joinUser = function(req, res){
 		];
 
     if(req.body.kakao){
-      params[1].user_from = 1;
-      params[1].access_token = req.body.token;
+      sqlParams[1].user_from = 1;
+      sqlParams[1].access_token = req.body.token;
     }
 
-    logger.debug("SQL Query [INSERT INTO %s SET %s]",
-			params[0],
-			JSON.stringify(params[1])
-		);
+    mysqlDb.doSQLQuery({
+      query: "INSERT INTO ?? SET ?",
 
-    mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
+      params: sqlParams,
+
+      onError: function(err){
+        if(err.code == "ER_DUP_ENTRY"){
+          res.send({
+  					"result": "fail",
+  					"text": "아이디가 이미 존재합니다."
+  				});
+        }
+        else{
+          res.send({
+  					"result": "fail",
+  					"text": "죄송합니다. 서비스에 문제가 발생하였습니다. 다시 시도해주세요."
+  				});
+        }
+      },
+
+      onSuccess: function(result){
+        var user = {"username": req.body.username};
+        //Session Login
+        req.login(user, function(err){
+          //Session Error Case
+          if(err){
+            logger.error(err.toString());
+            res.send({
+  						"result": "fail",
+  						"text": "죄송합니다. 서비스에 문제가 발생하였습니다. 다시 시도해주세요."
+  					});
+          }
+  				else{
+            res.send({"result": "success"});
+          }
+        });
+      }
+    });
   }
   //Fields Error
   else{
@@ -233,62 +230,52 @@ joinManager.deleteUserFiles = function(req, res, next){
 		return;
 	}
 
-  var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
+  mysqlDb.doSQLQuery({
+    query: "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ??",
 
-  var callbackForNoResult = function(){
-    next();
-  };
+    params: [
+      [
+        "studio.slider_photo_list",
+        "studioPortfolios.photo_list",
+      ],
+      "studio",
+      "studioPortfolios",
+      "studio.username",
+      req.user.username,
+      "studio.studio_id",
+      "studioPortfolios.studio_id"
+    ],
 
-  var callbackForSuccess = function(rows, fields){
-    var sliderPhotoList = JSON.parse(rows[0].slider_photo_list);
+    onError: function(err){
+      httpUtil.sendDBErrorPage(req, res, err);
+    },
 
-    for(var key in sliderPhotoList){
-      if(sliderPhotoList[key] !== ""){
-        fileUtil.deleteImageFile(sliderPhotoList[key]);
-      }
-    }
+    onSuccess: function(rows, fields){
+      var sliderPhotoList = JSON.parse(rows[0].slider_photo_list);
 
-    for(var rowsIndex = 0; rowsIndex < rows.length; rowsIndex++){
-      var photoList = rows[rowsIndex].photo_list.split(",");
-
-      for(var photoListIndex = 0; photoListIndex < photoList.length; photoListIndex++){
-        if(photoList[photoListIndex] !== ""){
-          fileUtil.deleteImageFile(photoList[photoListIndex]);
+      for(var key in sliderPhotoList){
+        if(sliderPhotoList[key] !== ""){
+          fileUtil.deleteImageFile(sliderPhotoList[key]);
         }
       }
+
+      for(var rowsIndex = 0; rowsIndex < rows.length; rowsIndex++){
+        var photoList = rows[rowsIndex].photo_list.split(",");
+
+        for(var photoListIndex = 0; photoListIndex < photoList.length; photoListIndex++){
+          if(photoList[photoListIndex] !== ""){
+            fileUtil.deleteImageFile(photoList[photoListIndex]);
+          }
+        }
+      }
+
+      next();
+    },
+
+    onNoResult: function(){
+      next();
     }
-
-    next();
-  };
-
-  var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ??";
-
-  var params = [
-    [
-      "studio.slider_photo_list",
-      "studioPortfolios.photo_list",
-    ],
-    "studio",
-    "studioPortfolios",
-    "studio.username",
-    req.user.username,
-    "studio.studio_id",
-    "studioPortfolios.studio_id"
-  ];
-
-  logger.debug("SQL Query [SELECT %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s]",
-    params[0].toString(),
-    params[1],
-    params[2],
-    params[3],
-    params[4],
-    params[5],
-    params[6]
-  );
-
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+  });
 };
 
 /*
@@ -296,28 +283,22 @@ Delete User Database
 */
 joinManager.deleteUser = function(req, res){
 
-  var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
+  mysqlDb.doSQLQuery({
+    query: "DELETE FROM ?? WHERE ?? = ?",
 
-  var callbackForSuccess = function(){
-    //Session Logout
-    req.logout();
-    //Redirecting to Success Page
-    res.redirect("/withdraw/success");
-  };
+    params: ["takeUser", "username", req.user.username],
 
-  var query = "DELETE FROM ?? WHERE ?? = ?";
+    onSuccess: function(){
+      //Session Logout
+      req.logout();
+      //Redirecting to Success Page
+      res.redirect("/withdraw/success");
+    },
 
-  var params = ["takeUser", "username", req.user.username];
-
-  logger.debug("SQL Query [DELETE FROM %s WHERE %s=%s]",
-    params[0],
-    params[1],
-    params[2]
-  );
-
-  mysqlDb.doSQLDeleteQuery(query, params, callbackForSuccess, callbackForError);
+    onError: function(err){
+      httpUtil.sendDBErrorPage(req, res, err);
+    }
+  });
 };
 
 /*

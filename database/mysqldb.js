@@ -5,17 +5,21 @@ mySQL Module
 //Modules
 var mysql = require("mysql");
 var logger = require("../logger/logger")(__filename);
+var caller = require("caller-id");
 var mysqlDb = {};
 
-function mysqlLog(query, params){
+function queryToString(query, params, callerFunc){
 
 	var logString = query;
 
 	for(var paramIndex = 0; paramIndex < params.length; paramIndex++){
-		logString = logString.replace(/\?+/, params[paramIndex].toString());
+		logString = logString.replace(/\?+/, JSON.stringify(params[paramIndex]));
 	}
 
-	logger.debug("SQL Query >>> [ " + logString + " ]");
+	logger.debug("------------------- MySQL --------------------");
+	logger.debug("BY\t: " + callerFunc.functionName);
+	logger.debug("Query\t: " + logString);
+	logger.debug("----------------------------------------------\n");
 }
 
 //MySQL User DB Settings
@@ -27,10 +31,10 @@ mysqlDb.init = function(options){
 
 mysqlDb.doSQLQuery = function(options){
 
-	mysqlLog(options.query, options.params);
+	queryToString(options.query, options.params, caller.getData());
 
 	mysqlDb.connectionPool.getConnection(function(err, connection){
-		connection.query(query, params, function(err, rows, fields){
+		connection.query(options.query, options.params, function(err, rows, fields){
 			connection.release();
 		  if(err){
 		    logger.error("SQL Error >>> [ " + err.toString() + " ]");
@@ -52,12 +56,11 @@ mysqlDb.doSQLQuery = function(options){
 		});
 	});
 };
+
 /*
 SELECT Function
-*/
-mysqlDb.doSQLSelectQuery = function(query, params, callbackForSuccess, callbackForNoResult, callbackForError){
 
-	mysqlLog(query, params);
+mysqlDb.doSQLSelectQuery = function(query, params, callbackForSuccess, callbackForNoResult, callbackForError){
 
 	mysqlDb.connectionPool.getConnection(function(err, connection){
 		connection.query(query, params, function(err, rows, fields){
@@ -125,5 +128,6 @@ mysqlDb.doSQLDeleteQuery = function(query, params, callbackForSuccess, callbackF
 		});
 	});
 };
+*/
 
 module.exports = mysqlDb;

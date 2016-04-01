@@ -12,35 +12,28 @@ var logger = require("../logger/logger")(__filename);
 //Passport Local Strategy Setting
 passport.use(new LocalStrategy(function(username, password, done){
 
-  var callbackForError = function(err){
-    return done(null, false);
-  };
+  mysqlDb.doSQLQuery({
+    query: "SELECT ?? FROM ?? WHERE ?? = ?",
 
-  var callbackForNoResult = function(){
-    return done(null, false);
-  };
+    params: ["password", "takeUser", "username", username],
 
-  var callbackForSuccess = function(rows, fields){
-    if(bcrypt.compareSync(password, rows[0].password)){
-      var user = {"username": username};
-      return done(null, user);
-    }else{
+    onSuccess: function(rows, fields){
+      if(bcrypt.compareSync(password, rows[0].password)){
+        var user = {"username": username};
+        return done(null, user);
+      }else{
+        return done(null, false);
+      }
+    },
+
+    onError: function(err){
+      return done(null, false);
+    },
+
+    onNoResult: function(){
       return done(null, false);
     }
-  };
-
-  var query = "SELECT ?? FROM ?? WHERE ?? = ?";
-
-  var params = ["password", "takeUser", "username", username];
-
-  logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
-    params[0],
-    params[1],
-    params[2],
-    params[3]
-  );
-
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+  });
 }));
 
 //Passport Serializer

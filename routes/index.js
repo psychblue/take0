@@ -12,11 +12,16 @@ var photographerManager = require("./photographer");
 var confManager = require("../conf/conf");
 var httpUtil = require("../util/http-util");
 var confParams = confManager.getParams();
+var logger = require("../logger/logger")(__filename);
 
 //Express Router Settings
 var router = express.Router();
 
 //Routing Middleware
+router.use(function(req, res, next){
+  logger.debug("User request is on [ %s ]", req.path);
+  next();
+});
 router.use(userManager.loadDefaultTakeParams);
 
 /*

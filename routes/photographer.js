@@ -32,70 +32,104 @@ photographerManager.checkReqFromOwner = function(req, res, next){
 
 photographerManager.loadStudio = function(req, res, next){
 
-  var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
+  mysqlDb.doSQLQuery({
+    query: "SELECT * FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ?",
 
-  var callbackForNoResult = function(){
-    httpUtil.send404Page(req, res);
-  };
+    params: [
+      "studio",
+      "takeUser",
+      "studio.username",
+      req.params.photographer,
+      "takeUser.username",
+      req.params.photographer
+    ],
 
-  var callbackForSuccess = function(rows, fields){
+    onSuccess: function(rows, fields){
 
-    if(rows[0].num_products === 0 && rows[0].num_portfolios === 0){
-      res.render("photographer/studio", {
-        title: confParams.html.title,
-        service: confParams.html.service_name,
-        isAuth: req.__take_params.isAuth,
-        hasStudio: req.__take_params.hasStudio,
-        isOwner: req.__take_params.isOwner,
-        username: req.__take_params.username,
-        nickname: req.__take_params.nickname,
-        studioData: rows[0]
-      });
+      if(rows[0].num_products === 0 && rows[0].num_portfolios === 0){
+        res.render("photographer/studio", {
+          title: confParams.html.title,
+          service: confParams.html.service_name,
+          isAuth: req.__take_params.isAuth,
+          hasStudio: req.__take_params.hasStudio,
+          isOwner: req.__take_params.isOwner,
+          username: req.__take_params.username,
+          nickname: req.__take_params.nickname,
+          studioData: rows[0]
+        });
+      }
+      else{
+        req.__take_params.studioData = rows[0];
+        next();
+      }
+    },
+
+    onError: function(err){
+      httpUtil.sendDBErrorPage(req, res, err);
+    },
+
+    onNoResult: function(){
+      httpUtil.send404Page(req, res);
     }
-    else{
-      req.__take_params.studioData = rows[0];
-      next();
-    }
-  };
-
-  var query = "SELECT * FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ?";
-
-  var params = [
-    "studio",
-    "takeUser",
-    "studio.username",
-    req.params.photographer,
-    "takeUser.username",
-    req.params.photographer
-  ];
-
-  logger.debug("SQL Query [SELECT * FROM %s INNER JOIN %s ON %s=%s AND %s=%s]",
-    params[0],
-    params[1],
-    params[2],
-    params[3],
-    params[4],
-    params[5]
-  );
-
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+  });
 };
 
 photographerManager.loadProducts = function(req, res, next){
 
-  var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
+  mysqlDb.doSQLQuery({
+    query: "SELECT * FROM ?? WHERE ?? = ? AND ?? = ?",
 
-  var callbackForNoResult = function(){
-    req.__take_params.productsData = undefined;
-    next();
-  };
+    params: [
+      "studioProducts",
+      "studio_id",
+      req.__take_params.studioData.studio_id,
+      "is_available",
+      1
+    ],
 
-  var callbackForSuccess = function(rows, fields){
-    if(req.__take_params.studioData.num_portfolios === 0){
+    onSuccess: function(rows, fields){
+      if(req.__take_params.studioData.num_portfolios === 0){
+        res.render("photographer/studio", {
+          title: confParams.html.title,
+          service: confParams.html.service_name,
+          isAuth: req.__take_params.isAuth,
+          hasStudio: req.__take_params.hasStudio,
+          isOwner: req.__take_params.isOwner,
+          username: req.__take_params.username,
+          nickname: req.__take_params.nickname,
+          studioData: req.__take_params.studioData,
+          productsData: rows
+        });
+      }
+      else{
+        req.__take_params.productsData = rows;
+        next();
+      }
+    },
+
+    onError: function(err){
+      httpUtil.sendDBErrorPage(req, res, err);
+    },
+
+    onNoResult: function(){
+      req.__take_params.productsData = undefined;
+      next();
+    }
+  });
+};
+
+photographerManager.loadPortfolios = function(req, res){
+
+  mysqlDb.doSQLQuery({
+    query: "SELECT * FROM ?? WHERE ?? = ?",
+
+    params: ["studioPortfolios", "studio_id", req.__take_params.studioData.studio_id],
+
+    onSuccess: function(rows, fields){
+      for(var i = 0; i < rows.length; i++){
+        rows[i].photo_list = rows[i].photo_list.split(",")[0];
+      }
+
       res.render("photographer/studio", {
         title: confParams.html.title,
         service: confParams.html.service_name,
@@ -105,70 +139,19 @@ photographerManager.loadProducts = function(req, res, next){
         username: req.__take_params.username,
         nickname: req.__take_params.nickname,
         studioData: req.__take_params.studioData,
-        productsData: rows
+        productsData: req.__take_params.productsData,
+        portfoliosData: rows
       });
+    },
+
+    onError: function(err){
+      httpUtil.sendDBErrorPage(req, res, err);
+    },
+
+    onNoResult: function(){
+      httpUtil.sendNoDataFromDBPage(req, res);
     }
-    else{
-      req.__take_params.productsData = rows;
-      next();
-    }
-  };
-
-  var query = "SELECT * FROM ?? WHERE ?? = ? AND ?? = ?";
-
-  var params = ["studioProducts", "studio_id", req.__take_params.studioData.studio_id, "is_available", 1];
-
-  logger.debug("SQL Query [SELECT * FROM %s WHERE %s=%s AND %s=%s]",
-    params[0],
-    params[1],
-    params[2],
-    params[3],
-    params[4]
-  );
-
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
-};
-
-photographerManager.loadPortfolios = function(req, res){
-
-  var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
-
-  var callbackForNoResult = function(){
-    httpUtil.sendNoDataFromDBPage(req, res);
-  };
-
-  var callbackForSuccess = function(rows, fields){
-    for(var i = 0; i < rows.length; i++){
-      rows[i].photo_list = rows[i].photo_list.split(",")[0];
-    }
-
-    res.render("photographer/studio", {
-      title: confParams.html.title,
-      service: confParams.html.service_name,
-      isAuth: req.__take_params.isAuth,
-      hasStudio: req.__take_params.hasStudio,
-      isOwner: req.__take_params.isOwner,
-      username: req.__take_params.username,
-      nickname: req.__take_params.nickname,
-      studioData: req.__take_params.studioData,
-      productsData: req.__take_params.productsData,
-      portfoliosData: rows
-    });
-  };
-
-  var query = "SELECT * FROM ?? WHERE ?? = ?";
-
-  var params = ["studioPortfolios", "studio_id", req.__take_params.studioData.studio_id];
-
-  logger.debug("SQL Query [SELECT * FROM %s WHERE %s=%s]",
-    params[0],
-    params[1],
-    params[2]
-  );
-
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+  });
 };
 
 photographerManager.checkLogin = function(req, res, next){
@@ -227,83 +210,60 @@ photographerManager.insertStudio = function(req, res, next){
     });
   }
   else{
-    var callbackForError = function(err){
-      res.send({
-        "result": "fail",
-        "text": err
-      });
-    };
+    mysqlDb.doSQLQuery({
+      query: "INSERT INTO ?? SET ?",
 
-    var callbackForSuccess = function(result){
-      req.__take_params.studioId = result.insertId;
-      next();
-    };
+      params: [
+        "studio",
+        {
+          studio_name: req.body.studio_name,
+          username: req.user.username,
+          introduction: req.body.introduction,
+          address: req.body.address,
+          tel_num: req.body.tel_num
+        }
+      ],
 
-    var query = "INSERT INTO ?? SET ?";
+      onSuccess: function(result){
+        req.__take_params.studioId = result.insertId;
+        next();
+      },
 
-    var params = [
-      "studio",
-      {
-        studio_name: req.body.studio_name,
-        username: req.user.username,
-        introduction: req.body.introduction,
-        address: req.body.address,
-        tel_num: req.body.tel_num
+      onError: function(err){
+        res.send({
+          "result": "fail",
+          "text": err
+        });
       }
-    ];
-
-    logger.debug("SQL Query [INSERT INTO %s SET %s]",
-      params[0],
-      JSON.stringify(params[1])
-    );
-
-    mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
+    });
   }
 };
 
 photographerManager.updateHasStudio = function(req, res, next){
 
-  var callbackForError = function(err){
-    res.send({
-      "result": "fail",
-      "text": err
-    });
-  };
+  mysqlDb.doSQLQuery({
+    query: "UPDATE ?? SET ? WHERE ?? = ?",
 
-  var callbackForSuccess = function(){
-    next();
-  };
+    params: ["takeUser", {has_studio: 1}, "username", req.user.username],
 
-  var query = "UPDATE ?? SET ? WHERE ?? = ?";
+    onSuccess: function(){
+      next();
+    },
 
-  var params = ["takeUser", {has_studio: 1}, "username", req.user.username];
-
-  logger.debug("SQL Query [UPDATE %s SET %s WHRER %s = %s]",
-    params[0],
-    JSON.stringify(params[1]),
-    params[2],
-    params[3]
-  );
-
-  mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
-};
-
-photographerManager.addServiceCategory = function(req, res){
-  if(req.body.category){
-    var callbackForError = function(err){
+    onError: function(err){
       res.send({
         "result": "fail",
         "text": err
       });
-    };
+    }
+  });
+};
 
-    var callbackForSuccess = function(result){
-      res.redirect("/studio/" + req.user.username);
-    };
+photographerManager.addServiceCategory = function(req, res){
 
-    var query = "INSERT INTO ?? (??, ??) VALUES ";
-
-    var params = [
+  if(req.body.category){
+    var sqlQuery = "INSERT INTO ?? (??, ??) VALUES ",
+    sqlParams = [
       "studioServiceCategory",
       "studio_id",
       "service_category"
@@ -311,23 +271,32 @@ photographerManager.addServiceCategory = function(req, res){
 
     for(var categoryIndex = 0; categoryIndex < req.body.category.length; categoryIndex++){
       if(categoryIndex == req.body.category.length - 1){
-        query = query + "(?, ?)";
+        sqlQuery = sqlQuery + "(?, ?)";
       }
       else{
-        query = query + "(?, ?),";
+        sqlQuery = sqlQuery + "(?, ?),";
       }
 
       params.push(req.__take_params.studioId);
       params.push(Number(req.body.category[categoryIndex]));
     }
 
-    logger.debug("SQL Query [INSERT INTO %s (%s, %s)]",
-      params[0],
-      params[1],
-      params[2]
-    );
+    mysqlDb.doSQLQuery({
+      query: sqlQuery,
 
-    mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
+      params: sqlParams,
+
+      onSuccess: function(result){
+        res.redirect("/studio/" + req.user.username);
+      },
+
+      onError: function(err){
+        res.send({
+          "result": "fail",
+          "text": err
+        });
+      }
+    });
   }
   else{
     res.redirect("/studio/" + req.user.username);
@@ -373,267 +342,228 @@ photographerManager.saveNewSliderPhotoFiles = function(req, res, next){
 
 photographerManager.loadSliderPhotoList = function(req, res, next){
 
-  var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
+  mysqlDb.doSQLQuery({
+    query: "SELECT ?? FROM ?? WHERE ?? = ?",
 
-  var callbackForNoResult = function(){
-    httpUtil.sendNoDataFromDBPage(req, res);
-  };
+    params: ["slider_photo_list", "studio", "username", req.params.photographer],
 
-  var callbackForSuccess = function(rows, fields){
-    var sliderPhotoUrlPathPrefix = confParams.file.slider_photo_url_path_prefix;
-    var flag = req.body.flag.split(",");
-    var currentPhotoList = JSON.parse(rows[0].slider_photo_list);
-    var newPhotoList = {};
+    onSuccess: function(rows, fields){
+      var sliderPhotoUrlPathPrefix = confParams.file.slider_photo_url_path_prefix;
+      var flag = req.body.flag.split(",");
+      var currentPhotoList = JSON.parse(rows[0].slider_photo_list);
+      var newPhotoList = {};
 
-    for(var i = 0; i < 5; i++){
+      for(var i = 0; i < 5; i++){
 
-      var index = String(i + 1);
+        var index = String(i + 1);
 
-      switch(flag[i]){
-        case "0":
-          newPhotoList[index] = currentPhotoList[index];
-          break;
-
-        case "1":
-          var newFilename = sliderPhotoUrlPathPrefix
-                            + req.__take_params.filenamePrefix
-                            + req.files[index][0].originalname;
-
-          if(currentPhotoList[index] !== ""){
-            fileUtil.deleteImageFile(currentPhotoList[index]);
-          }
-          newPhotoList[index] = newFilename;
-          break;
-
-        case "2":
-          if(currentPhotoList[index] !== ""){
-            fileUtil.deleteImageFile(currentPhotoList[index]);
-          }
-          newPhotoList[index] = "";
-          break;
-
-        default:
-      }
-    }
-
-    var numPhoto = 0;
-
-    for(var photoIndex = 1; photoIndex < 6; photoIndex++){
-      if(newPhotoList[String(photoIndex)] !== ""){
-        numPhoto++;
-      }
-      else{
-        for(var j = photoIndex + 1; j < 6; j++){
-          if(newPhotoList[String(j)] !== ""){
-            newPhotoList[String(photoIndex)] = newPhotoList[String(j)];
-            newPhotoList[String(j)] = "";
-            numPhoto++;
+        switch(flag[i]){
+          case "0":
+            newPhotoList[index] = currentPhotoList[index];
             break;
+
+          case "1":
+            var newFilename = sliderPhotoUrlPathPrefix
+                              + req.__take_params.filenamePrefix
+                              + req.files[index][0].originalname;
+
+            if(currentPhotoList[index] !== ""){
+              fileUtil.deleteImageFile(currentPhotoList[index]);
+            }
+            newPhotoList[index] = newFilename;
+            break;
+
+          case "2":
+            if(currentPhotoList[index] !== ""){
+              fileUtil.deleteImageFile(currentPhotoList[index]);
+            }
+            newPhotoList[index] = "";
+            break;
+
+          default:
+        }
+      }
+
+      var numPhoto = 0;
+
+      for(var photoIndex = 1; photoIndex < 6; photoIndex++){
+        if(newPhotoList[String(photoIndex)] !== ""){
+          numPhoto++;
+        }
+        else{
+          for(var j = photoIndex + 1; j < 6; j++){
+            if(newPhotoList[String(j)] !== ""){
+              newPhotoList[String(photoIndex)] = newPhotoList[String(j)];
+              newPhotoList[String(j)] = "";
+              numPhoto++;
+              break;
+            }
           }
         }
       }
+
+      req.__take_params.numPhoto = numPhoto;
+      req.__take_params.newPhotoList = JSON.stringify(newPhotoList);
+      next();
+    },
+
+    onError: function(err){
+      httpUtil.sendDBErrorPage(req, res, err);
+    },
+
+    onNoResult: function(){
+      httpUtil.sendNoDataFromDBPage(req, res);
     }
-
-    req.__take_params.numPhoto = numPhoto;
-    req.__take_params.newPhotoList = JSON.stringify(newPhotoList);
-    next();
-  };
-
-  var query = "SELECT ?? FROM ?? WHERE ?? = ?";
-
-  var params = ["slider_photo_list", "studio", "username", req.params.photographer];
-
-  logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
-    params[0],
-    params[1],
-    params[2],
-    params[3]
-  );
-
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+  });
 };
 
 photographerManager.updateSliderPhotoList = function(req, res){
 
-  var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
+  mysqlDb.doSQLQuery({
+    query: "UPDATE ?? SET ? WHERE ?? = ?",
 
-  var callbackForSuccess = function(){
-    res.redirect("/studio/" + req.params.photographer);
-  };
+    params: [
+      "studio",
+      {
+        num_photo_on_slider: req.__take_params.numPhoto,
+        slider_photo_list: req.__take_params.newPhotoList
+      },
+      "username",
+      req.params.photographer
+    ],
 
-  var query = "UPDATE ?? SET ? WHERE ?? = ?";
-
-  var params = [
-    "studio",
-    {
-      num_photo_on_slider: req.__take_params.numPhoto,
-      slider_photo_list: req.__take_params.newPhotoList
+    onSuccess: function(){
+      res.redirect("/studio/" + req.params.photographer);
     },
-    "username",
-    req.params.photographer
-  ];
 
-  logger.debug("SQL Query [UPDATE %s SET %s WHRER %s = %s]",
-    params[0],
-    JSON.stringify(params[1]),
-    params[2],
-    params[3]
-  );
-
-  mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
+    onError: function(err){
+      httpUtil.sendDBErrorPage(req, res, err);
+    }
+  });
 };
 
 photographerManager.updateIntro = function(req, res){
 
-  var callbackForError = function(err){
-    res.send({
-      "result": "fail",
-      "text": err
-    });
-  };
-
-  var callbackForSuccess = function(){
-    res.send({"result": "success"});
-  };
-
   var introduction = req.body.introduction.replace(/\r\n/gi, "<br>");
 
-  var query = "UPDATE ?? SET ? WHERE ?? = ?";
+  mysqlDb.doSQLQuery({
+    query: "UPDATE ?? SET ? WHERE ?? = ?",
 
-  var params = [
-    "studio",
-    {
-      studio_name: req.body.studio_name,
-      tel_num: req.body.tel_num,
-      address: req.body.address,
-      introduction: introduction
+    params: [
+      "studio",
+      {
+        studio_name: req.body.studio_name,
+        tel_num: req.body.tel_num,
+        address: req.body.address,
+        introduction: introduction
+      },
+      "username",
+      req.params.photographer
+    ],
+
+    onSuccess: function(){
+      res.send({"result": "success"});
     },
-    "username",
-    req.params.photographer
-  ];
 
-  logger.debug("SQL Query [UPDATE %s SET %s WHRER %s = %s]",
-    params[0],
-    JSON.stringify(params[1]),
-    params[2], params[3]
-  );
-
-  mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
-};
-
-photographerManager.insertProduct = function(req, res, next){
-
-  var callbackForError = function(err){
-    res.send({
-      "result": "fail",
-      "text": err
-    });
-  };
-
-  var callbackForSuccess = function(result){
-    next();
-  };
-
-  var productDesc = "<li>"
-                    + req.body.product_desc.replace(/\r\n/gi, "</li><li>")
-                    + "</li>";
-
-  var query = "INSERT INTO ?? SET ?";
-
-  var params = [
-    "studioProducts",
-    {
-      studio_id: req.body.studio_id,
-      product_name: req.body.product_name,
-      product_price: req.body.product_price,
-      product_duration: req.body.product_duration,
-      product_desc: productDesc
-    }
-  ];
-
-  logger.debug("SQL Query [INSERT INTO %s SET %s]",
-    params[0],
-    JSON.stringify(params[1])
-  );
-
-  mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
-};
-
-photographerManager.updateNumberOfProducts = function(req, res){
-
-  var callbackForError = function(err){
-    res.send({
-      "result": "fail",
-      "text": err
-    });
-  };
-
-  var callbackForSuccess = function(){
-    res.send({"result": "success"});
-  };
-
-  var query = "UPDATE ?? SET ? WHERE ?? = ?";
-
-  var params = [
-    "studio",
-    {num_products: req.body.num_products},
-    "studio_id",
-    req.body.studio_id
-  ];
-
-  logger.debug("SQL Query [UPDATE %s SET %s WHRER %s = %s]",
-    params[0],
-    JSON.stringify(params[1]),
-    params[2],
-    params[3]
-  );
-
-  mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
-};
-
-photographerManager.updateProduct = function(req, res){
-
-  var callbackForError = function(err){
+    onError: function(err){
       res.send({
         "result": "fail",
         "text": err
       });
-    };
+    }
+  });
+};
 
-  var callbackForSuccess = function(){
-    res.send({"result": "success"});
-  };
+photographerManager.insertProduct = function(req, res, next){
 
   var productDesc = "<li>"
                     + req.body.product_desc.replace(/\r\n/gi, "</li><li>")
                     + "</li>";
 
-  var query = "UPDATE ?? SET ? WHERE ?? = ?";
+  mysqlDb.doSQLQuery({
+    query: "INSERT INTO ?? SET ?",
 
-  var params = [
-    "studioProducts",
-    {
-      product_name: req.body.product_name,
-      product_price: req.body.product_price,
-      product_duration: req.body.product_duration,
-      product_desc: productDesc
+    params: [
+      "studioProducts",
+      {
+        studio_id: req.body.studio_id,
+        product_name: req.body.product_name,
+        product_price: req.body.product_price,
+        product_duration: req.body.product_duration,
+        product_desc: productDesc
+      }
+    ],
+
+    onSuccess: function(result){
+      next();
     },
-    "product_id",
-    req.body.product_id
-  ];
 
-  logger.debug("SQL Query [UPDATE %s SET %s WHRER %s = %s]",
-    params[0],
-    JSON.stringify(params[1]),
-    params[2],
-    params[3]
-  );
+    onError: function(err){
+      res.send({
+        "result": "fail",
+        "text": err
+      });
+    }
+  });
+};
 
-  mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
+photographerManager.updateNumberOfProducts = function(req, res){
+
+  mysqlDb.doSQLQuery({
+    query: "UPDATE ?? SET ? WHERE ?? = ?",
+
+    params: [
+      "studio",
+      {num_products: req.body.num_products},
+      "studio_id",
+      req.body.studio_id
+    ],
+
+    onSuccess: function(){
+      res.send({"result": "success"});
+    },
+
+    onError: function(err){
+      res.send({
+        "result": "fail",
+        "text": err
+      });
+    }
+  });
+};
+
+photographerManager.updateProduct = function(req, res){
+
+  var productDesc = "<li>"
+                    + req.body.product_desc.replace(/\r\n/gi, "</li><li>")
+                    + "</li>";
+
+  mysqlDb.doSQLQuery({
+    query: "UPDATE ?? SET ? WHERE ?? = ?",
+
+    params: [
+      "studioProducts",
+      {
+        product_name: req.body.product_name,
+        product_price: req.body.product_price,
+        product_duration: req.body.product_duration,
+        product_desc: productDesc
+      },
+      "product_id",
+      req.body.product_id
+    ],
+
+    onSuccess: function(){
+      res.send({"result": "success"});
+    },
+
+    onError: function(err){
+      res.send({
+        "result": "fail",
+        "text": err
+      });
+    }
+  });
 };
 
 /*
@@ -666,34 +596,27 @@ photographerManager.deleteProduct = function(req, res, next){
 
 photographerManager.deleteProduct = function(req, res, next){
 
-  var callbackForError = function(err){
-    res.send({
-      "result": "fail",
-      "text": err
-    });
-  };
+  mysqlDb.doSQLQuery({
+    query: "UPDATE ?? SET ? WHERE ?? = ?",
 
-  var callbackForSuccess = function(){
-    next();
-  };
+    params: [
+      "studioProducts",
+      {is_available: 0},
+      "product_id",
+      req.body.product_id
+    ],
 
-  var query = "UPDATE ?? SET ? WHERE ?? = ?";
+    onSuccess: function(){
+      next();
+    },
 
-  var params = [
-    "studioProducts",
-    {is_available: 0},
-    "product_id",
-    req.body.product_id
-  ];
-
-  logger.debug("SQL Query [UPDATE %s SET %s WHRER %s = %s]",
-    params[0],
-    JSON.stringify(params[1]),
-    params[2],
-    params[3]
-  );
-
-  mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
+    onError: function(err){
+      res.send({
+        "result": "fail",
+        "text": err
+      });
+    }
+  });
 };
 
 
@@ -768,234 +691,179 @@ photographerManager.updatePortfolio = function(req, res, next){
     next();
   }
   else{
-    var callbackForError = function(err){
-      httpUtil.sendDBErrorPage(req, res, err);
-    };
+    mysqlDb.doSQLQuery({
+      query: "UPDATE ?? SET ? WHERE ?? = ?",
 
-    var callbackForSuccess = function(){
-      res.redirect("/studio/" + req.params.photographer);
-    };
+      params: [
+        "studioPortfolios",
+        {portfolio_subject: req.body.portfolio_subject, photo_list: newPhotoList.toString(), num_photos: numPhoto},
+        "portfolio_id",
+        req.body.portfolio_id
+      ],
 
-    var query = "UPDATE ?? SET ? WHERE ?? = ?";
+      onSuccess: function(){
+        res.redirect("/studio/" + req.params.photographer);
+      },
 
-    var params = [
-      "studioPortfolios",
-      {portfolio_subject: req.body.portfolio_subject, photo_list: newPhotoList.toString(), num_photos: numPhoto},
-      "portfolio_id",
-      req.body.portfolio_id
-    ];
-
-    logger.debug("SQL Query [UPDATE %s SET %s WHRER %s = %s]",
-      params[0],
-      JSON.stringify(params[1]),
-      params[2],
-      params[3]
-    );
-
-    mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
+      onError: function(err){
+        httpUtil.sendDBErrorPage(req, res, err);
+      }
+    });
   }
 };
 
 photographerManager.insertPortfolio = function(req, res, next){
 
-  var callbackForError = function(err){
-    res.send({
-      "result": "fail",
-      "text": err
-    });
-  };
+  mysqlDb.doSQLQuery({
+    query: "INSERT INTO ?? SET ?",
 
-  var callbackForSuccess = function(result){
-    next();
-  };
-  var query = "INSERT INTO ?? SET ?";
+    params: [
+      "studioPortfolios",
+      {
+        studio_id: req.body.studio_id,
+        portfolio_subject: req.body.portfolio_subject,
+        photo_list: req.__take_params.photoList,
+        num_photos: req.__take_params.numPhoto
+      }
+    ],
 
-  var params = [
-    "studioPortfolios",
-    {
-      studio_id: req.body.studio_id,
-      portfolio_subject: req.body.portfolio_subject,
-      photo_list: req.__take_params.photoList,
-      num_photos: req.__take_params.numPhoto
+    onSuccess: function(result){
+      next();
+    },
+
+    onError: function(err){
+      res.send({
+        "result": "fail",
+        "text": err
+      });
     }
-  ];
-
-  logger.debug("SQL Query [INSERT INTO %s SET %s]",
-    params[0],
-    JSON.stringify(params[1])
-  );
-
-  mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
+  });
 };
 
 photographerManager.updateNumberOfPortfolios = function(req, res){
 
-  var callbackForError = function(err){
-    res.send({
-      "result": "fail",
-      "text": err
-    });
-  };
+  mysqlDb.doSQLQuery({
+    query: "UPDATE ?? SET ? WHERE ?? = ?",
 
-  var callbackForSuccess = function(){
-    if(req.body.portfolio_id == "new"){
-      res.redirect("/studio/" + req.params.photographer);
+    params: [
+      "studio",
+      {num_portfolios: req.body.num_portfolios},
+      "studio_id",
+      req.body.studio_id
+    ],
+
+    onSuccess: function(){
+      if(req.body.portfolio_id == "new"){
+        res.redirect("/studio/" + req.params.photographer);
+      }
+      else{
+        res.send({"result": "success"});
+      }
+    },
+
+    onError: function(err){
+      res.send({
+        "result": "fail",
+        "text": err
+      });
     }
-    else{
-      res.send({"result": "success"});
-    }
-  };
-
-  var query = "UPDATE ?? SET ? WHERE ?? = ?";
-
-  var params = [
-    "studio",
-    {num_portfolios: req.body.num_portfolios},
-    "studio_id",
-    req.body.studio_id
-  ];
-
-  logger.debug("SQL Query [UPDATE %s SET %s WHRER %s = %s]",
-    params[0],
-    JSON.stringify(params[1]),
-    params[2],
-    params[3]
-  );
-
-  mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
+  });
 };
 
 photographerManager.deletePortfolio = function(req, res, next){
 
-  var callbackForError = function(err){
-    res.send({
-      "result": "fail",
-      "text": err
-    });
-  };
+  mysqlDb.doSQLQuery({
+    query: "DELETE FROM ?? WHERE ?? = ?",
 
-  var callbackForSuccess = function(){
-    var photoList = req.body.photo_list.split(",");
-    if(photoList[0] !== ""){
-      for(var i = 0; i < photoList.length; i++){
-        fileUtil.deleteImageFile(photoList[i]);
+    params: ["studioPortfolios", "portfolio_id", req.body.portfolio_id],
+
+    onSuccess: function(){
+      var photoList = req.body.photo_list.split(",");
+      if(photoList[0] !== ""){
+        for(var i = 0; i < photoList.length; i++){
+          fileUtil.deleteImageFile(photoList[i]);
+        }
       }
+
+      next();
+    },
+
+    onError: function(err){
+      res.send({
+        "result": "fail",
+        "text": err
+      });
     }
-
-    next();
-  };
-
-  var query = "DELETE FROM ?? WHERE ?? = ?";
-
-	var params = ["studioPortfolios", "portfolio_id", req.body.portfolio_id];
-
-  logger.debug("SQL Query [DELETE FROM %s WHERE %s=%s]",
-    params[0],
-    params[1],
-    params[2]
-  );
-
-  mysqlDb.doSQLDeleteQuery(query, params, callbackForSuccess, callbackForError);
+  });
 };
 
 photographerManager.getPortfolioPhotoList = function(req, res, next){
 
-  var callbackForError = function(err){
-    res.send({
-      "result": "fail",
-      "text": err
-    });
-  };
+  mysqlDb.doSQLQuery({
+    query: "SELECT ?? FROM ?? WHERE ?? = ?",
 
-  var callbackForNoResult = function(){
-    res.send({
-      "result": "fail",
-      "text": "No data"
-    });
-  };
+    params: ["photo_list", "studioPortfolios", "portfolio_id", req.params.portfolio_id],
 
-  var callbackForSuccess = function(rows, fields){
-    res.send({
-      "result": "success",
-      "body": rows[0]
-    });
-  };
+    onSuccess: function(rows, fields){
+      res.send({
+        "result": "success",
+        "body": rows[0]
+      });
+    },
 
-  var query = "SELECT ?? FROM ?? WHERE ?? = ?";
+    onError: function(err){
+      res.send({
+        "result": "fail",
+        "text": err
+      });
+    },
 
-  var params = ["photo_list", "studioPortfolios", "portfolio_id", req.params.portfolio_id];
-
-  logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
-    params[0],
-    params[1],
-    params[2],
-    params[3]
-  );
-
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+    onNoResult: function(){
+      res.send({
+        "result": "fail",
+        "text": "No data"
+      });
+    }
+  });
 };
 
 photographerManager.loadProduct = function(req, res, next){
 
-  var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
+  mysqlDb.doSQLQuery({
+    query: "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ??",
 
-  var callbackForNoResult = function(){
-    httpUtil.sendNoDataFromDBPage(req, res);
-  };
-
-  var callbackForSuccess = function(rows, fields){
-    req.__take_params.productData = rows[0];
-    next();
-  };
-
-  var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ? AND ?? = ??";
-
-  var params = [
-    [
+    params: [
+      [
+        "studioProducts.product_id",
+        "studioProducts.product_name",
+        "studioProducts.product_duration",
+        "studio.studio_name",
+        "studio.username"
+      ],
+      "studioProducts",
+      "studio",
       "studioProducts.product_id",
-      "studioProducts.product_name",
-      "studioProducts.product_duration",
-      "studio.studio_name",
-      "studio.username"
+      req.query.product_id,
+      "studioProducts.studio_id",
+      "studio.studio_id"
     ],
-    "studioProducts",
-    "studio",
-    "studioProducts.product_id",
-    req.query.product_id,
-    "studioProducts.studio_id",
-    "studio.studio_id"
-  ];
 
-  logger.debug("SQL Query [SELECT %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s]",
-    params[0].toString(),
-    params[1],
-    params[2],
-    params[3],
-    params[4],
-    params[5],
-    params[6]
-  );
+    onSuccess: function(rows, fields){
+      req.__take_params.productData = rows[0];
+      next();
+    },
 
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+    onError: function(err){
+      httpUtil.sendDBErrorPage(req, res, err);
+    },
+
+    onNoResult: function(){
+      httpUtil.sendNoDataFromDBPage(req, res);
+    }
+  });
 };
 
 photographerManager.loadUserReservationsByDate = function(req, res, next){
-
-  var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
-
-  var callbackForNoResult = function(){
-    req.__take_params.reservationsData = [];
-    next();
-  };
-
-  var callbackForSuccess = function(rows, fields){
-    req.__take_params.reservationsData = rows;
-    next();
-  };
 
   var date = "";
 
@@ -1009,78 +877,34 @@ photographerManager.loadUserReservationsByDate = function(req, res, next){
     date = date + today.getFullYear() + month + dateNum;
   }
 
-  var query = "SELECT * FROM ?? WHERE ?? = ? AND ?? = ?";
+  mysqlDb.doSQLQuery({
+    query: "SELECT * FROM ?? WHERE ?? = ? AND ?? = ?",
 
-  var params = [
-    "studioReservations",
-    "product_id",
-    req.query.product_id,
-    "rsv_date",
-    date
-  ];
+    params: [
+      "studioReservations",
+      "product_id",
+      req.query.product_id,
+      "rsv_date",
+      date
+    ],
 
-  logger.debug("SQL Query [SELECT * FROM %s WHERE %s=%s AND %s=%s]",
-    params[0],
-    params[1],
-    params[2],
-    params[3],
-    params[4]
-  );
+    onSuccess: function(rows, fields){
+      req.__take_params.reservationsData = rows;
+      next();
+    },
 
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+    onError: function(err){
+      httpUtil.sendDBErrorPage(req, res, err);
+    },
+
+    onNoResult: function(){
+      req.__take_params.reservationsData = [];
+      next();
+    }
+  });
 };
 
 photographerManager.loadStudioReservations = function(req, res, next){
-
-  var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
-
-  var callbackForNoResult = function(){
-    req.__take_params.reservationsData = [];
-    next();
-  };
-
-  var callbackForSuccess = function(rows, fields){
-
-    for(var dataIndex = 0; dataIndex < rows.length; dataIndex++){
-      var date = rows[dataIndex].rsv_date.toString();
-      var time = rows[dataIndex].rsv_start_time;
-
-      var year = date.slice(0, 4);
-      var month = date.slice(4, 6);
-      var dateNum = date.slice(6, 8);
-
-      var timePrefix = "오전";
-
-      if(time >= 1300){
-        timePrefix = "오후";
-        time = time - 1200;
-      }
-      time = time.toString();
-      var hour;
-
-      if(time.length == 3){
-        hour = time.slice(0, 1);
-      }
-      else{
-        hour = time.slice(0, 2);
-      }
-
-      var minute = time.slice(-2);
-
-      date = year + "-" + month + "-" + dateNum;
-      time = timePrefix + " " + hour + ":" + minute;
-
-      rows[dataIndex].rsv_datetime = date + " " + time;
-
-      var statusStrings = ["예약요청중", "예약확인중", "예약확정", "결제완료", "촬영완료", "상품전달중", "상품확인"];
-      rows[dataIndex].rsv_status_string = statusStrings[rows[dataIndex].rsv_status - 1];
-    }
-
-    req.__take_params.reservationsData = rows;
-    next();
-  };
 
   var order;
 
@@ -1091,143 +915,159 @@ photographerManager.loadStudioReservations = function(req, res, next){
     order = "studioReservations.rsv_id";
   }
 
-  var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ?? INNER JOIN ?? ON ?? = ?? WHERE ?? = ? ORDER BY ?? DESC";
+  mysqlDb.doSQLQuery({
+    query: "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ?? INNER JOIN ?? ON ?? = ?? WHERE ?? = ? ORDER BY ?? DESC",
 
-  var params = [
-    [
-      "studioReservations.rsv_id",
-      "studioReservations.request_date",
-      "studioReservations.rsv_date",
-      "studioReservations.rsv_start_time",
-      "studioReservations.rsv_status",
-      "studioProducts.product_name"
+    params: [
+      [
+        "studioReservations.rsv_id",
+        "studioReservations.request_date",
+        "studioReservations.rsv_date",
+        "studioReservations.rsv_start_time",
+        "studioReservations.rsv_status",
+        "studioProducts.product_name"
+      ],
+      "studioProducts",
+      "studioReservations",
+      "studioReservations.product_id",
+      "studioProducts.product_id",
+      "studio",
+      "studioProducts.studio_id",
+      "studio.studio_id",
+      "studio.username",
+      req.user.username,
+      order
     ],
-    "studioProducts",
-    "studioReservations",
-    "studioReservations.product_id",
-    "studioProducts.product_id",
-    "studio",
-    "studioProducts.studio_id",
-    "studio.studio_id",
-    "studio.username",
-    req.user.username,
-    order
-  ];
 
-  logger.debug("SQL Query [SELECT %s FROM %s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s WHERE %s=%s ORDER BY %s DESC]",
-    params[0].toString(),
-    params[1],
-    params[2],
-    params[3],
-    params[4],
-    params[5],
-    params[6],
-    params[7],
-    params[8],
-    params[9],
-    params[10]
-  );
+    onSuccess: function(rows, fields){
 
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+      for(var dataIndex = 0; dataIndex < rows.length; dataIndex++){
+        var date = rows[dataIndex].rsv_date.toString();
+        var time = rows[dataIndex].rsv_start_time;
+
+        var year = date.slice(0, 4);
+        var month = date.slice(4, 6);
+        var dateNum = date.slice(6, 8);
+
+        var timePrefix = "오전";
+
+        if(time >= 1300){
+          timePrefix = "오후";
+          time = time - 1200;
+        }
+        time = time.toString();
+        var hour;
+
+        if(time.length == 3){
+          hour = time.slice(0, 1);
+        }
+        else{
+          hour = time.slice(0, 2);
+        }
+
+        var minute = time.slice(-2);
+
+        date = year + "-" + month + "-" + dateNum;
+        time = timePrefix + " " + hour + ":" + minute;
+
+        rows[dataIndex].rsv_datetime = date + " " + time;
+
+        var statusStrings = ["예약요청중", "예약확인중", "예약확정", "결제완료", "촬영완료", "상품전달중", "상품확인"];
+        rows[dataIndex].rsv_status_string = statusStrings[rows[dataIndex].rsv_status - 1];
+      }
+
+      req.__take_params.reservationsData = rows;
+      next();
+    },
+
+    onError: function(err){
+      httpUtil.sendDBErrorPage(req, res, err);
+    },
+
+    onNoResult: function(){
+      req.__take_params.reservationsData = [];
+      next();
+    }
+  });
 };
 
 photographerManager.loadReservation = function(req, res, next){
 
-	var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
+  mysqlDb.doSQLQuery({
+    query: "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ?? AND ?? = ? INNER JOIN ?? ON ?? = ??",
 
-  var callbackForNoResult = function(){
-    httpUtil.sendInfoPage(req, res, {
-      infoText: "잘못된 예약 정보입니다.",
-  		infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
-    });
-  };
+    params: [
+  		[
+  			"studioProducts.product_id",
+  			"studioProducts.product_name",
+  			"studioProducts.product_desc",
+  			"studioProducts.product_price",
+  			"studioReservations.rsv_id",
+        "studioReservations.request_user",
+  			"studioReservations.request_date",
+  			"studioReservations.rsv_date",
+  			"studioReservations.rsv_start_time",
+  			"studioReservations.rsv_end_time",
+        "studioReservations.rsv_desc",
+  			"studioReservations.rsv_status",
+  			"studio.studio_name",
+  			"studio.username"
+  		],
+  		"studioProducts",
+  		"studioReservations",
+  		"studioProducts.product_id",
+  		"studioReservations.product_id",
+      "studioReservations.rsv_id",
+      req.query.rsv_id,
+  		"studio",
+  		"studioProducts.studio_id",
+  		"studio.studio_id"
+    ],
 
-  var callbackForSuccess = function(rows, fields){
-    req.__take_params.reservationData = rows[0];
-    next();
-  };
+    onSuccess: function(rows, fields){
+      req.__take_params.reservationData = rows[0];
+      next();
+    },
 
-  var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ?? AND ?? = ? INNER JOIN ?? ON ?? = ??";
+    onError: function(err){
+      httpUtil.sendDBErrorPage(req, res, err);
+    },
 
-  var params = [
-		[
-			"studioProducts.product_id",
-			"studioProducts.product_name",
-			"studioProducts.product_desc",
-			"studioProducts.product_price",
-			"studioReservations.rsv_id",
-      "studioReservations.request_user",
-			"studioReservations.request_date",
-			"studioReservations.rsv_date",
-			"studioReservations.rsv_start_time",
-			"studioReservations.rsv_end_time",
-      "studioReservations.rsv_desc",
-			"studioReservations.rsv_status",
-			"studio.studio_name",
-			"studio.username"
-		],
-		"studioProducts",
-		"studioReservations",
-		"studioProducts.product_id",
-		"studioReservations.product_id",
-    "studioReservations.rsv_id",
-    req.query.rsv_id,
-		"studio",
-		"studioProducts.studio_id",
-		"studio.studio_id"
-  ];
-
-  logger.debug("SQL Query [SELECT %s FROM %s INNER JOIN %s ON %s=%s AND %s=%s INNER JOIN %s ON %s=%s]",
-		params[0].toString(),
-    params[1],
-    params[2],
-		params[3],
-		params[4],
-		params[5],
-		params[6],
-		params[7],
-		params[8],
-		params[9]
-  );
-
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+    onNoResult: function(){
+      httpUtil.sendInfoPage(req, res, {
+        infoText: "잘못된 예약 정보입니다.",
+    		infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
+      });
+    }
+  });
 };
 
 photographerManager.loadReservationEvents = function(req, res, next){
 
-  var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
+  mysqlDb.doSQLQuery({
+    query: "SELECT * FROM ?? WHERE ?? = ? ORDER BY ?? DESC",
 
-  var callbackForNoResult = function(){
-    req.__take_params.reservationEventsData = [];
-    next();
-  };
+    params: [
+      "studioReservationEvents",
+      "rsv_id",
+      req.query.rsv_id,
+      "event_id"
+    ],
 
-  var callbackForSuccess = function(rows, fields){
-    req.__take_params.reservationEventsData = rows;
-    next();
-  };
+    onSuccess: function(rows, fields){
+      req.__take_params.reservationEventsData = rows;
+      next();
+    },
 
-  var query = "SELECT * FROM ?? WHERE ?? = ? ORDER BY ?? DESC";
+    onError: function(err){
+      httpUtil.sendDBErrorPage(req, res, err);
+    },
 
-  var params = [
-    "studioReservationEvents",
-    "rsv_id",
-    req.query.rsv_id,
-    "event_id"
-  ];
-
-  logger.debug("SQL Query [SELECT * FROM %s WHERE %s=%s ORDER BY %s DESC]",
-    params[0],
-    params[1],
-    params[2],
-    params[3]
-  );
-
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+    onNoResult: function(){
+      req.__take_params.reservationEventsData = [];
+      next();
+    }
+  });
 };
 
 photographerManager.showReservPage = function(req, res){
@@ -1254,39 +1094,32 @@ photographerManager.sendReservationsData = function(req, res){
 
 photographerManager.loadReservUserNickname = function(req, res, next){
 
-  var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
+  mysqlDb.doSQLQuery({
+    query: "SELECT ?? FROM ?? WHERE ?? = ?",
 
-  var callbackForNoResult = function(){
-    httpUtil.sendInfoPage(req, res, {
-      infoText: "잘못된 예약 정보입니다.",
-  		infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
-    });
-  };
+    params: [
+      "nickname",
+      "takeUser",
+      "username",
+      req.__take_params.reservationData.request_user
+    ],
 
-  var callbackForSuccess = function(rows, fields){
-    req.__take_params.reservationData.user_nickname = rows[0].nickname;
-    next();
-  };
+    onSuccess: function(rows, fields){
+      req.__take_params.reservationData.user_nickname = rows[0].nickname;
+      next();
+    },
 
-  var query = "SELECT ?? FROM ?? WHERE ?? = ?";
+    onError: function(err){
+      httpUtil.sendDBErrorPage(req, res, err);
+    },
 
-  var params = [
-    "nickname",
-    "takeUser",
-    "username",
-    req.__take_params.reservationData.request_user
-  ];
-
-  logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
-		params[0],
-    params[1],
-    params[2],
-		params[3]
-  );
-
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+    onNoResult: function(){
+      httpUtil.sendInfoPage(req, res, {
+        infoText: "잘못된 예약 정보입니다.",
+    		infoLink: "<a href='/' class='font-darkgrey'>홈으로</a>"
+      });
+    }
+  });
 };
 
 photographerManager.loadReservEventsNickname = function(req, res, next){
@@ -1296,45 +1129,38 @@ photographerManager.loadReservEventsNickname = function(req, res, next){
 
   var load = function(iterator){
 
-		var callbackForError = function(err){
-	    httpUtil.sendDBErrorPage(req, res, err);
-	  };
+    mysqlDb.doSQLQuery({
+      query: "SELECT ?? FROM ?? WHERE ?? = ?",
 
-	  var callbackForNoResult = function(){
-	    httpUtil.sendNoDataFromDBPage(req, res);
-	  };
+      params: [
+  			"nickname",
+  			"takeUser",
+  			"username",
+  			req.__take_params.reservationEventsData[iterator].username
+  		],
 
-	  var callbackForSuccess = function(rows, fields){
-      if(req.__take_params.reservationEventsData[iterator].event_type == 0){
-        req.__take_params.reservationEventsData[iterator].rsv_status_string = statusStrings[req.__take_params.reservationEventsData[iterator].event_desc - 1];
-      }
-      req.__take_params.reservationEventsData[iterator].nickname = rows[0].nickname;
+      onSuccess: function(rows, fields){
+        if(req.__take_params.reservationEventsData[iterator].event_type == 0){
+          req.__take_params.reservationEventsData[iterator].rsv_status_string = statusStrings[req.__take_params.reservationEventsData[iterator].event_desc - 1];
+        }
+        req.__take_params.reservationEventsData[iterator].nickname = rows[0].nickname;
 
-			if(iterator < maxIterator - 1){
-				load(iterator + 1);
-			}
-			else{
-				next();
-			}
-	  };
+  			if(iterator < maxIterator - 1){
+  				load(iterator + 1);
+  			}
+  			else{
+  				next();
+  			}
+  	  },
 
-		var query = "SELECT ?? FROM ?? WHERE ?? = ?";
+      onError: function(err){
+  	    httpUtil.sendDBErrorPage(req, res, err);
+  	  },
 
-		var params = [
-			"nickname",
-			"takeUser",
-			"username",
-			req.__take_params.reservationEventsData[iterator].username
-		];
-
-	  logger.debug("SQL Query [SELECT %s FROM %s WHERE %s=%s]",
-	    params[0],
-	    params[1],
-	    params[2],
-			params[3]
-	  );
-
-	  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+      onNoResult: function(){
+  	    httpUtil.sendNoDataFromDBPage(req, res);
+  	  }
+    });
 	};
 
 	if(maxIterator > 0){
@@ -1347,37 +1173,32 @@ photographerManager.loadReservEventsNickname = function(req, res, next){
 
 photographerManager.insertReservation = function(req, res){
 
-  var callbackForError = function(err){
-		res.send({
-			"result": "fail",
-			"text": err
-		});
-	};
+  mysqlDb.doSQLQuery({
+    query: "INSERT INTO ?? SET ?",
 
-	var callbackForSuccess = function(result){
-		res.send({"result": "success"});
-	};
+    params: [
+  		"studioReservations",
+  		{
+  			product_id: req.query.product_id,
+        request_user: req.__take_params.username,
+        rsv_date: req.body.rsv_date,
+        rsv_start_time: req.body.rsv_start_time,
+        rsv_end_time: Number(req.body.rsv_start_time) + 100 * Number(req.body.product_duration),
+        rsv_desc: req.body.rsv_desc
+  		}
+  	],
 
-	var query = "INSERT INTO ?? SET ?";
+    onSuccess: function(result){
+  		res.send({"result": "success"});
+  	},
 
-	var params = [
-		"studioReservations",
-		{
-			product_id: req.query.product_id,
-      request_user: req.__take_params.username,
-      rsv_date: req.body.rsv_date,
-      rsv_start_time: req.body.rsv_start_time,
-      rsv_end_time: Number(req.body.rsv_start_time) + 100 * Number(req.body.product_duration),
-      rsv_desc: req.body.rsv_desc
-		}
-	];
-
-	logger.debug("SQL Query [INSERT INTO %s SET %s]",
-		params[0],
-		JSON.stringify(params[1])
-	);
-
-	mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
+    onError: function(err){
+  		res.send({
+  			"result": "fail",
+  			"text": err
+  		});
+  	}
+  });
 };
 
 photographerManager.showReservDetailsPage = function(req, res){
@@ -1422,39 +1243,32 @@ photographerManager.updateReservationStatusByOwner = function(req, res, next){
       return;
     }
 
-    var callbackForError = function(err){
-        res.send({
-          "result": "fail",
-          "text": err
-        });
-      };
+    mysqlDb.doSQLQuery({
+      query: "UPDATE ?? SET ? WHERE ?? = ?",
 
-    var callbackForSuccess = function(){
-      req.__take_params.event_type = 0;
-      req.__take_params.event_desc = req.body.rsv_status;
+      params: [
+        "studioReservations",
+        {
+          rsv_status: req.body.rsv_status
+        },
+        "rsv_id",
+        req.query.rsv_id
+      ],
 
-      next();
-    };
+      onSuccess: function(){
+        req.__take_params.event_type = 0;
+        req.__take_params.event_desc = req.body.rsv_status;
 
-    var query = "UPDATE ?? SET ? WHERE ?? = ?";
-
-    var params = [
-      "studioReservations",
-      {
-        rsv_status: req.body.rsv_status
+        next();
       },
-      "rsv_id",
-      req.query.rsv_id
-    ];
 
-    logger.debug("SQL Query [UPDATE %s SET %s WHRER %s = %s]",
-      params[0],
-      JSON.stringify(params[1]),
-      params[2],
-      params[3]
-    );
-
-    mysqlDb.doSQLUpdateQuery(query, params, callbackForSuccess, callbackForError);
+      onError: function(err){
+          res.send({
+            "result": "fail",
+            "text": err
+          });
+        }
+    });
   }
   else{
     next();
@@ -1464,40 +1278,35 @@ photographerManager.updateReservationStatusByOwner = function(req, res, next){
 photographerManager.insertReservationEvent = function(req, res, next){
 
   if(req.__take_params.event_type !== undefined){
-    var callbackForError = function(err){
-      res.send({
-        "result": "fail",
-        "text": err
-      });
-    };
+    mysqlDb.doSQLQuery({
+      query: "INSERT INTO ?? SET ?",
 
-    var callbackForSuccess = function(result){
-      if(req.path == "/reserve/details"){
-        next();
+      params: [
+        "studioReservationEvents",
+        {
+          rsv_id: req.query.rsv_id,
+          username: req.__take_params.username,
+          event_type: req.__take_params.event_type,
+          event_desc: req.__take_params.event_desc
+        }
+      ],
+
+      onSuccess: function(result){
+        if(req.path == "/reserve/details"){
+          next();
+        }
+        else{
+          res.send({"result": "success"});
+        }
+      },
+
+      onError: function(err){
+        res.send({
+          "result": "fail",
+          "text": err
+        });
       }
-      else{
-        res.send({"result": "success"});
-      }
-    };
-
-    var query = "INSERT INTO ?? SET ?";
-
-    var params = [
-      "studioReservationEvents",
-      {
-        rsv_id: req.query.rsv_id,
-        username: req.__take_params.username,
-        event_type: req.__take_params.event_type,
-        event_desc: req.__take_params.event_desc
-      }
-    ];
-
-    logger.debug("SQL Query [INSERT INTO %s SET %s]",
-      params[0],
-      JSON.stringify(params[1])
-    );
-
-    mysqlDb.doSQLInsertQuery(query, params, callbackForSuccess, callbackForError);
+    });
   }
   else{
     next();

@@ -5,6 +5,7 @@ Functions for Main Page
 //Modules
 var confParams = require("../conf/conf").getParams();
 var mysqlDb = require("../database/mysqldb");
+var commonUtil = require("../util/common-util");
 var httpUtil = require("../util/http-util");
 var logger = require("../logger/logger")(__filename);
 var mainManager = {};
@@ -29,51 +30,41 @@ Show Phtographer List Function
 */
 mainManager.showTodayStudioList = function(req, res){
 
-  var callbackForError = function(err){
-    httpUtil.sendDBErrorPage(req, res, err);
-  };
+  mysqlDb.doSQLQuery({
+    query: "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ?? INNER JOIN ?? ON ?? = ?? LIMIT ?,?",
 
-  var callbackForNoResult = function(){
-    httpUtil.sendNoDataFromDBPage(req, res);
-  };
-
-  var callbackForSuccess = function(rows, fields){
-    res.render("main/main-list", {
-      data: rows
-    });
-  };
-
-  var query = "SELECT ?? FROM ?? INNER JOIN ?? ON ?? = ?? INNER JOIN ?? ON ?? = ?? LIMIT ?,?";
-
-  var params = [
-    [
+    params: [
+      [
+        "studio.username",
+        "studio.studio_name",
+        "studio.slider_photo_list",
+        "takeUser.nickname"
+      ],
+      "studio",
+      "todayStudioList",
       "studio.username",
-      "studio.studio_name",
-      "studio.slider_photo_list",
-      "takeUser.nickname"
+      "todayStudioList.username",
+      "takeUser",
+      "studio.username",
+      "takeUser.username",
+      Number(req.body.start),
+      Number(req.body.end)
     ],
-    "studio",
-    "todayStudioList",
-    "studio.username",
-    "todayStudioList.username",
-    "takeUser",
-    "studio.username",
-    "takeUser.username",
-    Number(req.body.start),
-    Number(req.body.end)
-  ];
 
-  logger.debug("SQL Query [SELECT %s FROM %s INNER JOIN %s ON %s=%s INNER JOIN %s ON %s=%s LIMIT %d,%d]",
-    params[0].toString(),
-    params[1],
-    params[2],
-    params[3],
-    params[4],
-    params[5],
-    params[6]
-  );
+    onSuccess: function(rows, fields){
+      res.render("main/main-list", {
+        data: rows
+      });
+    },
 
-  mysqlDb.doSQLSelectQuery(query, params, callbackForSuccess, callbackForNoResult, callbackForError);
+    onError: function(err){
+      httpUtil.sendDBErrorPage(req, res, err);
+    },
+
+    onNoResult: function(){
+      httpUtil.sendNoDataFromDBPage(req, res);
+    }
+  });
 };
 
 module.exports = mainManager;
