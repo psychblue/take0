@@ -1235,7 +1235,10 @@ photographerManager.updateReservationStatusByOwner = function(req, res, next){
 
   if(req.body.rsv_status){
 
-    if(req.__take_params.username != req.__take_params.reservationData.username){
+    logger.debug("Status >>>\t" + req.body.rsv_status);
+
+    if(req.__take_params.username != req.__take_params.reservationData.username
+      && (req.body.rsv_status != 8 && req.body.rsv_status != 4)){
 
       res.send({
         "result": "fail",

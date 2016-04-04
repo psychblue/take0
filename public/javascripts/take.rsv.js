@@ -10,7 +10,9 @@ var RsvController = (function(){
   $msgButton,
   $rsvConfirmButton,
   $rsvCancelButton,
-  $rsvCancelConfirm;
+  $rsvCancelConfirm,
+  $rsvPayButton,
+  $takeCompleteButton;
 
   (function(){
     $(document).ready(function(){
@@ -26,19 +28,23 @@ var RsvController = (function(){
     $rsvConfirmButton = $(".rsv-confirm-button");
     $rsvCancelButton = $(".rsv-cancel-button");
     $rsvCancelConfirm = $(".rsv-cancel-confirm");
+    $rsvPayButton = $(".rsv-pay-button");
+    $takeCompleteButton = $(".take-complete-button");
   }
 
   function bindEvents(){
     ButtonController.setButton($backButton, goBack);
     ButtonController.setButton($msgButton, sendMsg);
-    ButtonController.setButton($rsvConfirmButton, rsvConfirm);
+    ButtonController.setButton($rsvConfirmButton, sendStatus, 3);
+    ButtonController.setButton($rsvPayButton, sendStatus, 4);
+    ButtonController.setButton($takeCompleteButton, sendStatus, 5);
     if(pageMode === 0){
-      ButtonController.setButton($rsvCancelButton, rsvCancelRequest);
+      ButtonController.setButton($rsvCancelButton, sendStatus, 8);
     }
     else{
-      ButtonController.setButton($rsvCancelButton, rsvCancelConfirm);
+      ButtonController.setButton($rsvCancelButton, sendStatus, 9);
     }
-    ButtonController.setButton($rsvCancelConfirm, rsvCancelConfirm);
+    ButtonController.setButton($rsvCancelConfirm, sendStatus, 9);
   }
 
   function goBack(){
@@ -58,65 +64,28 @@ var RsvController = (function(){
     });
   }
 
-  function rsvConfirm(){
+  function sendStatus(status){
+    var body = {rsv_status: status};
+
+    if(status == 3){
+      body.price = $("input[name='price']").val();
+    }
+
     $.ajax({
       type: "POST",
       url: "/reserve/status?rsv_id=" + rsvId,
-      data: {
-        rsv_status: 3
-      },
+      data: body,
       success: function(data){
         if(data.result == "success"){
-          alert("예약을 확정하였습니다.");
-          location.reload();
-        }
-        else if(data.result == "fail"){
-          alert(data.text);
-          if(data.code == "401"){
-            location.href = "/login?redirect=" + location.href;
-          }
-        }
-      },
-      error: function(xhr, option, error){
-        alert(error);
-      }
-    });
-  }
 
-  function rsvCancelConfirm(){
-    $.ajax({
-      type: "POST",
-      url: "/reserve/status?rsv_id=" + rsvId,
-      data: {
-        rsv_status: 9
-      },
-      success: function(data){
-        if(data.result == "success"){
-          location.reload();
-        }
-        else if(data.result == "fail"){
-          alert(data.text);
-          if(data.code == "401"){
-            location.href = "/login?redirect=" + location.href;
+          switch(status){
+            case 3:
+              alert("예약을 확정하였습니다.");
+              break;
+            case 8:
+              alert("예약 취소를 오쳥하였습니다.");
+              break;
           }
-        }
-      },
-      error: function(xhr, option, error){
-        alert(error);
-      }
-    });
-  }
-
-  function rsvCancelRequest(){
-    $.ajax({
-      type: "POST",
-      url: "/reserve/cancel?rsv_id=" + rsvId,
-      data: {
-        rsv_status: 8
-      },
-      success: function(data){
-        if(data.result == "success"){
-          alert("예약 취소를 요쳥하였습니다.");
           location.reload();
         }
         else if(data.result == "fail"){

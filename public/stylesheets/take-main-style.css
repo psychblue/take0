@@ -835,6 +835,24 @@ hr {
   text-align: right;
 }
 
+.rsv-timeline-box .rsv-timeline-item .contents .rsv-input {
+  width: 200px;
+  height: 38px;
+  padding-top: 0;
+  padding-right: 20px;
+  padding-bottom: 0;
+  padding-left: 20px;
+  margin-right: 10px;
+  font-size: 1em;
+  font-family: "Nanum Gothic";
+  border-radius: 3px;
+  outline-style: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  vertical-align: middle;
+}
+
 .rsv-timeline-box .rsv-timeline-item .contents .rsv-textarea {
   width: 510px;
   height: 100px;
@@ -864,6 +882,13 @@ hr {
   position: absolute;
   top: 0;
   right: -270px;
+}
+
+.rsv-timeline-box .rsv-timeline-item .contents .pay-request-box {
+  height: 40px;
+  padding-top: 30px;
+  border-top:1px solid #eee;
+  text-align: right;
 }
 
 .rsv-timeline-box .rsv-timeline-item .contents table {

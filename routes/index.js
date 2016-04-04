@@ -212,13 +212,6 @@ router.post("/reserve/status",
   photographerManager.insertReservationEvent
 );
 // Change Reservation Status (AJAX)
-router.post("/reserve/cancel",
-  photographerManager.checkLoginOnAjax,
-  photographerManager.loadReservation,
-  photographerManager.updateReservationStatusByUser,
-  photographerManager.insertReservationEvent
-);
-// Change Reservation Status (AJAX)
 router.post("/reserve/msg",
   photographerManager.checkLoginOnAjax,
   photographerManager.setMsgEvent,
