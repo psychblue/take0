@@ -60,90 +60,110 @@
       <% }else{ %>
         <div class="take-basic-window">
       <% } %>
-      
+
         <h1>예약 타임라인</h1>
         <span class="font-grey">예약 진행 상황을 확인하세요.</span>
         <hr class="bg-color-lightgrey">
 
-        <div class="rsv-status-box">
-          <div class="rsv-status font-white bg-color-lightgrey" for="1">예약요청중</div>
-          <div class="rsv-status-arrow font-grey font-level-larger">></div>
-          <div class="rsv-status font-white bg-color-lightgrey" for="2">예약확인중</div>
-          <div class="rsv-status-arrow font-grey font-level-larger">></div>
-          <div class="rsv-status font-white bg-color-lightgrey" for="3">예약확정</div>
-          <div class="rsv-status-arrow font-grey font-level-larger">></div>
-          <div class="rsv-status font-white bg-color-lightgrey" for="4">결제완료</div>
-          <div class="rsv-status-arrow font-grey font-level-larger">></div>
-          <div class="rsv-status font-white bg-color-lightgrey" for="5">촬영완료</div>
-          <div class="rsv-status-arrow font-grey font-level-larger">></div>
-          <div class="rsv-status font-white bg-color-lightgrey" for="6">상품전달중</div>
-          <div class="rsv-status-arrow font-grey font-level-larger">></div>
-          <div class="rsv-status font-white bg-color-lightgrey" for="7">상품확인</div>
-          <div class="float-clear"></div>
+        <% if(reservationData.rsv_status < 8){ %>
+          <div class="rsv-status-box">
+            <div class="rsv-status font-white bg-color-lightgrey" for="1">예약요청중</div>
+            <div class="rsv-status-arrow font-grey font-level-larger">></div>
+            <div class="rsv-status font-white bg-color-lightgrey" for="2">예약확인중</div>
+            <div class="rsv-status-arrow font-grey font-level-larger">></div>
+            <div class="rsv-status font-white bg-color-lightgrey" for="3">예약확정</div>
+            <div class="rsv-status-arrow font-grey font-level-larger">></div>
+            <div class="rsv-status font-white bg-color-lightgrey" for="4">결제완료</div>
+            <div class="rsv-status-arrow font-grey font-level-larger">></div>
+            <div class="rsv-status font-white bg-color-lightgrey" for="5">촬영완료</div>
+            <div class="rsv-status-arrow font-grey font-level-larger">></div>
+            <div class="rsv-status font-white bg-color-lightgrey" for="6">상품전달중</div>
+            <div class="rsv-status-arrow font-grey font-level-larger">></div>
+            <div class="rsv-status font-white bg-color-lightgrey" for="7">상품확인</div>
+            <div class="float-clear"></div>
 
-          <div class="rsv-status-desc font-grey font-level-small">
-            스튜디오에<br>촬영 예약을<br>요청하였습니다.
+            <div class="rsv-status-desc font-grey font-level-small">
+              스튜디오에<br>촬영 예약을<br>요청하였습니다.
+            </div>
+            <div class="rsv-status-arrow font-grey font-level-larger"></div>
+            <div class="rsv-status-desc font-grey font-level-small">
+              스튜디오와<br>예약 내용을<br>확인중입니다.
+            </div>
+            <div class="rsv-status-arrow font-grey font-level-larger"></div>
+            <div class="rsv-status-desc font-grey font-level-small">
+              촬영 일정이<br>확정되었습니다.
+            </div>
+            <div class="rsv-status-arrow font-grey font-level-larger"></div>
+            <div class="rsv-status-desc font-grey font-level-small">
+              예약/결제/확인이<br>완료되었습니다.
+            </div>
+            <div class="rsv-status-arrow font-grey font-level-larger"></div>
+            <div class="rsv-status-desc font-grey font-level-small">
+              예약된 일정에<br>촬영이<br>완료되었습니다.
+            </div>
+            <div class="rsv-status-arrow font-grey font-level-larger"></div>
+            <div class="rsv-status-desc font-grey font-level-small">
+              촬영 결과물이<br>전달중입니다.
+            </div>
+            <div class="rsv-status-arrow font-grey font-level-larger"></div>
+            <div class="rsv-status-desc font-grey font-level-small">
+              결과물이<br>확인되었습니다.
+            </div>
+            <div class="float-clear"></div>
           </div>
-          <div class="rsv-status-arrow font-grey font-level-larger"></div>
-          <div class="rsv-status-desc font-grey font-level-small">
-            스튜디오와<br>예약 내용을<br>확인중입니다.
+        <% }else{ %>
+          <div class="rsv-status-box">
+            <div class="rsv-status font-white bg-color-lightgrey" for="8">취소요청중</div>
+            <div class="rsv-status-arrow font-grey font-level-larger">></div>
+            <div class="rsv-status font-white bg-color-lightgrey" for="9">취소완료</div>
+            <div class="float-clear"></div>
+
+            <div class="rsv-status-desc font-grey font-level-small">
+              스튜디오에<br>예약 취소를<br>요청하였습니다.
+            </div>
+            <div class="rsv-status-arrow font-grey font-level-larger"></div>
+            <div class="rsv-status-desc font-grey font-level-small">
+              예약이<br>취소되었습니다.
+            </div>
+            <div class="float-clear"></div>
           </div>
-          <div class="rsv-status-arrow font-grey font-level-larger"></div>
-          <div class="rsv-status-desc font-grey font-level-small">
-            촬영 일정이<br>확정되었습니다.
-          </div>
-          <div class="rsv-status-arrow font-grey font-level-larger"></div>
-          <div class="rsv-status-desc font-grey font-level-small">
-            예약/결제/확인이<br>완료되었습니다.
-          </div>
-          <div class="rsv-status-arrow font-grey font-level-larger"></div>
-          <div class="rsv-status-desc font-grey font-level-small">
-            예약된 일정에<br>촬영이<br>완료되었습니다.
-          </div>
-          <div class="rsv-status-arrow font-grey font-level-larger"></div>
-          <div class="rsv-status-desc font-grey font-level-small">
-            촬영 결과물이<br>전달중입니다.
-          </div>
-          <div class="rsv-status-arrow font-grey font-level-larger"></div>
-          <div class="rsv-status-desc font-grey font-level-small">
-            결과물이<br>확인되었습니다.
-          </div>
-          <div class="float-clear"></div>
-        </div>
+        <% } %>
 
         <hr class="bg-color-lightgrey">
 
         <div class="rsv-timeline-box">
 
-          <div class="rsv-timeline-item">
+          <% if(reservationData.rsv_status < 9){ %>
+            <div class="rsv-timeline-item">
 
-            <div class="datetime">
-            </div>
+              <div class="datetime">
+              </div>
 
-            <div class="timeline">
-              <div class="line bg-color-grey"></div>
-              <div class="dot bg-color-mint"></div>
-              <div class="arrow-white"></div>
-            </div>
+              <div class="timeline">
+                <div class="line bg-color-grey"></div>
+                <div class="dot bg-color-mint"></div>
+                <div class="arrow-white"></div>
+              </div>
 
-            <div class="contents">
-                <div class="sub-line">
-                  <div class="msg-icon bg-color-darkgrey font-white font-level-larger">&middot;&middot;&middot;
+              <div class="contents">
+                  <div class="sub-line">
+                    <div class="msg-icon bg-color-darkgrey font-white font-level-larger">&middot;&middot;&middot;
+                    </div>
+                    <div class="chat-box">
+                      <form class="msg-form">
+                        <textarea class="rsv-textarea" placeholder="메시지를 남기세요." name="msg_desc"></textarea>
+                      </form>
+                      <button type="button" class="message-button take-button-mint">
+                        <span>&nbsp;&nbsp;보내기</span>
+                      </button>
+                    </div>
                   </div>
-                  <div class="chat-box">
-                    <form class="msg-form">
-                      <textarea class="rsv-textarea" placeholder="메시지를 남기세요." name="msg_desc"></textarea>
-                    </form>
-                    <button type="button" class="message-button take-button-mint">
-                      <span>&nbsp;&nbsp;보내기</span>
-                    </button>
-                  </div>
-                </div>
+              </div>
+
+              <div class="float-clear"></div>
+
             </div>
-
-            <div class="float-clear"></div>
-
-          </div>
+          <% } %>
 
           <% for(var i = 0; i < reservationEventsData.length; i++){ %>
             <div class="rsv-timeline-item">
@@ -167,6 +187,11 @@
                 <% if(reservationEventsData[i].event_type == 0){ %>
                   <div class="main-line bg-color-darkgrey">
                     <span class="font-white"><%= reservationEventsData[i].rsv_status_string %></span>
+                    <% if(reservationData.username == username && ( reservationData.rsv_status == 8 && reservationEventsData[i].event_desc == 8 )){ %>
+                      <button type="button" class="rsv-cancel-confirm rsv-button take-button-red">
+                        <img src="/images/studio/check.png"></img><span>&nbsp;&nbsp;예약취소</span>
+                      </button>
+                    <% } %>
                   </div>
                 <% }else{ %>
                   <div class="chat-line">
@@ -322,9 +347,11 @@
           <button type="button" class="back-button take-button-mint">
             <img src="/images/common/list.png"></img><span>&nbsp;&nbsp;목록으로</span>
           </button>
-          <button type="button" class="rsv-cancel-button take-button-red">
-            <img src="/images/common/cancel.png"></img><span>&nbsp;&nbsp;예약취소</span>
-          </button>
+          <% if(reservationData.username == username || reservationData.rsv_status < 3){ %>
+            <button type="button" class="rsv-cancel-button take-button-red">
+              <img src="/images/common/cancel.png"></img><span>&nbsp;&nbsp;예약취소</span>
+            </button>
+          <% } %>
         </div>
 
       </div>

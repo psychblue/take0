@@ -101,7 +101,7 @@
               </div>
               <div class="board-col status">
                 <button type="button" class="take-button-greyborder">
-                  <% var statusStrings = ["예약요청중", "예약확인중", "예약확정", "결제완료", "촬영완료", "상품전달중", "상품확인"]; %>
+                  <% var statusStrings = ["예약요청중", "예약확인중", "예약확정", "결제완료", "촬영완료", "상품전달중", "상품확인", "취소요청중", "취소완료"]; %>
                   <% var status = statusStrings[reservationsData[i].rsv_status - 1] %>
                   <span><%= status %></span>
                 </button>

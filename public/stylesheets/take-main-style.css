@@ -71,6 +71,10 @@ hr {
   background-color: #eefff5;
 }
 
+.bg-color-red {
+  background-color: #bb2929;
+}
+
 .bg-color-pink {
   background-color: #fde2e2;
 }
@@ -854,6 +858,12 @@ hr {
   position: absolute;
   top: 0;
   right: -135px;
+}
+
+.rsv-timeline-box .rsv-timeline-item .contents .rsv-button2 {
+  position: absolute;
+  top: 0;
+  right: -270px;
 }
 
 .rsv-timeline-box .rsv-timeline-item .contents table {

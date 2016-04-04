@@ -549,7 +549,7 @@ photographerManager.loadReservationEvents = function(req, res, next){
 photographerManager.loadReservEventsNickname = function(req, res, next){
 
   var maxIterator = req.__take_params.reservationEventsData.length;
-  var statusStrings = ["예약요청중", "예약확인중", "예약확정", "결제완료", "촬영완료", "상품전달중", "상품확인"];
+  var statusStrings = ["예약요청중", "예약확인중", "예약확정", "결제완료", "촬영완료", "상품전달중", "상품확인", "취소요청중", "취소완료"];
 
   var load = function(iterator){
 
@@ -814,7 +814,7 @@ photographerManager.loadStudioReservations = function(req, res, next){
 
         rows[dataIndex].rsv_datetime = date + " " + time;
 
-        var statusStrings = ["예약요청중", "예약확인중", "예약확정", "결제완료", "촬영완료", "상품전달중", "상품확인"];
+        var statusStrings = ["예약요청중", "예약확인중", "예약확정", "결제완료", "촬영완료", "상품전달중", "상품확인", "취소요청중", "취소완료"];
         rows[dataIndex].rsv_status_string = statusStrings[rows[dataIndex].rsv_status - 1];
       }
 
@@ -1244,6 +1244,42 @@ photographerManager.updateReservationStatusByOwner = function(req, res, next){
 
       return;
     }
+
+    mysqlDb.doSQLQuery({
+      query: "UPDATE ?? SET ? WHERE ?? = ?",
+
+      params: [
+        "studioReservations",
+        {
+          rsv_status: req.body.rsv_status
+        },
+        "rsv_id",
+        req.query.rsv_id
+      ],
+
+      onSuccess: function(){
+        req.__take_params.event_type = 0;
+        req.__take_params.event_desc = req.body.rsv_status;
+
+        next();
+      },
+
+      onError: function(err){
+          res.send({
+            "result": "fail",
+            "text": err
+          });
+        }
+    });
+  }
+  else{
+    next();
+  }
+};
+
+photographerManager.updateReservationStatusByUser = function(req, res, next){
+
+  if(req.body.rsv_status){
 
     mysqlDb.doSQLQuery({
       query: "UPDATE ?? SET ? WHERE ?? = ?",
