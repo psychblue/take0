@@ -23,35 +23,44 @@
 
     <% include ../header %>
 
-      <nav class="take-navigation bg-color-darkgrey font-lightgrey">
-        <ul>
-          <li class="nav-item">
-            <a href="/user/userinfo">
-              <img src="/images/user/userinfo.png"></img><span>회원정보 관리</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="/user/cart">
-              <img src="/images/user/cart.png"></img><span class="selected">나의 예약</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="/user/likeslist">
-              <img src="/images/user/likes.png"></img><span>찜 리스트</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="/user/userinfo">
-              <img src="/images/user/gallery.png"></img><span>갤러리</span>
-            </a>
-          </li>
-      </ul>
-      </nav>
+      <% if(mode === 0){ %>
+
+        <nav class="take-navigation bg-color-darkgrey font-lightgrey">
+          <ul>
+            <li class="nav-item">
+              <a href="/user/userinfo">
+                <img src="/images/user/userinfo.png"></img><span>회원정보 관리</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/user/cart">
+                <img src="/images/user/cart.png"></img><span class="selected">나의 예약</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/user/likeslist">
+                <img src="/images/user/likes.png"></img><span>찜 리스트</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/user/userinfo">
+                <img src="/images/user/gallery.png"></img><span>갤러리</span>
+              </a>
+            </li>
+        </ul>
+        </nav>
+
+      <% } %>
 
 
     <div class="take-main-window bg-color-lightergrey">
 
-      <div class="take-basic-window2">
+      <% if(mode === 0){ %>
+        <div class="take-basic-window2">
+      <% }else{ %>
+        <div class="take-basic-window">
+      <% } %>
+      
         <h1>예약 타임라인</h1>
         <span class="font-grey">예약 진행 상황을 확인하세요.</span>
         <hr class="bg-color-lightgrey">
@@ -119,12 +128,14 @@
 
             <div class="contents">
                 <div class="sub-line">
+                  <div class="msg-icon bg-color-darkgrey font-white font-level-larger">&middot;&middot;&middot;
+                  </div>
                   <div class="chat-box">
                     <form class="msg-form">
                       <textarea class="rsv-textarea" placeholder="메시지를 남기세요." name="msg_desc"></textarea>
                     </form>
                     <button type="button" class="message-button take-button-mint">
-                      <img src="/images/user/chat.png"></img><span>&nbsp;&nbsp;보내기</span>
+                      <span>&nbsp;&nbsp;보내기</span>
                     </button>
                   </div>
                 </div>

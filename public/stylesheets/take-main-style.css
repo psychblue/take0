@@ -816,6 +816,15 @@ hr {
   float: left;
 }
 
+.rsv-timeline-box .rsv-timeline-item .contents .msg-icon {
+  width:50px;
+  height: 50px;
+  line-height: 50px;
+  border-radius: 25px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
 .rsv-timeline-box .rsv-timeline-item .contents .chat-box {
   width:550px;
   line-height: 1em;
@@ -833,7 +842,7 @@ hr {
   margin-bottom: 10px;
   font-size: 1em;
   font-family: "Nanum Gothic";
-  border: 1px solid #eee;
+  border: 1px solid #ccc;
   border-radius: 3px;
   outline-style: none;
   -webkit-appearance: none;
