@@ -251,7 +251,7 @@ photographerManager.insertReservationEvent = function(req, res, next){
           rsv_id: req.query.rsv_id,
           username: req.__take_params.username,
           event_type: req.__take_params.event_type,
-          event_desc: req.__take_params.event_desc.replace(/\r\n/gi, "<br>")
+          event_desc: req.__take_params.event_desc.toString().replace(/\r\n/gi, "<br>")
         }
       ],
 
