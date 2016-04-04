@@ -65,7 +65,7 @@ photographerManager.checkLogin = function(req, res, next){
     res.render("login/login-page", {
       title: confParams.html.title,
       service: confParams.html.service_name,
-      redirectUrl: req.path
+      redirectUrl: req.originalUrl
     });
   }
 };
