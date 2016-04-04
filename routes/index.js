@@ -211,6 +211,12 @@ router.post("/reserve/status",
   photographerManager.updateReservationStatusByOwner,
   photographerManager.insertReservationEvent
 );
+// Change Reservation Status (AJAX)
+router.post("/reserve/msg",
+  photographerManager.checkLoginOnAjax,
+  photographerManager.setMsgEvent,
+  photographerManager.insertReservationEvent
+);
 //Get Reservation Data (AJAX)
 router.get("/rsvdata",
   photographerManager.loadUserReservationsByDate,
@@ -268,7 +274,7 @@ router.post("/studio/:photographer/portfolio/delete",
 );
 // Get Portfolio Photo List
 router.get("/studio/:photographer/portfolio/:portfolio_id/photolist",
-  photographerManager.getPortfolioPhotoList
+  photographerManager.loadPortfolioPhotoList
 );
 //Studio Reservation page
 router.get("/studio/:photographer/reserve",

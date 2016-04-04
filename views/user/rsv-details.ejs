@@ -102,7 +102,37 @@
           <div class="float-clear"></div>
         </div>
 
+        <hr class="bg-color-lightgrey">
+
         <div class="rsv-timeline-box">
+
+          <div class="rsv-timeline-item">
+
+            <div class="datetime">
+            </div>
+
+            <div class="timeline">
+              <div class="line bg-color-grey"></div>
+              <div class="dot bg-color-mint"></div>
+              <div class="arrow-white"></div>
+            </div>
+
+            <div class="contents">
+                <div class="sub-line">
+                  <div class="chat-box">
+                    <form class="msg-form">
+                      <textarea class="rsv-textarea" placeholder="메시지를 남기세요." name="msg_desc"></textarea>
+                    </form>
+                    <button type="button" class="message-button take-button-mint">
+                      <img src="/images/user/chat.png"></img><span>&nbsp;&nbsp;보내기</span>
+                    </button>
+                  </div>
+                </div>
+            </div>
+
+            <div class="float-clear"></div>
+
+          </div>
 
           <% for(var i = 0; i < reservationEventsData.length; i++){ %>
             <div class="rsv-timeline-item">
@@ -115,7 +145,11 @@
               <div class="timeline">
                 <div class="line bg-color-grey"></div>
                 <div class="dot bg-color-mint"></div>
-                <div class="arrow-darkgrey"></div>
+                <% if(reservationEventsData[i].event_type == 0){ %>
+                  <div class="arrow-darkgrey"></div>
+                <% }else{ %>
+                  <div class="arrow-white"></div>
+                <% } %>
               </div>
 
               <div class="contents">
@@ -124,7 +158,8 @@
                     <span class="font-white"><%= reservationEventsData[i].rsv_status_string %></span>
                   </div>
                 <% }else{ %>
-                  <div class="sub-line">
+                  <div class="chat-line">
+                    <span class="font-darkgrey">"<%- reservationEventsData[i].event_desc %>"</span>
                   </div>
                 <% } %>
               </div>
@@ -271,12 +306,6 @@
           </div>
 
         </div>
-
-        <div class="chat-box bg-color-white">
-          <textarea class="take-textarea border-solid-thin-lightgrey"></textarea>
-        </div>
-
-        <hr class="bg-color-lightgrey">
 
         <div class="editor-button-box center-aligned">
           <button type="button" class="back-button take-button-mint">

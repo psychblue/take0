@@ -492,6 +492,7 @@ hr {
   width: 1000px;
   margin: 0 auto;
   padding-top: 30px;
+  padding-bottom: 25px;
 }
 
 .rsv-status-box .rsv-status {
@@ -761,6 +762,18 @@ hr {
   right: 0px;
 }
 
+.rsv-timeline-box .rsv-timeline-item .timeline .arrow-white {
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-right: 15px solid #fff;
+  border-bottom: 5px solid transparent;
+  border-left: 15px solid transparent;
+  position: absolute;
+  top: 25px;
+  right: 0px;
+}
+
 .rsv-timeline-box .rsv-timeline-item .contents {
   width: 590px;
   padding-top: 10px;
@@ -772,6 +785,7 @@ hr {
   width: 150px;
   padding-right: 20px;
   padding-left: 20px;
+  margin-bottom: 10px;
   line-height: 40px;
   text-align: center;
   border-radius: 3px;
@@ -784,10 +798,47 @@ hr {
   padding-right: 20px;
   padding-bottom: 20px;
   padding-left: 20px;
-  margin-top: 10px;
-  line-height: 40px;
+  margin-bottom: 10px;
+  line-height: 1.5em;
   background-color: #fff;
   border-radius: 3px;
+}
+
+.rsv-timeline-box .rsv-timeline-item .contents .chat-line {
+  padding-top: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+  padding-left: 20px;
+  margin-bottom: 10px;
+  line-height: 1.5em;
+  background-color: #fff;
+  border-radius: 3px;
+  float: left;
+}
+
+.rsv-timeline-box .rsv-timeline-item .contents .chat-box {
+  width:550px;
+  line-height: 1em;
+  text-align: right;
+}
+
+.rsv-timeline-box .rsv-timeline-item .contents .rsv-textarea {
+  width: 510px;
+  height: 100px;
+  resize: none;
+  padding-top: 10px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  margin-bottom: 10px;
+  font-size: 1em;
+  font-family: "Nanum Gothic";
+  border: 1px solid #eee;
+  border-radius: 3px;
+  outline-style: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .rsv-timeline-box .rsv-timeline-item .contents .rsv-button {
@@ -801,7 +852,10 @@ hr {
 }
 
 .rsv-timeline-box .rsv-timeline-item .contents td {
-  padding: 0;
+  padding-top: 5px;
+  padding-right: 0px;
+  padding-bottom: 5px;
+  padding-left: 0px;
   margin: 0;
   vertical-align: top;
   border-top: none;
@@ -824,11 +878,10 @@ hr {
 }
 
 .rsv-timeline-box .rsv-timeline-item .contents ul {
-  line-height: 1.5em;
   margin: 0;
-  padding-top: 10px;
+  padding-top: 0px;
   padding-right: 20px;
-  padding-bottom: 10px;
+  padding-bottom: 0px;
   padding-left: 20px;
 }
 
